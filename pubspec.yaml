@@ -1,0 +1,26 @@
+name: exagon_plus
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  cupertino_icons: ^1.0.9
+  flutter:
+    sdk: flutter
+  flutter_gpu:
+    sdk: flutter
+  flutter_gpu_shaders: ^0.3.0
+
+assets:
+  - .assets/
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
