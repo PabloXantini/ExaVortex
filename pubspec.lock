@@ -161,7 +161,7 @@ packages:
     source: hosted
     version: "1.17.0"
   native_assets_cli:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: native_assets_cli
       sha256: "0907c5b85a21ae08dcdd0d2b75061cc614939911c2cab5ac903f35a9fbb2a50b"
@@ -246,7 +246,7 @@ packages:
     source: hosted
     version: "1.4.0"
   vector_math:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: vector_math
       sha256: d530bd74fea330e6e364cda7a85019c434070188383e1cd8d9777ee586914c5b
