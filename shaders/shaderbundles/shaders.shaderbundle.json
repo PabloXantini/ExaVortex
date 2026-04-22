@@ -1,0 +1,18 @@
+{
+    "vtest": {
+        "type": "vertex",
+        "file": "shaders/test.vert"
+    },
+    "ftest": {
+        "type": "fragment",
+        "file": "shaders/test.frag"
+    },
+    "tvtest": {
+        "type": "vertex",
+        "file": "shaders/texture.vert"
+    },
+    "tftest": {
+        "type": "fragment",
+        "file": "shaders/texture.frag"
+    }
+}

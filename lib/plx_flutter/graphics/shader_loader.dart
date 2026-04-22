@@ -1,6 +1,6 @@
 import 'package:flutter_gpu/gpu.dart' as gpu;
 
-const String _kBaseShaderBundlePath = 'build/shader_bundles/shaders.shaderbundle.json';
+const String _kBaseShaderBundlePath = 'build/shaderbundles/shaders.shaderbundle';
 
 gpu.ShaderLibrary? _baseShaderLibrary;
 gpu.ShaderLibrary get baseShaderLibrary {
