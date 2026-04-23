@@ -36,23 +36,17 @@ class TextureCubePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     /// Allocate a new renderable texture.
-    final gpu.Texture? renderTexture = gpu.gpuContext.createTexture(
+    final gpu.Texture renderTexture = gpu.gpuContext.createTexture(
         gpu.StorageMode.devicePrivate, 300, 300,
         enableRenderTargetUsage: true,
         enableShaderReadUsage: true,
         coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
-    if (renderTexture == null) {
-      return;
-    }
 
-    final gpu.Texture? depthTexture = gpu.gpuContext.createTexture(
+    final gpu.Texture depthTexture = gpu.gpuContext.createTexture(
         gpu.StorageMode.deviceTransient, 300, 300,
         format: gpu.gpuContext.defaultDepthStencilFormat,
         enableRenderTargetUsage: true,
         coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
-    if (depthTexture == null) {
-      return;
-    }
 
     /// Create the command buffer. This will be used to submit all encoded
     /// commands at the end.
@@ -136,7 +130,7 @@ class TextureCubePainter extends CustomPainter {
     final sampledTexture = gpu.gpuContext.createTexture(
         gpu.StorageMode.hostVisible, 5, 5,
         enableShaderReadUsage: true);
-    sampledTexture!.overwrite(uint32(<int>[
+    sampledTexture.overwrite(uint32(<int>[
       0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, //
       0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, //
       0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, //
