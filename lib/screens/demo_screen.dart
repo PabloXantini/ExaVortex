@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../plx_flutter/tests/test3d.dart';
+import '../plx_flutter/tests/test3d2.dart';
 
 class DemoScreen extends StatefulWidget {
   const DemoScreen({super.key});
@@ -29,7 +29,7 @@ class _DemoScreenState extends State<DemoScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(child: TextureCubePage()),
+          Expanded(child: Demo3D()),
         ],
       ),
     );
