@@ -73,7 +73,7 @@ class Canvas3D extends CustomPainter {
     // 2. Material
     final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
     
-    // Calculamos el aspect ratio para que el cubo no se deforme
+    // We calculate the aspect ratio to prevent the cube from deforming
     final aspect = size.width / size.height;
     final projection = Matrix4.identity();
     setPerspectiveMatrix(projection, radians(60), aspect, 0.01, 100);
@@ -90,15 +90,16 @@ class Canvas3D extends CustomPainter {
     final transients = gpu.gpuContext.createHostBuffer();
     final mvpView = transients.emplace(float32Mat(mvpMatrix));
     
-    // Vinculamos uniformes y texturas usando nuestro helper
+    // Binding uniforms and textures
     material.setUniform('FrameInfo', mvpView);
     material.setTexture('tex', getCubeTexture());
 
-    // 3. Dibujamos la malla
+    // 3. Draw Mesh
     renderer.drawMesh(getCubeMesh(), material);
 
-    // 4. Finalizamos el frame y lo pintamos en el canvas desde (0,0)
+    // 4. End frame
     final image = renderer.endFrame();
+    // And paint image on canvas
     canvas.drawImage(image, Offset.zero, Paint());
   }
 
