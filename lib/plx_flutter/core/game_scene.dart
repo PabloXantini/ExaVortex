@@ -1,13 +1,12 @@
 import 'dart:ui';
 import '../graphics/renderer.dart';
-import 'ecs/entities/entity.dart';
+import 'entities/entity.dart';
 
 abstract class GameScene {
   final List<Entity> entities = [];
 
   void onInit() {}
   void onClose() {}
-  void show() {}
   
   void update(double dt) {
     for (var entity in entities) {

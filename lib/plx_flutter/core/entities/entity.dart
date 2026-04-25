@@ -1,6 +1,6 @@
 import 'dart:ui';
-import '../../../graphics/renderer.dart';
-import '../../game_scene.dart';
+import '../../graphics/renderer.dart';
+import '../game_scene.dart';
 import '../components/component.dart';
 
 class Entity {

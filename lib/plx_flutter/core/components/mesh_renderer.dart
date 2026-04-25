@@ -3,10 +3,10 @@ import 'package:vector_math/vector_math_64.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'component.dart';
 import 'transform.dart';
-import '../../../graphics/mesh.dart';
-import '../../../graphics/material.dart';
-import '../../../graphics/renderer.dart';
-import '../../../graphics/type_adapter.dart';
+import '../../graphics/mesh.dart';
+import '../../graphics/material.dart';
+import '../../graphics/renderer.dart';
+import '../../graphics/type_adapter.dart';
 
 class MeshRenderer extends Component {
   Mesh? mesh;

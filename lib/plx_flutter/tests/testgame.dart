@@ -1,3 +1,4 @@
+import 'package:exagon_plus/plx_flutter/core/components/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
@@ -48,7 +49,7 @@ GfxTexture getCubeTexture() {
 class RotatorComponent extends Component {
   double speedX = 1.0;
   double speedY = 1.0;
-  
+
   @override
   void update(double dt) {
     if (entity == null) return;
@@ -64,44 +65,43 @@ class RotatorComponent extends Component {
 /// Definimos nuestra escena principal implementando GameScene
 class CubeDemoScene extends GameScene {
   late Entity3D cubeEntity;
-  late MeshRenderer rendererComponent;
+  late Entity3D cameraEntity;
+  late MeshRenderer renderComponent;
+  late CameraView3D viewComponent;
   late RotatorComponent rotator = RotatorComponent();
 
   @override
   void onInit() {
-    // 1. Instanciamos la entidad 3D
+    // 1. Entities instantiation
     cubeEntity = Entity3D(name: 'SpinningCube');
-    
-    // 2. Le damos una posición en el mundo (Z = -5 para que la cámara lo vea)
-    cubeEntity.position = Vector3(0, 0, -5);
-
-    // 3. Creamos el material y configuramos la textura
+    cameraEntity = Entity3D(name: 'Camera');
+    // 2. Set position
+    cubeEntity.position = Vector3(0, 0, 0); // for the view from camera
+    cameraEntity.position = Vector3(0, 0, 5); 
+    // 3. Material setup
     final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
     material.setTexture('tex', getCubeTexture());
-
-    // 4. Creamos el componente de renderizado y se lo añadimos
-    rendererComponent = MeshRenderer(mesh: getCubeMesh(), material: material);
-    cubeEntity.addComponent(rendererComponent);
-
-    // 5. Le añadimos un comportamiento (rotar con el tiempo)
+    // 4. Create the mesh renderer
+    renderComponent = MeshRenderer(mesh: getCubeMesh(), material: material);
+    // Cube:
     rotator = RotatorComponent()
       ..speedX = -0.5
       ..speedY = 0.5;
+    cubeEntity.addComponent(renderComponent);
     cubeEntity.addComponent(rotator);
-
-    // Añadimos la entidad a la escena
+    addEntity(cameraEntity);
+    // Camera:
+    viewComponent = CameraView3D(lens: CameraLensType.orthographic);
+    cameraEntity.addComponent(viewComponent);
     addEntity(cubeEntity);
   }
 
   @override
   void draw(PlxRenderer renderer, Canvas canvas, Size size) {
     // Calculamos la cámara (proyección) basándonos en el tamaño actual de la pantalla
-    final aspect = size.width / size.height;
-    final projection = Matrix4.identity();
-    setPerspectiveMatrix(projection, radians(60), aspect, 0.01, 100);
-
+    final proj = viewComponent.getProjection(size.width, size.height);
     // Le pasamos la matriz de la cámara al componente de renderizado antes de que se dibuje
-    rendererComponent.viewProjectionMatrix = projection;
+    renderComponent.viewProjectionMatrix = proj * viewComponent.view;
 
     // Ejecuta el draw de todas las entidades y componentes base
     super.draw(renderer, canvas, size);

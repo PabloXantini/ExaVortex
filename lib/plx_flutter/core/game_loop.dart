@@ -28,7 +28,7 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
     super.initState();
     _activeScene = widget.initialScene;
     _activeScene.onInit();
-    _activeScene.show();
+    //_activeScene.show();
 
     _ticker = createTicker(_onTick)..start();
   }

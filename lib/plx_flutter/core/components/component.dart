@@ -1,5 +1,5 @@
 import 'dart:ui';
-import '../../../graphics/renderer.dart';
+import '../../graphics/renderer.dart';
 import '../entities/entity.dart';
 
 abstract class Component {
