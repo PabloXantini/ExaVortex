@@ -12,19 +12,17 @@ class CameraView3D extends Component {
   Vector3 cameraPosition;
   Vector3 cameraFocusPosition;
   Vector3 cameraUp;
-
+  // lens parameters
+  double far = 100;
   // lens parameters: perspective lens
   double fov = 60;
   double pNear = 0.1;
-  double far = 100;
-
   // lens parameters: orthographic lens
   double orthographicSize = 5;
   double oNear = -100; 
 
-  bool isViewDirty = true;
-  bool isProjectionDirty = true;
-  
+  bool _isViewDirty = true;
+  bool _isProjectionDirty = true;  
   double _lastWidth = 0;
   double _lastHeight = 0;
 
@@ -45,52 +43,54 @@ class CameraView3D extends Component {
     cameraPosition.setFrom(position);
     cameraFocusPosition.setFrom(target);
     cameraUp.setFrom(up);
-    isViewDirty = true;
+    _isViewDirty = true;
   }
 
   Matrix4 getProjection(double w, double h) {
     if (w != _lastWidth || h != _lastHeight) {
-      isProjectionDirty = true;
+      _isProjectionDirty = true;
       _lastWidth = w;
       _lastHeight = h;
     }
 
-    if (isProjectionDirty) {
+    if (_isProjectionDirty) {
       _projection = Matrix4.identity();
+      final aspect = w/h;
       switch (lensType) {
         case CameraLensType.perspective:
-          setPerspectiveMatrix(_projection, radians(fov), w / h, pNear, far);
+          setPerspectiveMatrix(_projection, radians(fov), aspect, pNear, far);
           break;
         case CameraLensType.orthographic:
-          double aspect = w / h;
-          double left = -(orthographicSize * aspect);
-          double right = -left;
-          double bottom = -orthographicSize;
-          double top = orthographicSize;
-          setOrthographicMatrix(_projection, left, right, bottom, top, oNear, 100);
+          final s = orthographicSize;
+          setOrthographicMatrix(_projection, -s * aspect, s * aspect, -s, s, oNear, far);
           break;
       }
-      isProjectionDirty = false;
+      _isProjectionDirty = false;
     }
     return _projection;
   }
 
   Matrix4 get view {
-    // sync if entity has transform
-    if (entity != null) {
-      final transform = entity!.getComponent<TransformUser>();
-      if (transform != null && transform.position != cameraPosition) {
-        cameraPosition.setFrom(transform.position);
-        isViewDirty = true;
-      }
-    }
-    if (isViewDirty) {
+    if (_isViewDirty) {
       _view = Matrix4.identity();
       if (cameraPosition != cameraFocusPosition) {
         setViewMatrix(_view, cameraPosition, cameraFocusPosition, cameraUp);
       }
-      isViewDirty = false;
+      _isViewDirty = false;
     }
     return _view;
+  }
+
+  Matrix4 getResult(double w, double h) => getProjection(w, h) * view;
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    // sync if entity has transform
+    final transform = entity?.getComponent<TransformUser>();
+    if (transform != null && transform.position != cameraPosition) {
+      cameraPosition.setFrom(transform.position);
+      _isViewDirty = true;
+    }
   }
 }
