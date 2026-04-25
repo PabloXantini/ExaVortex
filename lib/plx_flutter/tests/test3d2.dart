@@ -17,15 +17,16 @@ Mesh getCubeMesh() {
     VertexAttribute(AttributeUsage.color, 4),
   ]);
 
-  final vertices = [
-    CustomVertex()..set(AttributeUsage.position, [-1, -1, -1])..set(AttributeUsage.uv, [0, 0])..set(AttributeUsage.color, [1, 0, 0, 1]),
-    CustomVertex()..set(AttributeUsage.position, [1, -1, -1])..set(AttributeUsage.uv, [1, 0])..set(AttributeUsage.color, [0, 1, 0, 1]),
-    CustomVertex()..set(AttributeUsage.position, [1, 1, -1])..set(AttributeUsage.uv, [1, 1])..set(AttributeUsage.color, [0, 0, 1, 1]),
-    CustomVertex()..set(AttributeUsage.position, [-1, 1, -1])..set(AttributeUsage.uv, [0, 1])..set(AttributeUsage.color, [0, 0, 0, 1]),
-    CustomVertex()..set(AttributeUsage.position, [-1, -1, 1])..set(AttributeUsage.uv, [0, 0])..set(AttributeUsage.color, [0, 1, 1, 1]),
-    CustomVertex()..set(AttributeUsage.position, [1, -1, 1])..set(AttributeUsage.uv, [1, 0])..set(AttributeUsage.color, [1, 0, 1, 1]),
-    CustomVertex()..set(AttributeUsage.position, [1, 1, 1])..set(AttributeUsage.uv, [1, 1])..set(AttributeUsage.color, [1, 1, 0, 1]),
-    CustomVertex()..set(AttributeUsage.position, [-1, 1, 1])..set(AttributeUsage.uv, [0, 1])..set(AttributeUsage.color, [1, 1, 1, 1]),
+  final vertices = <double>[
+    // X, Y, Z,       U, V,     R, G, B, A
+    -1, -1, -1,       0, 0,     1, 0, 0, 1,
+     1, -1, -1,       1, 0,     0, 1, 0, 1,
+     1,  1, -1,       1, 1,     0, 0, 1, 1,
+    -1,  1, -1,       0, 1,     0, 0, 0, 1,
+    -1, -1,  1,       0, 0,     0, 1, 1, 1,
+     1, -1,  1,       1, 0,     1, 0, 1, 1,
+     1,  1,  1,       1, 1,     1, 1, 0, 1,
+    -1,  1,  1,       0, 1,     1, 1, 1, 1,
   ];
 
   _cubeMesh = Mesh.create(format, vertices, indices16: [

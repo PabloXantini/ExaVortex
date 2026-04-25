@@ -20,14 +20,6 @@ class VertexFormat {
       : stride = attributes.fold(0, (sum, attr) => sum + attr.numArgs);
 }
 
-class CustomVertex {
-  final Map<AttributeUsage, List<double>> data = {};
-
-  void set(AttributeUsage usage, List<double> values) {
-    data[usage] = values;
-  }
-}
-
 class Mesh {
   final gpu.DeviceBuffer vertexBuffer;
   final gpu.DeviceBuffer? indexBuffer;
@@ -58,26 +50,16 @@ class Mesh {
     }
   }
 
-  /// Create a Mesh using a declarative VertexFormat and a list of CustomVertex.
-  static Mesh create(VertexFormat format, List<CustomVertex> vertices,
+  /// Create a Mesh using a declarative VertexFormat and a raw list of interleaved vertices.
+  /// This is much faster as it avoids dictionary lookups per vertex.
+  static Mesh create(VertexFormat format, List<double> interleavedVertices,
       {List<int>? indices16, List<int>? indices32}) {
-    List<double> interleaved = [];
+      
+    assert(interleavedVertices.length % format.stride == 0,
+        "The length of interleavedVertices must be a multiple of the stride (${format.stride})");
+    int vertexCount = interleavedVertices.length ~/ format.stride;
 
-    for (var v in vertices) {
-      for (var attr in format.attributes) {
-        var vals = v.data[attr.usage];
-        if (vals != null) {
-          assert(vals.length == attr.numArgs,
-              "Expected ${attr.numArgs} elements for ${attr.usage}");
-          interleaved.addAll(vals);
-        } else {
-          // Fill with zeros if missing
-          interleaved.addAll(List.filled(attr.numArgs, 0.0));
-        }
-      }
-    }
-
-    ByteData vertexData = float32(interleaved);
+    ByteData vertexData = float32(interleavedVertices);
     gpu.DeviceBuffer vertexBuffer = gpu.gpuContext.createDeviceBufferWithCopy(vertexData);
 
     gpu.DeviceBuffer? indexBuffer;
@@ -96,7 +78,7 @@ class Mesh {
 
     return Mesh(
       vertexBuffer: vertexBuffer,
-      vertexCount: vertices.length,
+      vertexCount: vertexCount,
       indexBuffer: indexBuffer,
       indexType: indexType,
       indexCount: indexCount,
