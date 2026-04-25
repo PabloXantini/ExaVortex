@@ -75,13 +75,13 @@ class Canvas3D extends CustomPainter {
     
     // Calculamos el aspect ratio para que el cubo no se deforme
     final aspect = size.width / size.height;
-    
-    final mvpMatrix = Matrix4(
-          0.5 / aspect, 0, 0, 0, // X se escala según el aspect ratio
-          0, 0.5, 0, 0, //
-          0, 0, 0.2, 0, //
-          0, 0, 0.5, 1, //
-        ) *
+    final projection = Matrix4.identity();
+    setPerspectiveMatrix(projection, radians(60), aspect, 0.01, 100);
+    final mvpMatrix = 
+        // projection
+        projection *
+        // model
+        Matrix4.translationValues(0, 0, -5) *
         Matrix4.rotationX(time) *
         Matrix4.rotationY(time * seedX) *
         Matrix4.rotationZ(time * seedY) *
@@ -116,7 +116,7 @@ class Demo3D extends StatefulWidget {
 class _Demo3DState extends State<Demo3D> {
   Ticker? tick;
   double time = 0;
-  double deltaSeconds = 0;
+  double deltaSeconds = 1/60;
   double seedX = -0.512511498387847167;
   double seedY = 0.521295573094847167;
   double scale = 1.0;
@@ -153,6 +153,7 @@ class _Demo3DState extends State<Demo3D> {
         ),
         Column(
           children: [
+            Text('FPS: ${(deltaSeconds > 0 ? 1 / deltaSeconds : 0).round()}'),
             Slider(
               value: seedX,
               max: 1,

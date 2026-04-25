@@ -78,7 +78,7 @@ class Mesh {
     }
 
     ByteData vertexData = float32(interleaved);
-    gpu.DeviceBuffer vertexBuffer = gpu.gpuContext.createDeviceBufferWithCopy(vertexData)!;
+    gpu.DeviceBuffer vertexBuffer = gpu.gpuContext.createDeviceBufferWithCopy(vertexData);
 
     gpu.DeviceBuffer? indexBuffer;
     gpu.IndexType indexType = gpu.IndexType.int16;
