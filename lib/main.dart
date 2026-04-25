@@ -1,4 +1,4 @@
-import 'package:exagon_plus/screens/demo_screen.dart';
+import 'package:exagon_plus/exavortex_app/screens/demo_screen.dart';
 //import 'package:exagon_plus/screens/title_screen.dart';
 import 'package:flutter/material.dart';
 

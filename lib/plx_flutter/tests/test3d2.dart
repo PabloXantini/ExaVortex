@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:vector_math/vector_math_64.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 
-import '../graphics/api.dart';
+import '../plx.dart';
 
 Mesh? _cubeMesh;
 GfxTexture? _cubeTexture;
