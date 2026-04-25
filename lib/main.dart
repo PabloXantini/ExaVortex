@@ -1,4 +1,5 @@
 import 'package:exagon_plus/exavortex_app/screens/demo_screen.dart';
+import 'package:exagon_plus/plx_flutter/tests/testgame.dart';
 //import 'package:exagon_plus/screens/title_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DemoScreen()
+      home: TestGame(),
     );
   }
 }
