@@ -14,3 +14,11 @@ export 'core/entities/entity_3d.dart';
 export 'core/components/component.dart';
 export 'core/components/transform.dart';
 export 'core/components/mesh_renderer.dart';
+export 'core/components/camera.dart';
+
+// Input exports
+export 'core/input/physical_input.dart';
+export 'core/input/input_event.dart';
+export 'core/input/input_action.dart';
+export 'core/input/input_manager.dart';
+export 'core/input/input_config.dart';
