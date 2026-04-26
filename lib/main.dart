@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TestScene2Game(),
+      home: TestSceneGame(),
     );
   }
 }

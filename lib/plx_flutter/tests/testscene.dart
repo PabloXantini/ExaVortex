@@ -10,6 +10,7 @@ class SceneA extends GameScene {
   late Entity3D cube2;
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
+  late RotatorComponent rotator;
   
   final InputManager inputManager = InputManager();
 
@@ -18,25 +19,24 @@ class SceneA extends GameScene {
     debugPrint('Initializing Scene A');
     
     cameraEntity = Entity3D(name: 'Camera');
-    cameraEntity.position = Vector3(0, 0, 5);
-    viewComponent = CameraView3D(lens: CameraLensType.orthographic);
-    cameraEntity.addComponent(viewComponent);
-    addEntity(cameraEntity);
-
-    // Cubo Rojo
     cube1 = Entity3D(name: 'RedCube');
+    cube2 = Entity3D(name: 'GreenCube');
+    cameraEntity.position = Vector3(0, 0, 5);
     cube1.position = Vector3(-1.5, 0, 0);
+    cube2.position = Vector3(1.5, 0, 0);
+    viewComponent = CameraView3D(lens: CameraLensType.orthographic);
+    rotator = RotatorComponent()
+      ..speedX = -0.5
+      ..speedY = 0.5;
     final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
     material1.setTexture('tex', getCubeTexture());
+    cameraEntity.addComponent(viewComponent);
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube1.addComponent(rotator);
+    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube2.addComponent(rotator);
+    addEntity(cameraEntity);
     addEntity(cube1);
-
-    // Cubo Verde
-    cube2 = Entity3D(name: 'GreenCube');
-    cube2.position = Vector3(1.5, 0, 0);
-    final material2 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material2.setTexture('tex', getCubeTexture());
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material2));
     addEntity(cube2);
 
     inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
@@ -45,9 +45,6 @@ class SceneA extends GameScene {
   @override
   void update(double dt) {
     super.update(dt);
-    cube1.rotation.y += dt;
-    cube2.rotation.x += dt;
-    
     if (inputManager.wasActionPressed('Switch')) {
       requestSceneChange(SceneB());
     }
@@ -81,7 +78,7 @@ class SceneB extends GameScene {
     
     cameraEntity = Entity3D(name: 'Camera');
     cameraEntity.position = Vector3(0, 0, 7);
-    viewComponent = CameraView3D(lens: CameraLensType.orthographic);
+    viewComponent = CameraView3D(lens: CameraLensType.perspective);
     cameraEntity.addComponent(viewComponent);
     addEntity(cameraEntity);
 
@@ -98,9 +95,7 @@ class SceneB extends GameScene {
     cube2 = Entity3D(name: 'YellowCube');
     cube2.position = Vector3(0, -1.5, 0);
     cube2.scale = Vector3.all(0.5);
-    final material2 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material2.setTexture('tex', getCubeTexture());
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material2));
+    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
     addEntity(cube2);
 
     inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
@@ -109,9 +104,10 @@ class SceneB extends GameScene {
   @override
   void update(double dt) {
     super.update(dt);
-    cube1.rotation.z += dt * 2;
-    cube2.rotation.y -= dt * 3;
-
+    cube1.rotation.z += dt * 20;
+    cube2.rotation.y -= dt * 30;
+    debugPrint('Cube1 rotation: ${cube1.rotation}');
+    debugPrint('Cube2 rotation: ${cube2.rotation}');
     if (inputManager.wasActionPressed('Switch')) {
       requestSceneChange(SceneA());
     }

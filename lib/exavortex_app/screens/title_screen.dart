@@ -1,3 +1,5 @@
+import 'package:exagon_plus/exavortex_app/scenes/background_scene.dart';
+import 'package:exagon_plus/plx_flutter/plx.dart';
 import 'package:flutter/material.dart';
 
 class TitleScreen extends StatefulWidget {
@@ -11,9 +13,7 @@ class _TitleScreenState extends State<TitleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Hola Mundo'),
-      ),
+      body: PlxGame(initialScene: BackgroundScene())
     );
   }
 }
