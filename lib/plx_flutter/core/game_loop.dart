@@ -100,16 +100,6 @@ class _GamePainter extends CustomPainter {
 
     final image = renderer.endFrame();
     canvas.drawImage(image, Offset.zero, Paint());
-
-    // Default fade if no builder is used? 
-    // Actually, let's keep it very clean. 
-    // If we want a default fade, we can put it here or in a default builder.
-    if (transitionAlpha > 0) {
-      final paint = Paint()
-        ..color = Colors.black.withOpacity(transitionAlpha)
-        ..style = PaintingStyle.fill;
-      canvas.drawRect(Offset.zero & size, paint);
-    }
   }
 
   @override
