@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
+import 'input/input_manager.dart';
 
 enum SceneTransitionState { none, fadingOut, fadingIn }
 
@@ -51,8 +52,12 @@ class SceneManager extends ChangeNotifier {
         _alpha = 0.0;
         _state = SceneTransitionState.none;
       }
-      notifyListeners();
     }
+    
+    // Reset input flags for next frame
+    InputManager().update();
+    
+    notifyListeners();
   }
 
   void changeScene(GameScene scene, {double duration = 0.5}) {

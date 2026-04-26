@@ -10,7 +10,6 @@ class SceneA extends GameScene {
   late Entity3D cube2;
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
-  late RotatorComponent rotator;
   
   final InputManager inputManager = InputManager();
 
@@ -24,17 +23,19 @@ class SceneA extends GameScene {
     cameraEntity.position = Vector3(0, 0, 5);
     cube1.position = Vector3(-1.5, 0, 0);
     cube2.position = Vector3(1.5, 0, 0);
+    
     viewComponent = CameraView3D(lens: CameraLensType.orthographic);
-    rotator = RotatorComponent()
-      ..speedX = -0.5
-      ..speedY = 0.5;
+    cameraEntity.addComponent(viewComponent);
+
     final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
     material1.setTexture('tex', getCubeTexture());
-    cameraEntity.addComponent(viewComponent);
+
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
-    cube1.addComponent(rotator);
+    cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
+
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
-    cube2.addComponent(rotator);
+    cube2.addComponent(RotatorComponent()..speedX = 0.5..speedY = -0.5);
+
     addEntity(cameraEntity);
     addEntity(cube1);
     addEntity(cube2);
@@ -48,7 +49,6 @@ class SceneA extends GameScene {
     if (inputManager.wasActionPressed('Switch')) {
       requestSceneChange(SceneB());
     }
-    inputManager.update();
   }
 
   @override
@@ -75,27 +75,29 @@ class SceneB extends GameScene {
   @override
   void onInit() {
     debugPrint('Initializing Scene B');
-    
-    cameraEntity = Entity3D(name: 'Camera');
-    cameraEntity.position = Vector3(0, 0, 7);
-    viewComponent = CameraView3D(lens: CameraLensType.perspective);
-    cameraEntity.addComponent(viewComponent);
-    addEntity(cameraEntity);
 
-    // Cubo Azul (Grande)
+    cameraEntity = Entity3D(name: 'Camera');
     cube1 = Entity3D(name: 'BlueCube');
+    cube2 = Entity3D(name: 'YellowCube');
+    cameraEntity.position = Vector3(0, 0, 7);
     cube1.position = Vector3(0, 1.5, 0);
     cube1.scale = Vector3.all(1.5);
-    final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material1.setTexture('tex', getCubeTexture());
-    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
-    addEntity(cube1);
-
-    // Cubo Amarillo (Pequeño)
-    cube2 = Entity3D(name: 'YellowCube');
     cube2.position = Vector3(0, -1.5, 0);
     cube2.scale = Vector3.all(0.5);
+
+    viewComponent = CameraView3D(lens: CameraLensType.perspective);
+    cameraEntity.addComponent(viewComponent);
+
+    final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
+    material1.setTexture('tex', getCubeTexture());
+
+    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube2.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
+
+    addEntity(cameraEntity);
+    addEntity(cube1);
     addEntity(cube2);
 
     inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
@@ -104,14 +106,9 @@ class SceneB extends GameScene {
   @override
   void update(double dt) {
     super.update(dt);
-    cube1.rotation.z += dt * 20;
-    cube2.rotation.y -= dt * 30;
-    debugPrint('Cube1 rotation: ${cube1.rotation}');
-    debugPrint('Cube2 rotation: ${cube2.rotation}');
     if (inputManager.wasActionPressed('Switch')) {
       requestSceneChange(SceneA());
     }
-    inputManager.update();
   }
 
   @override
@@ -149,23 +146,12 @@ class _TestSceneGameState extends State<TestSceneGame> {
       body: Focus(
         autofocus: true,
         onKeyEvent: (node, event) {
-          // El InputManager es un singleton o instancia en escena? 
-          // En mi test puse uno por escena, así que necesito pasarlo.
-          // Pero el InputManager que hice antes es un singleton.
-          // Vamos a usar el singleton para que sea más fácil.
           InputManager().handleKeyEvent(event);
           return KeyEventResult.handled;
         },
         child: PlxGame(
           initialScene: _initialScene,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // También podemos forzar el cambio desde afuera si tuviéramos acceso a la escena activa
-          // Pero la idea es que sea la escena la que pida el cambio.
-        },
-        child: const Icon(Icons.swap_horiz),
       ),
     );
   }

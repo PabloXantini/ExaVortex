@@ -15,13 +15,14 @@ class TransitionScene1 extends GameScene {
   void onInit() {
     cameraEntity = Entity3D(name: 'Camera');
     cameraEntity.position = Vector3(0, 0, 5);
-    cameraEntity.addComponent(CameraView3D(lens: CameraLensType.orthographic));
+    cameraEntity.addComponent(CameraView3D(lens: CameraLensType.perspective));
     addEntity(cameraEntity);
 
     cube1 = Entity3D(name: 'Cube1');
     final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
     material1.setTexture('tex', getCubeTexture());
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
     addEntity(cube1);
 
     inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
@@ -29,14 +30,13 @@ class TransitionScene1 extends GameScene {
 
   @override
   void update(double dt) {
+    Vector3 rot = cube1.rotation;
+    cube1.rotation = Vector3(rot.x, rot.y, rot.z+dt*2); 
     super.update(dt);
-    cube1.rotation.y += dt * 2;
-    
     if (inputManager.wasActionPressed('Switch')) {
       // Uso manual del SceneManager a través de la escena
       requestSceneChange(TransitionScene2());
     }
-    inputManager.update();
   }
 
   @override
@@ -66,6 +66,8 @@ class TransitionScene2 extends GameScene {
     final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
     material.setTexture('tex', getCubeTexture());
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material));
+    cube2.addComponent(RotatorComponent()..speedX = 3.0..speedY=0);
+
     addEntity(cube2);
 
     // USANDO COMPONENTE para volver a la escena 1 después de 3 segundos
@@ -74,12 +76,6 @@ class TransitionScene2 extends GameScene {
       delay: 3.0,
       duration: 1.0,
     ));
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-    cube2.rotation.x += dt * 3;
   }
 
   @override
