@@ -1,4 +1,3 @@
-import 'package:exagon_plus/plx_flutter/core/components/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
@@ -123,7 +122,6 @@ class _TestGameState extends State<TestGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ECS Cube Engine Demo')),
       body: Stack(
         children: [
           // Capa base: El motor 3D

@@ -10,6 +10,9 @@ abstract class GameScene {
 
   void requestSceneChange(GameScene scene) {
     _nextScene = scene;
+    // We could call SceneManager().changeScene(scene) directly here,
+    // but keeping the property allows the SceneManager to detect it in its update loop
+    // if the user prefers that pattern.
   }
 
   void clearSceneRequest() {
