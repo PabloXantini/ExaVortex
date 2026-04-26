@@ -43,6 +43,15 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
 
     setState(() {
       _activeScene.update(dt);
+
+      if (_activeScene.nextScene != null) {
+        GameScene newScene = _activeScene.nextScene!;
+        _activeScene.clearSceneRequest();
+        _activeScene.onClose();
+        
+        _activeScene = newScene;
+        _activeScene.onInit();
+      }
     });
   }
 

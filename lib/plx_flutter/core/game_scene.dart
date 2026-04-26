@@ -4,6 +4,17 @@ import 'entities/entity.dart';
 
 abstract class GameScene {
   final List<Entity> entities = [];
+  GameScene? _nextScene;
+
+  GameScene? get nextScene => _nextScene;
+
+  void requestSceneChange(GameScene scene) {
+    _nextScene = scene;
+  }
+
+  void clearSceneRequest() {
+    _nextScene = null;
+  }
 
   void onInit() {}
   void onClose() {}
