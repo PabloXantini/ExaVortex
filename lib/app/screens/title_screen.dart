@@ -13,7 +13,27 @@ class _TitleScreenState extends State<TitleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PlxGame(initialScene: BackgroundScene())
+      body: 
+      Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: PlxGame(initialScene: BackgroundScene())),
+                Expanded(child: PlxGame(initialScene: BackgroundScene()))
+              ],
+            )
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: PlxGame(initialScene: BackgroundScene())),
+                Expanded(child: PlxGame(initialScene: BackgroundScene()))
+              ],
+            ),
+          )
+        ],
+      )
     );
   }
 }
