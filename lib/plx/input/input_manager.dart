@@ -1,4 +1,6 @@
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:ui';
 import 'physical_input.dart';
 import 'input_action.dart';
 
@@ -51,6 +53,35 @@ class InputManager {
       device: InputDevice.keyboard,
       keyId: event.logicalKey.keyId,
     );
+
+    return _triggerBindings(physicalInput, isDown, isDown ? 1.0 : 0.0);
+  }
+
+  // Allows hooking into Flutter's PointerEvents (Mouse/Touch)
+  bool handlePointerEvent(PointerEvent event) {
+    final isDown = event is PointerDownEvent;
+    final isUp = event is PointerUpEvent;
+    final isMove = event is PointerMoveEvent;
+
+    if (!isDown && !isUp && !isMove) return false;
+
+    // Map pointer buttons to keyId
+    // 0: Primary (Left), 1: Secondary (Right), 2: Tertiary (Middle)
+    int keyId = 0; 
+    if (event.buttons & 0x01 != 0) {keyId = 0;}
+    else if (event.buttons & 0x02 != 0) {keyId = 1;}
+    else if (event.buttons & 0x04 != 0) {keyId = 2;}
+
+    final physicalInput = PhysicalInput(
+      device: event.kind == PointerDeviceKind.touch ? InputDevice.touch : InputDevice.mouse,
+      keyId: keyId,
+    );
+
+    if (isMove) {
+      // For move, we might want to trigger "axis" actions, but for now let's just 
+      // trigger the binding if any button is held.
+      return _triggerBindings(physicalInput, true, 1.0);
+    }
 
     return _triggerBindings(physicalInput, isDown, isDown ? 1.0 : 0.0);
   }

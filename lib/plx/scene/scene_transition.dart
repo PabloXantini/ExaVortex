@@ -22,7 +22,7 @@ class SceneTransition extends Component {
     _timer += dt;
     if (_timer >= delay) {
       _triggered = true;
-      SceneManager().changeScene(targetScene, duration: duration);
+      entity?.scene?.requestSceneChange(targetScene);
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'game_scene.dart';
 import 'scene_manager.dart';
 import '../graphics/renderer.dart';
+import '../input/input_manager.dart';
 
 typedef PlxTransitionBuilder = Widget Function(
   BuildContext context, 
@@ -66,15 +67,35 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
     final activeScene = _manager.activeScene;
     if (activeScene == null) return const SizedBox.shrink();
 
-    return Stack(
-      children: [
-        CustomPaint(
-          size: Size.infinite,
-          painter: _GamePainter(activeScene, _manager.progress),
-        ),
-        if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
-          widget.transitionBuilder!(context, _manager.progress, _manager.state),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = constraints.biggest;
+        
+        return Focus(
+          autofocus: true,
+          onKeyEvent: (node, event) {
+            InputManager().handleKeyEvent(event);
+            return KeyEventResult.handled;
+          },
+          child: Listener(
+            onPointerDown: (event) => InputManager().handlePointerEvent(event),
+            onPointerUp: (event) => InputManager().handlePointerEvent(event),
+            onPointerMove: (event) => InputManager().handlePointerEvent(event),
+            child: Stack(
+              children: [
+                RepaintBoundary(
+                  child: CustomPaint(
+                    size: size,
+                    painter: _GamePainter(activeScene, _manager.progress),
+                  ),
+                ),
+                if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
+                  widget.transitionBuilder!(context, _manager.progress, _manager.state),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

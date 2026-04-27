@@ -5,9 +5,7 @@ import '../input/input_manager.dart';
 enum SceneTransitionState { idle, fadingOut, fadingIn }
 
 class SceneManager extends ChangeNotifier {
-  static final SceneManager _instance = SceneManager._internal();
-  factory SceneManager() => _instance;
-  SceneManager._internal();
+  SceneManager();
 
   GameScene? _activeScene;
   GameScene? _pendingScene;
