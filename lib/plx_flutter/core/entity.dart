@@ -1,7 +1,7 @@
 import 'dart:ui';
-import '../../graphics/renderer.dart';
-import '../game_scene.dart';
-import '../components/component.dart';
+import '../graphics/renderer.dart';
+import 'game_scene.dart';
+import 'component.dart';
 
 class Entity {
   String name;

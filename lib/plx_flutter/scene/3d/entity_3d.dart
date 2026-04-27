@@ -1,6 +1,6 @@
 import 'package:vector_math/vector_math_64.dart';
-import 'entity.dart';
-import '../components/transform.dart';
+import '../../core/entity.dart';
+import '../../math/transform.dart';
 
 class Entity3D extends Entity {
   late final TransformUser transform;

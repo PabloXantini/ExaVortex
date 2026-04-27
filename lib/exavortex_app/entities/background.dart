@@ -1,5 +1,5 @@
 import 'package:exagon_plus/exavortex_app/utils/shapes/polygons.dart';
-import 'package:exagon_plus/plx_flutter/plx.dart';
+import 'package:exagon_plus/plx_flutter/plx3d.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class Background extends Entity3D {

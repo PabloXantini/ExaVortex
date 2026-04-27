@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_64.dart' hide Colors;
 
-import '../plx.dart'; // Importa toda la abstracción que creamos
+import 'package:exagon_plus/plx_flutter/plx.dart' hide Colors; // Importa toda la abstracción que creamos
+import 'package:exagon_plus/plx_flutter/plx3d.dart';
 
 // Malla del Cubo
 Mesh getCubeMesh() {

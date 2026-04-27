@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vector_math/vector_math_64.dart' hide Colors;
 
-import '../plx.dart';
+import 'package:exagon_plus/plx_flutter/plx.dart' hide Colors;
+import 'package:exagon_plus/plx_flutter/plx3d.dart';
+
+
 import 'testgame.dart'; // Reusing getCubeMesh and getCubeTexture
 
 class InputTestScene extends GameScene {

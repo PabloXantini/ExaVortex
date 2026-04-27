@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 import '../plx.dart';
+import '../plx3d.dart';
 import 'testgame.dart'; // Para reutilizar getCubeMesh y getCubeTexture
 
 class SceneA extends GameScene {

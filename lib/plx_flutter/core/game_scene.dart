@@ -1,6 +1,6 @@
 import 'dart:ui';
 import '../graphics/renderer.dart';
-import 'entities/entity.dart';
+import 'entity.dart';
 
 abstract class GameScene {
   final List<Entity> entities = [];

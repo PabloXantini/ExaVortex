@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
-import 'input/input_manager.dart';
+import '../input/input_manager.dart';
 
 enum SceneTransitionState { idle, fadingOut, fadingIn }
 
