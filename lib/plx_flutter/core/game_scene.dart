@@ -10,9 +10,6 @@ abstract class GameScene {
 
   void requestSceneChange(GameScene scene) {
     _nextScene = scene;
-    // We could call SceneManager().changeScene(scene) directly here,
-    // but keeping the property allows the SceneManager to detect it in its update loop
-    // if the user prefers that pattern.
   }
 
   void clearSceneRequest() {
@@ -24,17 +21,13 @@ abstract class GameScene {
   
   void update(double dt) {
     for (var entity in entities) {
-      if (entity.active) {
-        entity.update(dt);
-      }
+      if (entity.active) entity.update(dt);
     }
   }
 
   void draw(PlxRenderer renderer, Canvas canvas, Size size) {
     for (var entity in entities) {
-      if (entity.active) {
-        entity.draw(renderer, canvas, size);
-      }
+      if (entity.active) entity.draw(renderer, canvas, size);
     }
   }
 

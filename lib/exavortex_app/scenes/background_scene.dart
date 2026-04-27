@@ -10,7 +10,7 @@ class BackgroundScene extends GameScene{
   late CameraView3D view;
   @override
   void onInit() {
-    background = Background(name: 'main', numSides: 7);
+    background = Background(name: 'main', numSides: 5);
     camera = Entity3D(name: 'Camera');
     
     background.position = Vector3(0,0,0);

@@ -1,10 +1,8 @@
-import 'package:exagon_plus/exavortex_app/screens/demo_screen.dart';
 import 'package:exagon_plus/exavortex_app/screens/title_screen.dart';
 import 'package:exagon_plus/plx_flutter/tests/testgame.dart';
 import 'package:exagon_plus/plx_flutter/tests/testinput.dart';
 import 'package:exagon_plus/plx_flutter/tests/testscene.dart';
 import 'package:exagon_plus/plx_flutter/tests/testscene2.dart';
-//import 'package:exagon_plus/screens/title_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

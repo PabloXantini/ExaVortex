@@ -7,19 +7,17 @@ import '../graphics/renderer.dart';
 
 typedef PlxTransitionBuilder = Widget Function(
   BuildContext context, 
-  double alpha, 
+  double progress, 
   SceneTransitionState state
 );
 
 class PlxGame extends StatefulWidget {
   final GameScene initialScene;
-  final double depthClearValue;
   final PlxTransitionBuilder? transitionBuilder;
 
   const PlxGame({
     super.key,
     required this.initialScene,
-    this.depthClearValue = 1.0,
     this.transitionBuilder,
   });
 
@@ -72,10 +70,10 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
       children: [
         CustomPaint(
           size: Size.infinite,
-          painter: _GamePainter(activeScene, widget.depthClearValue, _manager.alpha),
+          painter: _GamePainter(activeScene, _manager.progress),
         ),
-        if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.none)
-          widget.transitionBuilder!(context, _manager.alpha, _manager.state),
+        if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
+          widget.transitionBuilder!(context, _manager.progress, _manager.state),
       ],
     );
   }
@@ -83,21 +81,17 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
 
 class _GamePainter extends CustomPainter {
   final GameScene scene;
-  final double depthClearValue;
   final double transitionAlpha;
 
-  _GamePainter(this.scene, this.depthClearValue, this.transitionAlpha);
+  _GamePainter(this.scene, this.transitionAlpha);
 
   @override
   void paint(Canvas canvas, Size size) {
     final renderer = PlxRenderer();
-    renderer.beginFrame(size.width.toInt(), size.height.toInt(), depthClearValue: depthClearValue);
-
+    renderer.beginFrame(size.width.toInt(), size.height.toInt());
     renderer.setDepthState(writeEnable: true, compareOp: gpu.CompareFunction.less);
     renderer.setBlendState(true);
-
     scene.draw(renderer, canvas, size);
-
     final image = renderer.endFrame();
     canvas.drawImage(image, Offset.zero, Paint());
   }

@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 abstract class Polygon2D {
@@ -20,7 +19,6 @@ class RegularPolygon2D extends Polygon2D {
       double x = radius * cos(tx * i);
       double y = radius * sin(tx * i);
       vertices?.add(Vector2(x, y));
-      debugPrint('$x $y');
     }
   }
   int get vnum => numvertices;

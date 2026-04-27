@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'game_scene.dart';
 import 'input/input_manager.dart';
 
-enum SceneTransitionState { none, fadingOut, fadingIn }
+enum SceneTransitionState { idle, fadingOut, fadingIn }
 
 class SceneManager extends ChangeNotifier {
   static final SceneManager _instance = SceneManager._internal();
@@ -12,13 +12,13 @@ class SceneManager extends ChangeNotifier {
   GameScene? _activeScene;
   GameScene? _pendingScene;
   
-  SceneTransitionState _state = SceneTransitionState.none;
-  double _alpha = 0.0;
+  SceneTransitionState _state = SceneTransitionState.idle;
+  double _progress = 0.0;
   double _duration = 0.5;
 
   GameScene? get activeScene => _activeScene;
   SceneTransitionState get state => _state;
-  double get alpha => _alpha;
+  double get progress => _progress;
 
   void init(GameScene initialScene) {
     _activeScene = initialScene;
@@ -27,41 +27,41 @@ class SceneManager extends ChangeNotifier {
   }
 
   void update(double dt) {
-    if (_state == SceneTransitionState.none) {
-      if (_activeScene != null) {
-        _activeScene!.update(dt);
-        
+    switch(_state){
+      case SceneTransitionState.idle:
+        _activeScene?.update(dt);
         // Auto-detect scene change requests from the scene itself
         if (_activeScene!.nextScene != null) {
           changeScene(_activeScene!.nextScene!);
           _activeScene!.clearSceneRequest();
         }
-      }
-    } else if (_state == SceneTransitionState.fadingOut) {
-      _alpha += dt / _duration;
-      if (_alpha >= 1.0) {
-        _alpha = 1.0;
-        _performSwitch();
-        _state = SceneTransitionState.fadingIn;
-      }
-      notifyListeners();
-    } else if (_state == SceneTransitionState.fadingIn) {
-      _activeScene?.update(dt);
-      _alpha -= dt / _duration;
-      if (_alpha <= 0.0) {
-        _alpha = 0.0;
-        _state = SceneTransitionState.none;
-      }
+        break;
+      case SceneTransitionState.fadingOut:
+        _progress += dt / _duration;
+        if (_progress >= 1.0) {
+          _progress = 1.0;
+          _performSwitch();
+          _state = SceneTransitionState.fadingIn;
+        }
+        notifyListeners();
+        break;
+      case SceneTransitionState.fadingIn:
+        _activeScene?.update(dt);
+        _progress -= dt / _duration;
+        if (_progress <= 0.0) {
+          _progress = 0.0;
+          _state = SceneTransitionState.idle;
+        }
+        notifyListeners();
+        break;
     }
-    
     // Reset input flags for next frame
     InputManager().update();
-    
     notifyListeners();
   }
 
   void changeScene(GameScene scene, {double duration = 0.5}) {
-    if (_state != SceneTransitionState.none) return;
+    if (_state != SceneTransitionState.idle) return;
     _pendingScene = scene;
     _duration = duration;
     _state = SceneTransitionState.fadingOut;

@@ -107,7 +107,7 @@ class TestScene2Game extends StatelessWidget {
             // Ejemplo de UI de transición limpia
             return IgnorePointer(
               child: Container(
-                color: Colors.black.withOpacity(alpha),
+                color: Colors.black.withValues(alpha: alpha),
                 child: Center(
                   child: Opacity(
                     opacity: alpha,
