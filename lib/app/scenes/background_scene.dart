@@ -1,6 +1,6 @@
-import 'package:exagon_plus/app/entities/background.dart';
-import 'package:exagon_plus/plx/plx.dart';
-import 'package:exagon_plus/plx/plx3d.dart';
+import 'package:exa_vortex/app/entities/background.dart';
+import 'package:exa_vortex/plx/plx.dart';
+import 'package:exa_vortex/plx/plx3d.dart';
 
 class BackgroundScene extends GameScene{
   late World w1;

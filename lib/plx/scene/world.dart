@@ -1,5 +1,5 @@
-import 'package:exagon_plus/plx/plx.dart';
-import 'package:exagon_plus/plx/scene/view.dart';
+import 'package:exa_vortex/plx/plx.dart';
+import 'package:exa_vortex/plx/scene/view.dart';
 
 class World extends Entity {
   PlxView? view;

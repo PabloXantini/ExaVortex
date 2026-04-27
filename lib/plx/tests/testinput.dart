@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:exagon_plus/plx/plx.dart' hide Colors;
-import 'package:exagon_plus/plx/plx3d.dart';
+import 'package:exa_vortex/plx/plx.dart' hide Colors;
+import 'package:exa_vortex/plx/plx3d.dart';
 
 
 import 'testgame.dart'; // Reusing getCubeMesh and getCubeTexture

@@ -1,4 +1,4 @@
-name: exagon_plus
+name: exa_vortex
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -17,6 +17,7 @@ dependencies:
   vector_math: ^2.2.0
   rename_app: ^1.6.5
   path_provider: ^2.1.5
+  rename: ^3.1.0
   
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,4 @@
-import 'package:exagon_plus/plx/core/plx_core.dart';
+import 'package:exa_vortex/plx/core/plx_core.dart';
 
 import '../graphics/renderer.dart';
 

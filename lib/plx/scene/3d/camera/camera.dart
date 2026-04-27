@@ -1,7 +1,7 @@
-import 'package:exagon_plus/plx/math/transform.dart';
-import 'package:exagon_plus/plx/scene/3d/entity_3d.dart';
-import 'package:exagon_plus/plx/scene/view.dart';
-import 'package:exagon_plus/plx/scene/world.dart';
+import 'package:exa_vortex/plx/math/transform.dart';
+import 'package:exa_vortex/plx/scene/3d/entity_3d.dart';
+import 'package:exa_vortex/plx/scene/view.dart';
+import 'package:exa_vortex/plx/scene/world.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 enum CameraLensType {

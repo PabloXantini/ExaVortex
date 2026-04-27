@@ -1,7 +1,7 @@
 import 'package:vector_math/vector_math_64.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
-import 'package:exagon_plus/plx/core/plx_core.dart';
-import 'package:exagon_plus/plx/math/transform.dart';
+import 'package:exa_vortex/plx/core/plx_core.dart';
+import 'package:exa_vortex/plx/math/transform.dart';
 import 'mesh.dart';
 import 'material.dart';
 import 'renderer.dart';

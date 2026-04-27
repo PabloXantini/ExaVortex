@@ -1,9 +1,9 @@
-import 'package:exagon_plus/app/screens/title_screen.dart';
-import 'package:exagon_plus/plx/tests/testgame.dart';
-import 'package:exagon_plus/plx/tests/testgame2.dart';
-import 'package:exagon_plus/plx/tests/testinput.dart';
-import 'package:exagon_plus/plx/tests/testscene.dart';
-import 'package:exagon_plus/plx/tests/testscene2.dart';
+import 'package:exa_vortex/app/screens/title_screen.dart';
+import 'package:exa_vortex/plx/tests/testgame.dart';
+import 'package:exa_vortex/plx/tests/testgame2.dart';
+import 'package:exa_vortex/plx/tests/testinput.dart';
+import 'package:exa_vortex/plx/tests/testscene.dart';
+import 'package:exa_vortex/plx/tests/testscene2.dart';
 import 'package:flutter/material.dart';
 
 void main() {
