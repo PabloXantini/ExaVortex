@@ -1,4 +1,3 @@
-import 'dart:ui';
 import '../graphics/renderer.dart';
 import 'entity.dart';
 
@@ -10,5 +9,5 @@ abstract class Component {
   void onRemoved() {}
 
   void update(double dt) {}
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {}
+  void draw(PlxRenderer renderer) {}
 }

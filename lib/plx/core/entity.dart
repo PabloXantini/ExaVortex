@@ -1,4 +1,3 @@
-import 'dart:ui';
 import '../graphics/renderer.dart';
 import 'game_scene.dart';
 import 'component.dart';
@@ -40,10 +39,10 @@ class Entity {
     }
   }
 
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
+  void draw(PlxRenderer renderer) {
     for (var comp in _components) {
       if (comp.active) {
-        comp.draw(renderer, canvas, size);
+        comp.draw(renderer);
       }
     }
   }

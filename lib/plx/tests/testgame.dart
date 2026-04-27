@@ -96,14 +96,13 @@ class CubeDemoScene extends GameScene {
   }
 
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
+  void draw(PlxRenderer renderer) {
     // Calculamos la cámara (proyección) basándonos en el tamaño actual de la pantalla
-    final res = viewComponent.getResult(size.width, size.height);
+    final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
     // Le pasamos la matriz de la cámara al componente de renderizado antes de que se dibuje
     renderComponent.viewProjectionMatrix = res;
-
     // Ejecuta el draw de todas las entidades y componentes base
-    super.draw(renderer, canvas, size);
+    super.draw(renderer);
   }
 }
 

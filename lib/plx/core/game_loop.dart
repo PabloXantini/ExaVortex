@@ -108,11 +108,11 @@ class _GamePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final renderer = PlxRenderer();
+    final renderer = PlxRenderer(canvas: canvas, size: size);
     renderer.beginFrame(size.width.toInt(), size.height.toInt());
     renderer.setDepthState(writeEnable: true, compareOp: gpu.CompareFunction.less);
     renderer.setBlendState(true);
-    scene.draw(renderer, canvas, size);
+    scene.draw(renderer);
     final image = renderer.endFrame();
     canvas.drawImage(image, Offset.zero, Paint());
   }

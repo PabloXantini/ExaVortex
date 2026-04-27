@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 import '../plx.dart';
 import '../plx3d.dart';
@@ -53,15 +52,15 @@ class SceneA extends GameScene {
   }
 
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
-    final res = viewComponent.getResult(size.width, size.height);
+  void draw(PlxRenderer renderer) {
+    final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
     for (var entity in entities) {
       final rendererComp = entity.getComponent<MeshRenderer>();
       if (rendererComp != null) {
         rendererComp.viewProjectionMatrix = res;
       }
     }
-    super.draw(renderer, canvas, size);
+    super.draw(renderer);
   }
 }
 
@@ -113,15 +112,15 @@ class SceneB extends GameScene {
   }
 
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
-    final res = viewComponent.getResult(size.width, size.height);
+  void draw(PlxRenderer renderer) {
+    final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
     for (var entity in entities) {
       final rendererComp = entity.getComponent<MeshRenderer>();
       if (rendererComp != null) {
         rendererComp.viewProjectionMatrix = res;
       }
     }
-    super.draw(renderer, canvas, size);
+    super.draw(renderer);
   }
 }
 

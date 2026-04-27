@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:vector_math/vector_math_64.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:exagon_plus/plx/core/plx_core.dart';
@@ -19,7 +18,7 @@ class MeshRenderer extends Component {
   MeshRenderer({this.mesh, this.material});
 
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
+  void draw(PlxRenderer renderer) {
     if (mesh == null || material == null || entity == null) return;
 
     final transform = entity!.getComponent<TransformUser>();

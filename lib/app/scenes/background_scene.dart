@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:exagon_plus/app/entities/background.dart';
 import 'package:exagon_plus/plx/plx.dart';
 import 'package:exagon_plus/plx/plx3d.dart';
@@ -24,14 +22,14 @@ class BackgroundScene extends GameScene{
     addEntity(background);
   }
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
-    final res = view.getResult(size.width, size.height);
+  void draw(PlxRenderer renderer) {
+    final res = view.getResult(renderer.size.width, renderer.size.height);
     for (var entity in entities) {
       final rendererComp = entity.getComponent<MeshRenderer>();
       if (rendererComp != null) {
         rendererComp.viewProjectionMatrix = res;
       }
     }
-    super.draw(renderer, canvas, size);
+    super.draw(renderer);
   }
 }

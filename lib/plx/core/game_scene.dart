@@ -1,4 +1,3 @@
-import 'dart:ui';
 import '../graphics/renderer.dart';
 import 'entity.dart';
 
@@ -25,9 +24,9 @@ abstract class GameScene {
     }
   }
 
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
+  void draw(PlxRenderer renderer) {
     for (var entity in entities) {
-      if (entity.active) entity.draw(renderer, canvas, size);
+      if (entity.active) entity.draw(renderer);
     }
   }
 

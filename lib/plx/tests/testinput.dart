@@ -79,10 +79,10 @@ class InputTestScene extends GameScene {
   }
 
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
-    final res = viewComponent.getResult(size.width, size.height);
+  void draw(PlxRenderer renderer) {
+    final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
     renderComponent.viewProjectionMatrix = res;
-    super.draw(renderer, canvas, size);
+    super.draw(renderer);
   }
 }
 

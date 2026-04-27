@@ -1,13 +1,21 @@
 import 'dart:ui' as ui;
+import 'dart:ui';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'mesh.dart';
 import 'material.dart';
 
 class PlxRenderer {
+  Canvas canvas;
+  Size size;
   gpu.CommandBuffer? _commandBuffer;
   gpu.RenderPass? _renderPass;
   gpu.Texture? _renderTexture;
   gpu.Texture? _depthTexture;
+
+  PlxRenderer({
+    required this.canvas,
+    required this.size
+  });
 
   /// Starts the rendering frame, creating textures for color and depth.
   void beginFrame(int width, int height, {double depthClearValue = 1.0}) {

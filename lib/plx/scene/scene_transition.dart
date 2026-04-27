@@ -1,5 +1,4 @@
 import '../core/game_scene.dart';
-import '../core/scene_manager.dart';
 import '../core/component.dart';
 
 class SceneTransition extends Component {

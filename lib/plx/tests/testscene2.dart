@@ -41,13 +41,13 @@ class TransitionScene1 extends GameScene {
   }
 
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
+  void draw(PlxRenderer renderer) {
     final view = cameraEntity.getComponent<CameraView3D>();
     if (view != null) {
-      final res = view.getResult(size.width, size.height);
+      final res = view.getResult(renderer.size.width, renderer.size.height);
       cube1.getComponent<MeshRenderer>()?.viewProjectionMatrix = res;
     }
-    super.draw(renderer, canvas, size);
+    super.draw(renderer);
   }
 }
 
@@ -80,13 +80,13 @@ class TransitionScene2 extends GameScene {
   }
 
   @override
-  void draw(PlxRenderer renderer, Canvas canvas, Size size) {
+  void draw(PlxRenderer renderer) {
     final view = cameraEntity.getComponent<CameraView3D>();
     if (view != null) {
-      final res = view.getResult(size.width, size.height);
+      final res = view.getResult(renderer.size.width, renderer.size.height);
       cube2.getComponent<MeshRenderer>()?.viewProjectionMatrix = res;
     }
-    super.draw(renderer, canvas, size);
+    super.draw(renderer);
   }
 }
 
