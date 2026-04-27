@@ -1,6 +1,8 @@
 import 'package:exagon_plus/plx/core/component.dart';
 import 'package:exagon_plus/plx/math/transform.dart';
 import 'package:exagon_plus/plx/scene/3d/entity_3d.dart';
+import 'package:exagon_plus/plx/scene/view.dart';
+import 'package:exagon_plus/plx/scene/world.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 enum CameraLensType {
@@ -8,15 +10,7 @@ enum CameraLensType {
   orthographic
 }
 
-class Camera3D extends Entity3D{
-  CameraView3D? view;
-  Camera3D({super.name = 'Camera3D'}){
-    view = CameraView3D(lens: CameraLensType.perspective);
-    addComponent(view!);
-  }
-}
-
-class CameraView3D extends Component {
+class CameraView3D extends PlxView {
   CameraLensType lensType;
   Vector3 cameraPosition;
   Vector3 cameraFocusPosition;
@@ -90,6 +84,7 @@ class CameraView3D extends Component {
     return _view;
   }
 
+  @override
   Matrix4 getResult(double w, double h) => getProjection(w, h) * view;
 
   @override
@@ -101,5 +96,15 @@ class CameraView3D extends Component {
       cameraPosition.setFrom(transform.position);
       _isViewDirty = true;
     }
+  }
+}
+
+class Camera3D extends Entity3D{
+  World? world;
+  CameraView3D? view;
+  Camera3D({super.name = 'Camera3D', required this.world}){
+    view = CameraView3D(lens: CameraLensType.perspective);
+    addComponent(view!);
+    world?.view = view;
   }
 }

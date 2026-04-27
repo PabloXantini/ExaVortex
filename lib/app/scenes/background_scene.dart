@@ -1,20 +1,23 @@
 import 'package:exagon_plus/app/entities/background.dart';
 import 'package:exagon_plus/plx/plx.dart';
 import 'package:exagon_plus/plx/plx3d.dart';
+import 'package:exagon_plus/plx/scene/world.dart';
 
 class BackgroundScene extends GameScene{
+  late World w1;
   late Background background;
   late Camera3D camera;
   @override
   void onInit() {
+    w1 = World();
     background = Background(name: 'BG', numSides: 6);
-    camera = Camera3D(name: 'Camera');
+    camera = Camera3D(name: 'Camera', world: w1);
     
     background.position = Vector3(0,0,0);
     camera.position = Vector3(0,0,5);
-        
+    w1.addChild(background);
     addEntity(camera);
-    addEntity(background);
+    addEntity(w1);
   }
   @override
   void update(double dt) {
@@ -23,13 +26,7 @@ class BackgroundScene extends GameScene{
   }
   @override
   void draw(PlxRenderer renderer) {
-    final res = camera.view?.getResult(renderer.size.width, renderer.size.height);
-    for (var entity in entities) {
-      final rendererComp = entity.getComponent<MeshRenderer>();
-      if (rendererComp != null) {
-        rendererComp.viewProjectionMatrix = res!;
-      }
-    }
+    w1.draw(renderer);
     super.draw(renderer);
   }
 }

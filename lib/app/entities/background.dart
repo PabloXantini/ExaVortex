@@ -1,6 +1,6 @@
 import 'package:exagon_plus/app/utils/shapes/polygons.dart';
+import 'package:exagon_plus/plx/plx.dart';
 import 'package:exagon_plus/plx/plx3d.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 class Background extends Entity3D {
   late Mesh model;
