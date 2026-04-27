@@ -31,6 +31,8 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
   double _lastTime = 0.0;
   final InputManager _inputManager = InputManager();
   late final SceneManager _manager = SceneManager(inputManager: _inputManager);
+  final FocusNode _focusNode = FocusNode();
+
   InputManager get input => _inputManager;
   @override
   void initState() {
@@ -48,16 +50,14 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
     double time = elapsed.inMicroseconds / 1000000.0;
     double dt = time - _lastTime;
     _lastTime = time;
-
     if (dt > 0.1) dt = 0.1;
-
-    // Delegate update to manager
     _manager.update(dt);
   }
 
   @override
   void dispose() {
     _ticker?.dispose();
+    _focusNode.dispose();
     _manager.removeListener(_onManagerUpdate);
     _manager.activeScene?.onClose();
     super.dispose();
@@ -73,12 +73,13 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
         final size = constraints.biggest;
         
         return TapRegion(
-          onTapInside: (_) => FocusScope.of(context).requestFocus(),
+          onTapInside: (_) => _focusNode.requestFocus(),
           child: Focus(
+            focusNode: _focusNode,
             autofocus: true,
             onKeyEvent: (node, event) {
-              _inputManager.handleKeyEvent(event);
-              return KeyEventResult.handled;
+              final handled = _inputManager.handleKeyEvent(event);
+              return handled ? KeyEventResult.handled : KeyEventResult.ignored;
             },
             child: Listener(
               onPointerDown: (event) => _inputManager.handlePointerEvent(event),

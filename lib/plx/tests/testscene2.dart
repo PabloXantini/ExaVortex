@@ -29,13 +29,13 @@ class TransitionScene1 extends GameScene {
 
   @override
   void update(double dt) {
+    super.update(dt);
     Vector3 rot = cube1.rotation;
     cube1.rotation = Vector3(rot.x, rot.y, rot.z+dt*2); 
-    super.update(dt);
     if (input.wasActionPressed('Switch')) {
-      // Uso manual del SceneManager a través de la escena
       requestSceneChange(TransitionScene2());
     }
+    input.update();
   }
 
   @override
@@ -88,39 +88,38 @@ class TransitionScene2 extends GameScene {
   }
 }
 
-class TestScene2Game extends StatelessWidget {
+class TestScene2Game extends StatefulWidget {
   const TestScene2Game({super.key});
 
   @override
+  State<TestScene2Game> createState() => _TestScene2GameState();
+}
+
+class _TestScene2GameState extends State<TestScene2Game> {
+  late final TransitionScene1 _scene = TransitionScene1();
+
+  @override
   Widget build(BuildContext context) {
-    TransitionScene1 iscene = TransitionScene1();
     return Scaffold(
-      body: Focus(
-        autofocus: true,
-        onKeyEvent: (node, event) {
-          iscene.input.handleKeyEvent(event);
-          return KeyEventResult.handled;
-        },
-        child: PlxGame(
-          initialScene: iscene,
-          transitionBuilder: (context, alpha, state) {
-            // Ejemplo de UI de transición limpia
-            return IgnorePointer(
-              child: Container(
-                color: Colors.black.withValues(alpha: alpha),
-                child: Center(
-                  child: Opacity(
-                    opacity: alpha,
-                    child: Text(
-                      state == SceneTransitionState.fadingOut ? 'LOADING...' : 'READY',
-                      style: const TextStyle(color: Colors.white, fontSize: 32, letterSpacing: 4),
-                    ),
+      body: PlxGame(
+        initialScene: _scene,
+        transitionBuilder: (context, alpha, state) {
+          // Ejemplo de UI de transición limpia
+          return IgnorePointer(
+            child: Container(
+              color: Colors.black.withValues(alpha: alpha),
+              child: Center(
+                child: Opacity(
+                  opacity: alpha,
+                  child: Text(
+                    state == SceneTransitionState.fadingOut ? 'LOADING...' : 'READY',
+                    style: const TextStyle(color: Colors.white, fontSize: 32, letterSpacing: 4),
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

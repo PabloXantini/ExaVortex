@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 import '../core/game_scene.dart';
 import '../core/component.dart';
 
@@ -19,7 +17,6 @@ class SceneTransition extends Component {
   @override
   void update(double dt) {
     if (_triggered) return;
-    debugPrint('$_timer');
     _timer += dt;
     if (_timer >= delay) {
       _triggered = true;

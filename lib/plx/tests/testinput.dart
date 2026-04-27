@@ -99,18 +99,7 @@ class _TestInputGameState extends State<TestInputGame> {
     return Scaffold(
       body: Stack(
         children: [
-          // Keyboard event listener wrapper
-          Focus(
-            autofocus: true,
-            onKeyEvent: (node, event) {
-              final handled = _scene.input.handleKeyEvent(event);
-              return handled ? KeyEventResult.handled : KeyEventResult.ignored;
-            },
-            child: PlxGame(
-              initialScene: _scene,
-            ),
-          ),
-          
+          PlxGame(initialScene: _scene),
           Positioned(
             top: 20,
             left: 20,
