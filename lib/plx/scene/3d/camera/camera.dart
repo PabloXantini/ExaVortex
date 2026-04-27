@@ -1,4 +1,3 @@
-import 'package:exagon_plus/plx/core/component.dart';
 import 'package:exagon_plus/plx/math/transform.dart';
 import 'package:exagon_plus/plx/scene/3d/entity_3d.dart';
 import 'package:exagon_plus/plx/scene/view.dart';

@@ -1,7 +1,9 @@
+import 'package:exagon_plus/plx/core/plx_core.dart';
+
 import '../graphics/renderer.dart';
-import 'entity.dart';
 
 abstract class GameScene {
+  late InputManager input;
   final List<Entity> entities = [];
   GameScene? _nextScene;
 

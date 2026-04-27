@@ -10,8 +10,6 @@ class TransitionScene1 extends GameScene {
   late Entity3D cube1;
   late Entity3D cameraEntity;
   
-  final InputManager inputManager = InputManager();
-
   @override
   void onInit() {
     cameraEntity = Entity3D(name: 'Camera');
@@ -26,7 +24,7 @@ class TransitionScene1 extends GameScene {
     cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
     addEntity(cube1);
 
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
   }
 
   @override
@@ -34,7 +32,7 @@ class TransitionScene1 extends GameScene {
     Vector3 rot = cube1.rotation;
     cube1.rotation = Vector3(rot.x, rot.y, rot.z+dt*2); 
     super.update(dt);
-    if (inputManager.wasActionPressed('Switch')) {
+    if (input.wasActionPressed('Switch')) {
       // Uso manual del SceneManager a través de la escena
       requestSceneChange(TransitionScene2());
     }
@@ -95,15 +93,16 @@ class TestScene2Game extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TransitionScene1 iscene = TransitionScene1();
     return Scaffold(
       body: Focus(
         autofocus: true,
         onKeyEvent: (node, event) {
-          InputManager().handleKeyEvent(event);
+          iscene.input.handleKeyEvent(event);
           return KeyEventResult.handled;
         },
         child: PlxGame(
-          initialScene: TransitionScene1(),
+          initialScene: iscene,
           transitionBuilder: (context, alpha, state) {
             // Ejemplo de UI de transición limpia
             return IgnorePointer(

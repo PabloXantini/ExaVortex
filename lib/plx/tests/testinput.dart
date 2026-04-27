@@ -13,8 +13,6 @@ class InputTestScene extends GameScene {
   late MeshRenderer renderComponent;
   late CameraView3D viewComponent;
   
-  final InputManager inputManager = InputManager();
-
   @override
   void onInit() {
     // Basic setup
@@ -37,14 +35,14 @@ class InputTestScene extends GameScene {
     addEntity(cubeEntity);
 
     // Input Setup
-    inputManager.clearBindings();
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowUp), 'MoveUp');
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowDown), 'MoveDown');
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowLeft), 'MoveLeft');
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowRight), 'MoveRight');
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Reset');
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyS), 'SaveConfig');
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyL), 'LoadConfig');
+    input.clearBindings();
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowUp), 'MoveUp');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowDown), 'MoveDown');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowLeft), 'MoveLeft');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowRight), 'MoveRight');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Reset');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyS), 'SaveConfig');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyL), 'LoadConfig');
   }
 
   @override
@@ -55,27 +53,27 @@ class InputTestScene extends GameScene {
     final transform = cubeEntity.getComponent<TransformUser>();
     if (transform != null) {
       double speed = 2.0;
-      if (inputManager.isActionPressed('MoveUp')) transform.rotation.x -= speed * dt;
-      if (inputManager.isActionPressed('MoveDown')) transform.rotation.x += speed * dt;
-      if (inputManager.isActionPressed('MoveLeft')) transform.rotation.y -= speed * dt;
-      if (inputManager.isActionPressed('MoveRight')) transform.rotation.y += speed * dt;
+      if (input.isActionPressed('MoveUp')) transform.rotation.x -= speed * dt;
+      if (input.isActionPressed('MoveDown')) transform.rotation.x += speed * dt;
+      if (input.isActionPressed('MoveLeft')) transform.rotation.y -= speed * dt;
+      if (input.isActionPressed('MoveRight')) transform.rotation.y += speed * dt;
       
-      if (inputManager.wasActionPressed('Reset')) {
+      if (input.wasActionPressed('Reset')) {
         transform.rotation = Vector3.zero();
       }
       
-      if (inputManager.wasActionPressed('SaveConfig')) {
-        InputConfig.saveConfig(inputManager);
+      if (input.wasActionPressed('SaveConfig')) {
+        InputConfig.saveConfig(input);
       }
-      if (inputManager.wasActionPressed('LoadConfig')) {
-        InputConfig.loadConfig(inputManager);
+      if (input.wasActionPressed('LoadConfig')) {
+        InputConfig.loadConfig(input);
       }
       
       transform.isDirty = true;
     }
     
     // reset single frame flags
-    inputManager.update();
+    input.update();
   }
 
   @override
@@ -105,7 +103,7 @@ class _TestInputGameState extends State<TestInputGame> {
           Focus(
             autofocus: true,
             onKeyEvent: (node, event) {
-              final handled = _scene.inputManager.handleKeyEvent(event);
+              final handled = _scene.input.handleKeyEvent(event);
               return handled ? KeyEventResult.handled : KeyEventResult.ignored;
             },
             child: PlxGame(

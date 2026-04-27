@@ -5,10 +5,6 @@ import 'physical_input.dart';
 import 'input_action.dart';
 
 class InputManager {
-  static final InputManager _instance = InputManager._internal();
-  factory InputManager() => _instance;
-  InputManager._internal();
-
   final Map<String, InputAction> _actions = {};
   final Map<PhysicalInput, List<String>> _bindings = {};
 

@@ -29,8 +29,9 @@ class PlxGame extends StatefulWidget {
 class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
   Ticker? _ticker;
   double _lastTime = 0.0;
-  final SceneManager _manager = SceneManager();
-
+  final InputManager _inputManager = InputManager();
+  late final SceneManager _manager = SceneManager(inputManager: _inputManager);
+  InputManager get input => _inputManager;
   @override
   void initState() {
     super.initState();
@@ -71,27 +72,30 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
       builder: (context, constraints) {
         final size = constraints.biggest;
         
-        return Focus(
-          autofocus: true,
-          onKeyEvent: (node, event) {
-            InputManager().handleKeyEvent(event);
-            return KeyEventResult.handled;
-          },
-          child: Listener(
-            onPointerDown: (event) => InputManager().handlePointerEvent(event),
-            onPointerUp: (event) => InputManager().handlePointerEvent(event),
-            onPointerMove: (event) => InputManager().handlePointerEvent(event),
-            child: Stack(
-              children: [
-                RepaintBoundary(
-                  child: CustomPaint(
-                    size: size,
-                    painter: _GamePainter(activeScene, _manager.progress),
+        return TapRegion(
+          onTapInside: (_) => FocusScope.of(context).requestFocus(),
+          child: Focus(
+            autofocus: true,
+            onKeyEvent: (node, event) {
+              _inputManager.handleKeyEvent(event);
+              return KeyEventResult.handled;
+            },
+            child: Listener(
+              onPointerDown: (event) => _inputManager.handlePointerEvent(event),
+              onPointerUp: (event) => _inputManager.handlePointerEvent(event),
+              onPointerMove: (event) => _inputManager.handlePointerEvent(event),
+              child: Stack(
+                children: [
+                  RepaintBoundary(
+                    child: CustomPaint(
+                      size: size,
+                      painter: _GamePainter(activeScene, _manager.progress),
+                    ),
                   ),
-                ),
-                if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
-                  widget.transitionBuilder!(context, _manager.progress, _manager.state),
-              ],
+                  if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
+                    widget.transitionBuilder!(context, _manager.progress, _manager.state),
+                ],
+              ),
             ),
           ),
         );

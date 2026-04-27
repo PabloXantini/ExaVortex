@@ -11,8 +11,6 @@ class SceneA extends GameScene {
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
   
-  final InputManager inputManager = InputManager();
-
   @override
   void onInit() {
     debugPrint('Initializing Scene A');
@@ -40,13 +38,13 @@ class SceneA extends GameScene {
     addEntity(cube1);
     addEntity(cube2);
 
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    if (inputManager.wasActionPressed('Switch')) {
+    if (input.wasActionPressed('Switch')) {
       requestSceneChange(SceneB());
     }
   }
@@ -70,8 +68,6 @@ class SceneB extends GameScene {
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
   
-  final InputManager inputManager = InputManager();
-
   @override
   void onInit() {
     debugPrint('Initializing Scene B');
@@ -100,13 +96,13 @@ class SceneB extends GameScene {
     addEntity(cube1);
     addEntity(cube2);
 
-    inputManager.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
+    input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    if (inputManager.wasActionPressed('Switch')) {
+    if (input.wasActionPressed('Switch')) {
       requestSceneChange(SceneA());
     }
   }
@@ -146,7 +142,7 @@ class _TestSceneGameState extends State<TestSceneGame> {
       body: Focus(
         autofocus: true,
         onKeyEvent: (node, event) {
-          InputManager().handleKeyEvent(event);
+          _initialScene.input.handleKeyEvent(event);
           return KeyEventResult.handled;
         },
         child: PlxGame(

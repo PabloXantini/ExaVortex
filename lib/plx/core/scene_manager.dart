@@ -5,7 +5,9 @@ import '../input/input_manager.dart';
 enum SceneTransitionState { idle, fadingOut, fadingIn }
 
 class SceneManager extends ChangeNotifier {
-  SceneManager();
+  InputManager inputManager;
+  
+  SceneManager({required this.inputManager});
 
   GameScene? _activeScene;
   GameScene? _pendingScene;
@@ -20,11 +22,14 @@ class SceneManager extends ChangeNotifier {
 
   void init(GameScene initialScene) {
     _activeScene = initialScene;
+    _activeScene?.input = inputManager;
     _activeScene?.onInit();
     notifyListeners();
   }
 
   void update(double dt) {
+    // Reset input flags for next frame
+    //inputManager.update();
     switch(_state){
       case SceneTransitionState.idle:
         _activeScene?.update(dt);
@@ -53,8 +58,6 @@ class SceneManager extends ChangeNotifier {
         notifyListeners();
         break;
     }
-    // Reset input flags for next frame
-    InputManager().update();
     notifyListeners();
   }
 
@@ -69,6 +72,7 @@ class SceneManager extends ChangeNotifier {
   void _performSwitch() {
     _activeScene?.onClose();
     _activeScene = _pendingScene;
+    _activeScene?.input = inputManager;
     _activeScene?.onInit();
     _pendingScene = null;
   }

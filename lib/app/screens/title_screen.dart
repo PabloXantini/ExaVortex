@@ -1,5 +1,8 @@
 import 'package:exagon_plus/app/scenes/background_scene.dart';
 import 'package:exagon_plus/plx/plx.dart';
+import 'package:exagon_plus/plx/tests/testgame2.dart';
+import 'package:exagon_plus/plx/tests/testinput.dart';
+import 'package:exagon_plus/plx/tests/testscene2.dart';
 import 'package:flutter/material.dart';
 
 class TitleScreen extends StatefulWidget {
@@ -19,7 +22,7 @@ class _TitleScreenState extends State<TitleScreen> {
           Expanded(
             child: Row(
               children: [
-                Expanded(child: PlxGame(initialScene: BackgroundScene())),
+                Expanded(child: PlxGame(initialScene: InputTestScene())),
                 Expanded(child: PlxGame(initialScene: BackgroundScene()))
               ],
             )
@@ -27,8 +30,9 @@ class _TitleScreenState extends State<TitleScreen> {
           Expanded(
             child: Row(
               children: [
-                Expanded(child: PlxGame(initialScene: BackgroundScene())),
-                Expanded(child: PlxGame(initialScene: BackgroundScene()))
+                Expanded(child: PlxGame(initialScene: TransitionScene1())),
+                Expanded(child: TestGame2()
+                )
               ],
             ),
           )
