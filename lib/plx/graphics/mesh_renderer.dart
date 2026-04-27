@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:vector_math/vector_math_64.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
-import 'package:exagon_plus/plx_flutter/core/core.dart';
-import 'package:exagon_plus/plx_flutter/math/transform.dart';
+import 'package:exagon_plus/plx/core/plx_core.dart';
+import 'package:exagon_plus/plx/math/transform.dart';
 import 'mesh.dart';
 import 'material.dart';
 import 'renderer.dart';

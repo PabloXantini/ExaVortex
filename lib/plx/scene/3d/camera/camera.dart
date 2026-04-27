@@ -1,6 +1,6 @@
-import 'package:exagon_plus/plx_flutter/core/component.dart';
-import 'package:exagon_plus/plx_flutter/math/transform.dart';
-import 'package:exagon_plus/plx_flutter/scene/3d/entity_3d.dart';
+import 'package:exagon_plus/plx/core/component.dart';
+import 'package:exagon_plus/plx/math/transform.dart';
+import 'package:exagon_plus/plx/scene/3d/entity_3d.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 enum CameraLensType {

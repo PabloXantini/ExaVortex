@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:exagon_plus/exavortex_app/entities/background.dart';
-import 'package:exagon_plus/plx_flutter/plx.dart';
-import 'package:exagon_plus/plx_flutter/plx3d.dart';
+import 'package:exagon_plus/app/entities/background.dart';
+import 'package:exagon_plus/plx/plx.dart';
+import 'package:exagon_plus/plx/plx3d.dart';
 
 class BackgroundScene extends GameScene{
   late Background background;

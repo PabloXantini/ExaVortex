@@ -1,5 +1,5 @@
 import 'package:vector_math/vector_math_64.dart';
-import 'package:exagon_plus/plx_flutter/core/component.dart';
+import 'package:exagon_plus/plx/core/component.dart';
 
 class TransformUser extends Component {
   Vector3 position = Vector3.zero();

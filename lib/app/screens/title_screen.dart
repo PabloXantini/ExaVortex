@@ -1,5 +1,5 @@
-import 'package:exagon_plus/exavortex_app/scenes/background_scene.dart';
-import 'package:exagon_plus/plx_flutter/plx.dart';
+import 'package:exagon_plus/app/scenes/background_scene.dart';
+import 'package:exagon_plus/plx/plx.dart';
 import 'package:flutter/material.dart';
 
 class TitleScreen extends StatefulWidget {
