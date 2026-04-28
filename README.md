@@ -31,6 +31,10 @@ ExaVortex is a facewashing of ExagonPlus Game for Windows and Android powered by
 - SceneManager
 - Entity-Component System
 
+#### **Input System**
+- Load/Save Input Config
+- Physical, events and actions abstracted
+
 #### **Collision System**
 - Broad Phase
 - Narrow Phase (SAT check)
@@ -39,6 +43,10 @@ ExaVortex is a facewashing of ExagonPlus Game for Windows and Android powered by
 - Shader GLSL build assets
 - Materials
 - Support for custom buffers
+- **2D and 3D scene rendering** (Scene 2D is not implemented yet)
+    - Camera
+    - World
+    - Entity drawing
 
 #### **Audio Engine abstraction**
 - Implementation on soLoud 
