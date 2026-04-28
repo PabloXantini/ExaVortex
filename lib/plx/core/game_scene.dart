@@ -1,6 +1,6 @@
 import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
-import 'asset_manager.dart';
+import 'resources.dart';
 
 abstract class GameScene {
   final InputManager input = InputManager();
