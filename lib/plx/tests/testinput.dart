@@ -45,8 +45,8 @@ class InputTestScene extends GameScene {
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyL), 'LoadConfig');
 
     // Drag Bindings: Mouse Left Click (0) and Touch (0)
-    input.bindInput(PhysicalInput.mouse(MouseButton.left), 'DragMouse');
-    input.bindInput(const PhysicalInput(device: InputDevice.touch, keyId: 0), 'DragTouch');
+    input.bindInput(PhysicalInput.mouse(MouseButton.left), 'Drag');
+    input.bindInput(const PhysicalInput(device: InputDevice.touch, keyId: 0), 'Drag');
   }
 
   @override
@@ -74,7 +74,7 @@ class InputTestScene extends GameScene {
       }
 
       // Mouse/Touch Drag logic using the new pointerDelta
-      if (input.isActionPressed('DragMouse') || input.isActionPressed('DragTouch')) {
+      if (input.isActionPressed('Drag')) {
         final delta = input.pointerDelta;
         transform.rotation.y += delta.dx * 0.005;
         transform.rotation.x += delta.dy * 0.005;

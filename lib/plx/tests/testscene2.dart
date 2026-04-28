@@ -9,17 +9,21 @@ import 'testgame.dart';
 class TransitionScene1 extends GameScene {
   late GfxTexture cubeTex;
   late Entity3D cube1;
+  late Entity3D cube2;
   late Entity3D cameraEntity;
 
   @override
   Future<void> onLoad() async {
     cameraEntity = Entity3D(name: 'Camera');
     cube1 = Entity3D(name: 'Cube1');
+    cube2 = Entity3D(name: 'Cube2');
     cubeTex = await assets.loadTexture('.assets/textures/jijija.png');
   }
 
   @override
   void onInit() {
+    cube2.position = Vector3(5, 0, -10);
+    cube2.scale = Vector3.all(2);
     cameraEntity.position = Vector3(0, 0, 5);
     cameraEntity.addComponent(CameraView3D(lens: CameraLensType.perspective));
     addEntity(cameraEntity);
@@ -28,10 +32,12 @@ class TransitionScene1 extends GameScene {
     material1.setTexture('tex', cubeTex);
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
     cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
     addEntity(cube1);
-
+    addEntity(cube2);
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
+    input.bindInput(PhysicalInput.touch(0), 'Switch');
   }
 
   @override
@@ -51,6 +57,7 @@ class TransitionScene1 extends GameScene {
     if (view != null) {
       final res = view.getResult(renderer.size.width, renderer.size.height);
       cube1.getComponent<MeshRenderer>()?.viewProjectionMatrix = res;
+      cube2.getComponent<MeshRenderer>()?.viewProjectionMatrix = res;
     }
     super.draw(renderer);
   }
