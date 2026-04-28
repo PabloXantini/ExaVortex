@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
+import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'game_scene.dart';
 import 'scene_manager.dart';
-import '../graphics/renderer.dart';
-import '../input/input_manager.dart';
 
 typedef PlxTransitionBuilder = Widget Function(
   BuildContext context, 
@@ -29,11 +28,9 @@ class PlxGame extends StatefulWidget {
 class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
   Ticker? _ticker;
   double _lastTime = 0.0;
-  final InputManager _inputManager = InputManager();
-  late final SceneManager _manager = SceneManager(inputManager: _inputManager);
+  late final SceneManager _manager = SceneManager();
   final FocusNode _focusNode = FocusNode();
 
-  InputManager get input => _inputManager;
   @override
   void initState() {
     super.initState();
@@ -78,13 +75,14 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
             focusNode: _focusNode,
             autofocus: true,
             onKeyEvent: (node, event) {
-              final handled = _inputManager.handleKeyEvent(event);
+              final handled = activeScene.input.handleKeyEvent(event);
               return handled ? KeyEventResult.handled : KeyEventResult.ignored;
             },
             child: Listener(
-              onPointerDown: (event) => _inputManager.handlePointerEvent(event),
-              onPointerUp: (event) => _inputManager.handlePointerEvent(event),
-              onPointerMove: (event) => _inputManager.handlePointerEvent(event),
+              onPointerDown: (event) => activeScene.input.handlePointerEvent(event),
+              onPointerUp: (event) => activeScene.input.handlePointerEvent(event),
+              onPointerMove: (event) => activeScene.input.handlePointerEvent(event),
+              onPointerCancel: (event) => activeScene.input.handlePointerEvent(event),
               child: Stack(
                 children: [
                   RepaintBoundary(

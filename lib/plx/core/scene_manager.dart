@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
-import '../input/input_manager.dart';
 
 enum SceneTransitionState { idle, fadingOut, fadingIn }
 
 class SceneManager extends ChangeNotifier {
-  InputManager inputManager;
   
-  SceneManager({required this.inputManager});
+  SceneManager(); 
 
   GameScene? _activeScene;
   GameScene? _pendingScene;
@@ -22,7 +20,6 @@ class SceneManager extends ChangeNotifier {
 
   void init(GameScene initialScene) {
     _activeScene = initialScene;
-    _activeScene?.input = inputManager;
     _activeScene?.onInit();
     notifyListeners();
   }
@@ -72,7 +69,6 @@ class SceneManager extends ChangeNotifier {
   void _performSwitch() {
     _activeScene?.onClose();
     _activeScene = _pendingScene;
-    _activeScene?.input = inputManager;
     _activeScene?.onInit();
     _pendingScene = null;
   }

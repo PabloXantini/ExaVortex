@@ -1,9 +1,8 @@
 import 'package:exa_vortex/plx/core/plx_core.dart';
-
-import '../graphics/renderer.dart';
+import 'package:exa_vortex/plx/graphics/renderer.dart';
 
 abstract class GameScene {
-  late InputManager input;
+  final InputManager input = InputManager();
   final List<Entity> entities = [];
   GameScene? _nextScene;
 

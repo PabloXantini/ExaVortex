@@ -43,6 +43,10 @@ class InputTestScene extends GameScene {
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Reset');
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyS), 'SaveConfig');
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyL), 'LoadConfig');
+
+    // Drag Bindings: Mouse Left Click (0) and Touch (0)
+    input.bindInput(PhysicalInput.mouse(MouseButton.left), 'DragMouse');
+    input.bindInput(const PhysicalInput(device: InputDevice.touch, keyId: 0), 'DragTouch');
   }
 
   @override
@@ -68,6 +72,13 @@ class InputTestScene extends GameScene {
       if (input.wasActionPressed('LoadConfig')) {
         InputConfig.loadConfig(input);
       }
+
+      // Mouse/Touch Drag logic using the new pointerDelta
+      if (input.isActionPressed('DragMouse') || input.isActionPressed('DragTouch')) {
+        final delta = input.pointerDelta;
+        transform.rotation.y += delta.dx * 0.005;
+        transform.rotation.x += delta.dy * 0.005;
+      }
       
       transform.isDirty = true;
     }
@@ -92,7 +103,7 @@ class TestInputGame extends StatefulWidget {
 }
 
 class _TestInputGameState extends State<TestInputGame> {
-  final InputTestScene _scene = InputTestScene();
+  late final InputTestScene _scene = InputTestScene();
 
   @override
   Widget build(BuildContext context) {
@@ -103,16 +114,23 @@ class _TestInputGameState extends State<TestInputGame> {
           Positioned(
             top: 20,
             left: 20,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              color: Colors.black54,
-              child: const Text(
-                'Use Arrow Keys to rotate the cube\n'
-                'Press SPACE to reset rotation\n'
-                'Press S to save bindings\n'
-                'Press L to load bindings',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
+            child: ListenableBuilder(
+              listenable: _scene.input,
+              builder: (context, child) {
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.black54,
+                  child: Text(
+                    'Use Arrow Keys to rotate the cube\n'
+                    'Press SPACE to reset rotation\n'
+                    'Press S to save bindings\n'
+                    'Press L to load bindings\n'
+                    'DRAG with Mouse or Touch to rotate\n'
+                    'Pointers: ${_scene.input.activePointerIds.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                );
+              },
             ),
           )
         ],

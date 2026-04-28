@@ -21,7 +21,7 @@ class _TitleScreenState extends State<TitleScreen> {
           Expanded(
             child: Row(
               children: [
-                Expanded(child: PlxGame(initialScene: InputTestScene())),
+                Expanded(child: TestInputGame()),
                 Expanded(child: PlxGame(initialScene: BackgroundScene())),
               ],
             ),
