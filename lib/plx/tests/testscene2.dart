@@ -7,19 +7,26 @@ import 'package:exa_vortex/plx/plx3d.dart';
 import 'testgame.dart';
 
 class TransitionScene1 extends GameScene {
+  late GfxTexture cubeTex;
   late Entity3D cube1;
   late Entity3D cameraEntity;
-  
+
+  @override
+  Future<void> onLoad() async {
+    cameraEntity = Entity3D(name: 'Camera');
+    cube1 = Entity3D(name: 'Cube1');
+    cubeTex = await assets.loadTexture('.assets/textures/jijija.png');
+  }
+
   @override
   void onInit() {
-    cameraEntity = Entity3D(name: 'Camera');
     cameraEntity.position = Vector3(0, 0, 5);
     cameraEntity.addComponent(CameraView3D(lens: CameraLensType.perspective));
     addEntity(cameraEntity);
 
-    cube1 = Entity3D(name: 'Cube1');
     final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material1.setTexture('tex', getCubeTexture());
+    material1.setTexture('tex', cubeTex);
+
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
     cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
     addEntity(cube1);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
 
-enum SceneTransitionState { idle, fadingOut, fadingIn }
+enum SceneTransitionState { idle, fadingOut, loading, fadingIn }
 
 class SceneManager extends ChangeNotifier {
   
@@ -18,20 +18,18 @@ class SceneManager extends ChangeNotifier {
   SceneTransitionState get state => _state;
   double get progress => _progress;
 
-  void init(GameScene initialScene) {
+  Future<void> init(GameScene initialScene) async {
     _activeScene = initialScene;
+    await _activeScene?.onLoad();
     _activeScene?.onInit();
     notifyListeners();
   }
 
   void update(double dt) {
-    // Reset input flags for next frame
-    //inputManager.update();
     switch(_state){
       case SceneTransitionState.idle:
         _activeScene?.update(dt);
-        // Auto-detect scene change requests from the scene itself
-        if (_activeScene!.nextScene != null) {
+        if (_activeScene?.nextScene != null) {
           changeScene(_activeScene!.nextScene!);
           _activeScene!.clearSceneRequest();
         }
@@ -40,10 +38,9 @@ class SceneManager extends ChangeNotifier {
         _progress += dt / _duration;
         if (_progress >= 1.0) {
           _progress = 1.0;
+          _state = SceneTransitionState.loading;
           _performSwitch();
-          _state = SceneTransitionState.fadingIn;
         }
-        notifyListeners();
         break;
       case SceneTransitionState.fadingIn:
         _activeScene?.update(dt);
@@ -52,7 +49,8 @@ class SceneManager extends ChangeNotifier {
           _progress = 0.0;
           _state = SceneTransitionState.idle;
         }
-        notifyListeners();
+        break;
+      default:
         break;
     }
     notifyListeners();
@@ -66,10 +64,18 @@ class SceneManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _performSwitch() {
+  Future<void> _performSwitch() async {
+    // 1. Preload the new scene while the old one might still be in memory
+    if (_pendingScene != null) {
+      await _pendingScene!.onLoad();
+    }    
+    // 2. Now that the new scene is ready, close the old one and swap
     _activeScene?.onClose();
     _activeScene = _pendingScene;
+    // 3. Initialize entities
     _activeScene?.onInit();
     _pendingScene = null;
+    _state = SceneTransitionState.fadingIn;
+    notifyListeners();
   }
 }

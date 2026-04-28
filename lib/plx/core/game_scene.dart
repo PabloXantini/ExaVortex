@@ -1,8 +1,10 @@
 import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
+import 'asset_manager.dart';
 
 abstract class GameScene {
   final InputManager input = InputManager();
+  final AssetManager assets = AssetManager();
   final List<Entity> entities = [];
   GameScene? _nextScene;
 
@@ -16,7 +18,12 @@ abstract class GameScene {
     _nextScene = null;
   }
 
+  /// Asynchronous preloading of assets.
+  Future<void> onLoad() async {}
+
+  /// Synchronous initialization of entities and components.
   void onInit() {}
+
   void onClose() {}
   
   void update(double dt) {

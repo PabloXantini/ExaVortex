@@ -31,3 +31,4 @@ flutter:
   assets:
   - build/shaderbundles/shaders.shaderbundle
   - .assets/
+  - .assets/textures/
