@@ -1,3 +1,4 @@
+import 'package:exa_vortex/plx/input/mouse/mouse_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,7 +34,6 @@ class InputTestScene extends GameScene {
     
     addEntity(cameraEntity);
     addEntity(cubeEntity);
-
     // Input Setup
     input.clearBindings();
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowUp), 'MoveUp');
@@ -46,7 +46,8 @@ class InputTestScene extends GameScene {
 
     // Drag Bindings: Mouse Left Click (0) and Touch (0)
     input.bindInput(PhysicalInput.mouse(MouseButton.left), 'Drag');
-    input.bindInput(const PhysicalInput(device: InputDevice.touch, keyId: 0), 'Drag');
+    input.bindInput(PhysicalInput.touch(0), 'Drag');
+    input.bindInput(PhysicalInput.touch(0), 'DragScale');
   }
 
   @override
@@ -72,12 +73,15 @@ class InputTestScene extends GameScene {
       if (input.wasActionPressed('LoadConfig')) {
         InputConfig.loadConfig(input);
       }
-
-      // Mouse/Touch Drag logic using the new pointerDelta
+      // Mouse/Touch Drag logic
       if (input.isActionPressed('Drag')) {
         final delta = input.pointerDelta;
         transform.rotation.y += delta.dx * 0.005;
         transform.rotation.x += delta.dy * 0.005;
+      }
+      if (input.isActionPressed('DragScale')) {
+        final pinch = input.touch.pinch;
+        cubeEntity.scale = cubeEntity.scale * pinch;
       }
       
       transform.isDirty = true;
@@ -126,7 +130,7 @@ class _TestInputGameState extends State<TestInputGame> {
                     'Press S to save bindings\n'
                     'Press L to load bindings\n'
                     'DRAG with Mouse or Touch to rotate\n'
-                    'Pointers: ${_scene.input.activePointerIds.length}',
+                    'Pointers: ${_scene.input.pointerCount}',
                     style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 );

@@ -78,23 +78,32 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
               final handled = activeScene.input.handleKeyEvent(event);
               return handled ? KeyEventResult.handled : KeyEventResult.ignored;
             },
-            child: Listener(
-              onPointerDown: (event) => activeScene.input.handlePointerEvent(event),
-              onPointerUp: (event) => activeScene.input.handlePointerEvent(event),
-              onPointerMove: (event) => activeScene.input.handlePointerEvent(event),
-              onPointerCancel: (event) => activeScene.input.handlePointerEvent(event),
-              child: Stack(
-                children: [
-                  RepaintBoundary(
-                    child: CustomPaint(
-                      size: size,
-                      painter: _GamePainter(activeScene, _manager.progress),
+            child: ListenableBuilder(
+              listenable: activeScene.input,
+              builder: (context, _) {
+                return MouseRegion(
+                  cursor: activeScene.input.cursor,
+                  child: Listener(
+                    onPointerDown: (event) => activeScene.input.handlePointerEvent(event),
+                    onPointerUp: (event) => activeScene.input.handlePointerEvent(event),
+                    onPointerMove: (event) => activeScene.input.handlePointerEvent(event),
+                    onPointerCancel: (event) => activeScene.input.handlePointerEvent(event),
+                    onPointerSignal: (event) => activeScene.input.handlePointerSignal(event),
+                    child: Stack(
+                      children: [
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            size: size,
+                            painter: _GamePainter(activeScene, _manager.progress),
+                          ),
+                        ),
+                        if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
+                          widget.transitionBuilder!(context, _manager.progress, _manager.state),
+                      ],
                     ),
                   ),
-                  if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
-                    widget.transitionBuilder!(context, _manager.progress, _manager.state),
-                ],
-              ),
+                );
+              },
             ),
           ),
         );
@@ -105,9 +114,9 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
 
 class _GamePainter extends CustomPainter {
   final GameScene scene;
-  final double transitionAlpha;
+  final double progress;
 
-  _GamePainter(this.scene, this.transitionAlpha);
+  _GamePainter(this.scene, this.progress);
 
   @override
   void paint(Canvas canvas, Size size) {
