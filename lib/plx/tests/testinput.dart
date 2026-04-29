@@ -1,4 +1,3 @@
-import 'package:exa_vortex/plx/input/mouse/mouse_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,12 +47,13 @@ class InputTestScene extends GameScene {
     input.bindInput(PhysicalInput.mouse(MouseButton.left), 'Drag');
     input.bindInput(PhysicalInput.touch(0), 'Drag');
     input.bindInput(PhysicalInput.touch(0), 'DragScale');
+    // Mouse Move Binding (triggered by movement/hover)
+    input.bindInput(PhysicalInput.mouse(MouseButton.unknown), 'MouseMove');
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    
     // Apply inputs to cube rotation
     final transform = cubeEntity.getComponent<TransformUser>();
     if (transform != null) {
@@ -67,26 +67,41 @@ class InputTestScene extends GameScene {
         transform.rotation = Vector3.zero();
       }
       
-      if (input.wasActionPressed('SaveConfig')) {
-        InputConfig.saveConfig(input);
-      }
-      if (input.wasActionPressed('LoadConfig')) {
-        InputConfig.loadConfig(input);
-      }
+      if (input.wasActionPressed('SaveConfig')) InputConfig.saveConfig(input);
+      if (input.wasActionPressed('LoadConfig')) InputConfig.loadConfig(input);
+
       // Mouse/Touch Drag logic
       if (input.isActionPressed('Drag')) {
+        input.cursor = CursorShape.move;
         final delta = input.pointerDelta;
+        debugPrint('Drag: ${delta.dx}, ${delta.dy}');
         transform.rotation.y += delta.dx * 0.005;
         transform.rotation.x += delta.dy * 0.005;
       }
+      
+      // Fixed: Now correctly detects when the button is released
+      if (input.wasActionReleased('Drag')) {
+        input.cursor = CursorShape.basic;
+      }
+
+      // Mouse Move Action
+      if (input.isActionPressed('MouseMove')) {
+        // You can access input.mouse.position or input.mouse.delta here
+      }
+
+      // Mouse Wheel Zoom
+      final scroll = input.mouse.scrollDelta;
+      if (scroll != 0) {
+        double factor = scroll > 0 ? 0.95 : 1.05;
+        cubeEntity.scale = cubeEntity.scale * factor;
+      }
+
       if (input.isActionPressed('DragScale')) {
         final pinch = input.touch.pinch;
-        cubeEntity.scale = cubeEntity.scale * pinch;
+        if (pinch!=0) cubeEntity.scale = cubeEntity.scale * pinch;
       }
-      
       transform.isDirty = true;
     }
-    
     // reset single frame flags
     input.update();
   }

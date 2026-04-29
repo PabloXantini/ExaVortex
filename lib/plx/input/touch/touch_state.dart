@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'pointer_data.dart';
+import '../pointer_data.dart';
 import '../physical_input.dart';
 
 class TouchState {

@@ -1,16 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-import '../touch/pointer_data.dart';
+import '../pointer_data.dart';
 import '../physical_input.dart';
+import 'cursor.dart';
 
 enum MouseEventKind { move, drag, button, scroll }
-enum CursorShape {
-  basic, 
-  hand, 
-  grabbing, 
-  text,
-  moving 
-}
 
 class MouseState {
   PointerData? _pointer;
@@ -25,37 +19,36 @@ class MouseState {
   
   set cursor(CursorShape value) => c = _getCursorShape(value);
 
+  int _lastButtons = 0;
+
   bool handlePointerEvent(PointerEvent event, Function(PhysicalInput, bool, double) triggerBindings) {
     _pointer ??= PointerData(id: event.pointer, kind: PointerDeviceKind.mouse);
     _pointer!.update(event.localPosition, event.delta, event.buttons != 0);
-    final button = _cast(event.buttons);
-    final physicalInput = PhysicalInput.mouse(button);
     
     bool handled = false;
-    final isDownEvent = event is PointerDownEvent;
-    final isUpEvent = event is PointerUpEvent || event is PointerCancelEvent;
-    final isMoveEvent = event is PointerMoveEvent || event is PointerHoverEvent;
 
-    if (isMoveEvent && !isDownEvent && !isUpEvent) {
-      handled = triggerBindings(physicalInput, true, 1.0);
-    } else {
-      handled = triggerBindings(physicalInput, _pointer!.isDown, _pointer!.isDown ? 1.0 : 0.0);
+    // Detect button state changes
+    final int changedButtons = _lastButtons ^ event.buttons;
+    _lastButtons = event.buttons;
+
+    // Trigger specific button bindings for changed bits
+    if (changedButtons != 0) {
+      handled |= _updateButton(kPrimaryButton, MouseButton.left, event.buttons, triggerBindings);
+      handled |= _updateButton(kSecondaryButton, MouseButton.right, event.buttons, triggerBindings);
+      handled |= _updateButton(kTertiaryButton, MouseButton.middle, event.buttons, triggerBindings);
+    }
+
+    // Trigger movement/hover bindings
+    if (event is PointerMoveEvent || event is PointerHoverEvent) {
+      handled |= triggerBindings(PhysicalInput.mouse(MouseButton.unknown), true, 1.0);
     }
     
     return handled;
   }
-
   void handlePointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent) {
       _scrollDelta += event.scrollDelta.dy;
     }
-  }
-
-  MouseButton _cast(int buttons) {
-    if (buttons & kPrimaryButton != 0) return MouseButton.left;
-    if (buttons & kSecondaryButton != 0) return MouseButton.right;
-    if (buttons & kTertiaryButton != 0) return MouseButton.middle;
-    return MouseButton.unknown;
   }
 
   void update() {
@@ -67,7 +60,7 @@ class MouseState {
     if (_pointer != null && !_pointer!.isDown && !_pointer!.updatedThisFrame) {
       _pointer = null;
     }
-    _pointer?.updatedThisFrame = false;
+    if (_pointer != null) _pointer!.updatedThisFrame = false;
   }
 
   MouseCursor _getCursorShape(CursorShape shape){
@@ -76,7 +69,12 @@ class MouseState {
       case CursorShape.hand: return SystemMouseCursors.grab;
       case CursorShape.grabbing: return SystemMouseCursors.grabbing;
       case CursorShape.text: return SystemMouseCursors.text;
-      case CursorShape.moving: return SystemMouseCursors.move;
+      case CursorShape.move: return SystemMouseCursors.move;
     }
+  }
+
+  bool _updateButton(int mask, MouseButton button, int currentButtons, Function(PhysicalInput, bool, double) triggerBindings) {
+    final bool isDown = (currentButtons & mask) != 0;
+    return triggerBindings(PhysicalInput.mouse(button), isDown, isDown ? 1.0 : 0.0);
   }
 }

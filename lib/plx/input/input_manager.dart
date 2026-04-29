@@ -5,7 +5,7 @@ import 'physical_input.dart';
 import 'input_action.dart';
 import 'keyboard/keyboard_state.dart';
 import 'mouse/mouse_state.dart';
-import 'touch/pointer_data.dart';
+import 'mouse/cursor.dart';
 import 'touch/touch_state.dart';
 
 class InputManager extends ChangeNotifier {
