@@ -84,15 +84,15 @@ class InputManager extends ChangeNotifier {
 
   // Update
   void update() {
+    // Update device states
+    mouse.update();
+    touch.update();
     // Reset actions
     for (final action in _actions.values) {
       action.resetFrame();
     }
-    // Update device states
+    // Clear inputs
     keyboard.clear(); // Keyboard repeat logic is handled by OS events, but we reset frame-based stuff if any
-    mouse.update();
-    touch.update();
-    // Cleanup
     mouse.cleanup();
   }
   bool _triggerBindings(PhysicalInput input, bool pressed, double value) {

@@ -44,12 +44,12 @@ class InputTestScene extends GameScene {
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyL), 'LoadConfig');
 
     // Drag Bindings: Mouse Left Click (0) and Touch (0)
-    input.bindInput(PhysicalInput.mouse(MouseButton.left), 'Drag');
+    input.bindInput(PhysicalInput.mouse(MouseInput.leftButton), 'Drag');
     input.bindInput(PhysicalInput.touch(0), 'Drag');
     input.bindInput(PhysicalInput.touch(0), 'DragScale');
     // Mouse Move Binding (triggered by movement/hover)
-    input.bindInput(PhysicalInput.mouse(MouseButton.unknown), 'MouseMove');
-    input.bindInput(PhysicalInput.mouse(MouseButton.hover), 'MouseHover');
+    input.bindInput(PhysicalInput.mouse(MouseInput.unknown), 'MouseMove');
+    input.bindInput(PhysicalInput.mouse(MouseInput.hover), 'MouseHover');
   }
 
   @override

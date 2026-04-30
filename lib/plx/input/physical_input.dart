@@ -8,16 +8,16 @@ enum InputDevice {
   unknown
 }
 
-enum MouseButton {
-  left(0),
-  right(1),
-  middle(2),
+enum MouseInput {
+  leftButton(0),
+  rightButton(1),
+  middleButton(2),
   move(3),
   hover(4),
   unknown(-1);
 
   final int id;
-  const MouseButton(this.id);
+  const MouseInput(this.id);
 }
 
 class PhysicalInput {
@@ -34,8 +34,8 @@ class PhysicalInput {
     return PhysicalInput(device: InputDevice.keyboard, keyId: key.keyId);
   }
   // Helper for mouse buttons
-  factory PhysicalInput.mouse(MouseButton button) {
-    return PhysicalInput(device: InputDevice.mouse, keyId: button.id);
+  factory PhysicalInput.mouse(MouseInput type) {
+    return PhysicalInput(device: InputDevice.mouse, keyId: type.id);
   }
   // Helper for touch
   factory PhysicalInput.touch(int index) {

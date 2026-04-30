@@ -33,21 +33,21 @@ class MouseState {
 
     // Trigger specific button bindings for changed bits
     if (changedButtons != 0) {
-      handled |= _updateButton(kPrimaryButton, MouseButton.left, event.buttons, triggerBindings);
-      handled |= _updateButton(kSecondaryButton, MouseButton.right, event.buttons, triggerBindings);
-      handled |= _updateButton(kTertiaryButton, MouseButton.middle, event.buttons, triggerBindings);
+      handled |= _updateButton(kPrimaryButton, MouseInput.leftButton, event.buttons, triggerBindings);
+      handled |= _updateButton(kSecondaryButton, MouseInput.rightButton, event.buttons, triggerBindings);
+      handled |= _updateButton(kTertiaryButton, MouseInput.middleButton, event.buttons, triggerBindings);
     }
 
     // Trigger movement/hover bindings
     if (event is PointerHoverEvent) {
-      handled |= triggerBindings(PhysicalInput.mouse(MouseButton.hover), true, 1.0);
+      handled |= triggerBindings(PhysicalInput.mouse(MouseInput.hover), true, 1.0);
     } else if (event is PointerMoveEvent) {
-      handled |= triggerBindings(PhysicalInput.mouse(MouseButton.move), true, 1.0);
+      handled |= triggerBindings(PhysicalInput.mouse(MouseInput.move), true, 1.0);
     }
 
     // Still trigger unknown for backward compatibility if needed
     if (event is PointerMoveEvent || event is PointerHoverEvent) {
-      handled |= triggerBindings(PhysicalInput.mouse(MouseButton.unknown), true, 1.0);
+      handled |= triggerBindings(PhysicalInput.mouse(MouseInput.unknown), true, 1.0);
     }
     
     return handled;
@@ -80,8 +80,8 @@ class MouseState {
     }
   }
 
-  bool _updateButton(int mask, MouseButton button, int currentButtons, Function(PhysicalInput, bool, double) triggerBindings) {
+  bool _updateButton(int mask, MouseInput type, int currentButtons, Function(PhysicalInput, bool, double) triggerBindings) {
     final bool isDown = (currentButtons & mask) != 0;
-    return triggerBindings(PhysicalInput.mouse(button), isDown, isDown ? 1.0 : 0.0);
+    return triggerBindings(PhysicalInput.mouse(type), isDown, isDown ? 1.0 : 0.0);
   }
 }
