@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'game_scene.dart';
+import 'game_cache.dart';
 import 'scene_manager.dart';
 
 typedef PlxTransitionBuilder = Widget Function(
@@ -13,11 +14,13 @@ typedef PlxTransitionBuilder = Widget Function(
 
 class PlxGame extends StatefulWidget {
   final GameScene initialScene;
+  final GameCache? cache;
   final PlxTransitionBuilder? transitionBuilder;
 
   const PlxGame({
     super.key,
     required this.initialScene,
+    this.cache,
     this.transitionBuilder,
   });
 
@@ -28,7 +31,7 @@ class PlxGame extends StatefulWidget {
 class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
   Ticker? _ticker;
   double _lastTime = 0.0;
-  late final SceneManager _manager = SceneManager();
+  late final SceneManager _manager = SceneManager(cache: widget.cache);
   final FocusNode _focusNode = FocusNode();
 
   @override

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
+import 'game_cache.dart';
 
 enum SceneTransitionState { idle, fadingOut, loading, fadingIn }
 
 class SceneManager extends ChangeNotifier {
+  final GameCache cache;
   
-  SceneManager(); 
+  SceneManager({GameCache? cache}) : cache = cache ?? const NonCache(); 
 
   GameScene? _activeScene;
   GameScene? _pendingScene;
@@ -20,6 +22,8 @@ class SceneManager extends ChangeNotifier {
 
   Future<void> init(GameScene initialScene) async {
     _activeScene = initialScene;
+    _activeScene?.cache = cache;
+    
     await _activeScene?.onLoad();
     _activeScene?.onInit();
     notifyListeners();
@@ -67,6 +71,7 @@ class SceneManager extends ChangeNotifier {
   Future<void> _performSwitch() async {
     // 1. Preload the new scene while the old one might still be in memory
     if (_pendingScene != null) {
+      _pendingScene!.cache = cache;
       await _pendingScene!.onLoad();
     }    
     // 2. Now that the new scene is ready, close the old one and swap
