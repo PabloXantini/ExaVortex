@@ -23,6 +23,7 @@ class MeshRenderer extends Component {
 
     final transform = entity!.getComponent<TransformUser>();
     if (transform != null) {
+      //renderer.setDepthState(writeEnable: false);
       // Compute MVP
       final mvpMatrix = viewProjectionMatrix * transform.modelMatrix;
       
@@ -32,6 +33,7 @@ class MeshRenderer extends Component {
       // We assume your shader always uses 'FrameInfo' for the MVP matrix.
       // This can be customized if needed.
       material!.setUniform('FrameInfo', mvpView);
+      //renderer.setDepthState(writeEnable: true);
     }
 
     renderer.drawMesh(mesh!, material!);

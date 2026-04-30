@@ -22,6 +22,7 @@ class TransitionScene1 extends GameScene {
 
   @override
   void onInit() {
+    cube1.position = Vector3(-2, 0, -5);
     cube2.position = Vector3(5, 0, -10);
     cube2.scale = Vector3.all(2);
     cameraEntity.position = Vector3(0, 0, 5);
@@ -45,7 +46,7 @@ class TransitionScene1 extends GameScene {
     super.update(dt);
     Vector3 rot = cube1.rotation;
     cube1.rotation = Vector3(rot.x, rot.y, rot.z+dt*2); 
-    if (input.wasActionPressed('Switch')) {
+    if (input.wasActionTriggered('Switch')) {
       requestSceneChange(TransitionScene2());
     }
     input.update();

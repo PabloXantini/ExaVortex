@@ -49,6 +49,7 @@ class InputTestScene extends GameScene {
     input.bindInput(PhysicalInput.touch(0), 'DragScale');
     // Mouse Move Binding (triggered by movement/hover)
     input.bindInput(PhysicalInput.mouse(MouseButton.unknown), 'MouseMove');
+    input.bindInput(PhysicalInput.mouse(MouseButton.hover), 'MouseHover');
   }
 
   @override
@@ -58,36 +59,35 @@ class InputTestScene extends GameScene {
     final transform = cubeEntity.getComponent<TransformUser>();
     if (transform != null) {
       double speed = 2.0;
-      if (input.isActionPressed('MoveUp')) transform.rotation.x -= speed * dt;
-      if (input.isActionPressed('MoveDown')) transform.rotation.x += speed * dt;
-      if (input.isActionPressed('MoveLeft')) transform.rotation.y -= speed * dt;
-      if (input.isActionPressed('MoveRight')) transform.rotation.y += speed * dt;
+      if (input.isActionTriggered('MoveUp')) transform.rotation.x -= speed * dt;
+      if (input.isActionTriggered('MoveDown')) transform.rotation.x += speed * dt;
+      if (input.isActionTriggered('MoveLeft')) transform.rotation.y -= speed * dt;
+      if (input.isActionTriggered('MoveRight')) transform.rotation.y += speed * dt;
       
-      if (input.wasActionPressed('Reset')) {
-        transform.rotation = Vector3.zero();
-      }
-      
-      if (input.wasActionPressed('SaveConfig')) InputConfig.saveConfig(input);
-      if (input.wasActionPressed('LoadConfig')) InputConfig.loadConfig(input);
+      if (input.wasActionTriggered('Reset')) transform.rotation = Vector3.zero();
+
+      if (input.wasActionTriggered('SaveConfig')) InputConfig.saveConfig(input);
+      if (input.wasActionTriggered('LoadConfig')) InputConfig.loadConfig(input);
 
       // Mouse/Touch Drag logic
-      if (input.isActionPressed('Drag')) {
+      if (input.isActionTriggered('Drag')) {
         input.cursor = CursorShape.move;
         final delta = input.pointerDelta;
-        debugPrint('Drag: ${delta.dx}, ${delta.dy}');
+        //debugPrint('Drag: ${delta.dx}, ${delta.dy}');
         transform.rotation.y += delta.dx * 0.005;
         transform.rotation.x += delta.dy * 0.005;
+      } else if (input.isActionTriggered('MouseHover')) {
+        debugPrint('Hovering at: ${input.mouse.position.dx}, ${input.mouse.position.dy}');
       }
-      
-      // Fixed: Now correctly detects when the button is released
+      // Mouse drag
       if (input.wasActionReleased('Drag')) {
         input.cursor = CursorShape.basic;
       }
 
-      // Mouse Move Action
-      if (input.isActionPressed('MouseMove')) {
-        // You can access input.mouse.position or input.mouse.delta here
-      }
+      /*/ Mouse Move Action (Any movement)
+      if (input.isActionTriggered('MouseMove')) {
+        
+      }*/
 
       // Mouse Wheel Zoom
       final scroll = input.mouse.scrollDelta;
@@ -96,7 +96,7 @@ class InputTestScene extends GameScene {
         cubeEntity.scale = cubeEntity.scale * factor;
       }
 
-      if (input.isActionPressed('DragScale')) {
+      if (input.isActionTriggered('DragScale')) {
         final pinch = input.touch.pinch;
         if (pinch!=0) cubeEntity.scale = cubeEntity.scale * pinch;
       }

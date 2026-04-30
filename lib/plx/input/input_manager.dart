@@ -50,9 +50,13 @@ class InputManager extends ChangeNotifier {
   Map<PhysicalInput, List<String>> getBindings() => _bindings; 
   InputAction? getAction(String actionName) => _actions[actionName];
   
-  bool isActionPressed(String actionName) => _actions[actionName]?.isPressed ?? false;
-  bool wasActionPressed(String actionName) => _actions[actionName]?.wasPressedThisFrame ?? false;
+  /// Returns true if the action is currently triggered
+  bool isActionTriggered(String actionName) => _actions[actionName]?.isTriggered ?? false;
+  /// Returns true if the action was triggered this frame
+  bool wasActionTriggered(String actionName) => _actions[actionName]?.wasTriggeredThisFrame ?? false;
+  /// Returns true if the action was released this frame
   bool wasActionReleased(String actionName) => _actions[actionName]?.wasReleasedThisFrame ?? false;
+  /// Returns the value of the action (e.g. for axes or analog triggers)
   double getActionValue(String actionName) => _actions[actionName]?.value ?? 0.0;
 
   // Event handling

@@ -84,11 +84,12 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
                 return MouseRegion(
                   cursor: activeScene.input.cursor,
                   child: Listener(
-                    onPointerDown: (event) => activeScene.input.handlePointerEvent(event),
-                    onPointerUp: (event) => activeScene.input.handlePointerEvent(event),
-                    onPointerMove: (event) => activeScene.input.handlePointerEvent(event),
-                    onPointerCancel: (event) => activeScene.input.handlePointerEvent(event),
-                    onPointerSignal: (event) => activeScene.input.handlePointerSignal(event),
+                    onPointerDown: (event) => activeScene.input.handlePointerEvent(event),    // Events when something is pressed (keys, buttons)
+                    onPointerUp: (event) => activeScene.input.handlePointerEvent(event),      // Events when something is released (keys, buttons)
+                    onPointerMove: (event) => activeScene.input.handlePointerEvent(event),    // Events that track position when something is touched (drag mouse, touch)
+                    onPointerHover: (event) => activeScene.input.handlePointerEvent(event),   // Events that track position when something is on widget (mouse hover)
+                    onPointerCancel: (event) => activeScene.input.handlePointerEvent(event),  // Events when OS interrupts
+                    onPointerSignal: (event) => activeScene.input.handlePointerSignal(event), // Other events (mouse wheels, trackpads)
                     child: Stack(
                       children: [
                         RepaintBoundary(

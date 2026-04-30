@@ -39,6 +39,13 @@ class MouseState {
     }
 
     // Trigger movement/hover bindings
+    if (event is PointerHoverEvent) {
+      handled |= triggerBindings(PhysicalInput.mouse(MouseButton.hover), true, 1.0);
+    } else if (event is PointerMoveEvent) {
+      handled |= triggerBindings(PhysicalInput.mouse(MouseButton.move), true, 1.0);
+    }
+
+    // Still trigger unknown for backward compatibility if needed
     if (event is PointerMoveEvent || event is PointerHoverEvent) {
       handled |= triggerBindings(PhysicalInput.mouse(MouseButton.unknown), true, 1.0);
     }

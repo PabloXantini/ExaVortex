@@ -12,6 +12,8 @@ enum MouseButton {
   left(0),
   right(1),
   middle(2),
+  move(3),
+  hover(4),
   unknown(-1);
 
   final int id;

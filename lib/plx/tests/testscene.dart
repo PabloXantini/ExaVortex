@@ -44,7 +44,7 @@ class SceneA extends GameScene {
   @override
   void update(double dt) {
     super.update(dt);
-    if (input.wasActionPressed('Switch')) {
+    if (input.wasActionTriggered('Switch')) {
       requestSceneChange(SceneB());
     }
   }
@@ -102,7 +102,7 @@ class SceneB extends GameScene {
   @override
   void update(double dt) {
     super.update(dt);
-    if (input.wasActionPressed('Switch')) {
+    if (input.wasActionTriggered('Switch')) {
       requestSceneChange(SceneA());
     }
   }
