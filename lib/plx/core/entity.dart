@@ -62,6 +62,9 @@ class Entity {
         comp.update(dt);
       }
     }
+    for (var e in _children){
+      if (e.active) e.update(dt);
+    }
   }
 
   void draw(PlxRenderer renderer) {
