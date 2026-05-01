@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:exa_vortex/plx/graphics/renderer.dart';
+import 'package:exa_vortex/plx/audio/plx_audio.dart';
 import 'game_scene.dart';
 import 'game_cache.dart';
 import 'scene_manager.dart';
@@ -37,6 +38,7 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    AudioManager.instance.init();
     _manager.init(widget.initialScene);
     _manager.addListener(_onManagerUpdate);
     _ticker = createTicker(_onTick)..start();
@@ -51,7 +53,11 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
     double dt = time - _lastTime;
     _lastTime = time;
     if (dt > 0.1) dt = 0.1;
+    
     _manager.update(dt);
+    
+    // Update audio system (3D and visualization data)
+    AudioManager.instance.update();
   }
 
   @override
