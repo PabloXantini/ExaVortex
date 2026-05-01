@@ -1,7 +1,7 @@
 import 'package:exa_vortex/plx/math/transform.dart';
 import 'package:exa_vortex/plx/scene/3d/entity_3d.dart';
 import 'package:exa_vortex/plx/scene/view.dart';
-import 'package:exa_vortex/plx/scene/world.dart';
+import 'package:exa_vortex/plx/scene/3d/world_3d.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 enum CameraLensType {
@@ -99,7 +99,7 @@ class CameraView3D extends PlxView {
 }
 
 class Camera3D extends Entity3D{
-  World? world;
+  World3D? world;
   CameraView3D? view;
   Camera3D({super.name = 'Camera3D', required this.world}){
     view = CameraView3D(lens: CameraLensType.perspective);
