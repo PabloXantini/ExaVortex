@@ -19,8 +19,8 @@ class AudioListener3D extends Component {
         velocity: velocity,
       );
     } else if (transform != null) {
-      // Fallback a posición de la entidad
-      AudioManager.instance.mod3dListener(
+        // Fallback to entity position
+        AudioManager.instance.mod3dListener(
         transform.position,
         transform.position + Vector3(0, 0, 1), // default lookAt
         Vector3(0, 1, 0), // default up
