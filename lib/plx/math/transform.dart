@@ -2,9 +2,9 @@ import 'package:vector_math/vector_math_64.dart';
 import 'package:exa_vortex/plx/core/component.dart';
 
 class TransformUser extends Component {
-  Vector3 position = Vector3.zero();
-  Vector3 rotation = Vector3.zero(); // Euler angles
-  Vector3 scale = Vector3.all(1.0);
+  final Vector3 _position = Vector3.zero();
+  final Vector3 _rotation = Vector3.zero(); // Euler angles
+  final Vector3 _scale = Vector3.all(1.0);
 
   bool isDirty = true;
   bool _isGlobalDirty = true;
@@ -12,9 +12,24 @@ class TransformUser extends Component {
   final Matrix4 _localModelMatrix = Matrix4.identity();
   final Matrix4 _globalModelMatrix = Matrix4.identity();
 
-  final Vector3 _lastPosition = Vector3.zero();
-  final Vector3 _lastRotation = Vector3.zero();
-  final Vector3 _lastScale = Vector3.all(1.0);
+  Vector3 get position => _position;
+  set position(Vector3 value) {
+    if(position == value) return;
+    _position.setFrom(value);
+    setDirty();
+  }
+  Vector3 get rotation => _rotation;
+  set rotation(Vector3 value) {
+    if(rotation == value) return;
+    _rotation.setFrom(value);
+    setDirty();
+  }
+  Vector3 get scale => _scale;
+  set scale(Vector3 value) {
+    if(scale == value) return;
+    _scale.setFrom(value);
+    setDirty();
+  }
 
   void setDirty() {
     isDirty = true;
@@ -34,11 +49,11 @@ class TransformUser extends Component {
   Matrix4 get modelMatrix {
     if (isDirty) {
       _localModelMatrix.setIdentity();
-      _localModelMatrix.translateByVector3(position);
-      _localModelMatrix.rotateX(rotation.x);
-      _localModelMatrix.rotateY(rotation.y);
-      _localModelMatrix.rotateZ(rotation.z);
-      _localModelMatrix.scaleByVector3(scale);
+      _localModelMatrix.translateByVector3(_position);
+      _localModelMatrix.rotateX(_rotation.x);
+      _localModelMatrix.rotateY(_rotation.y);
+      _localModelMatrix.rotateZ(_rotation.z);
+      _localModelMatrix.scaleByVector3(_scale);
       isDirty = false;
       _isGlobalDirty = true;
     }
@@ -54,15 +69,5 @@ class TransformUser extends Component {
       _isGlobalDirty = false;
     }
     return _globalModelMatrix;
-  }
-
-  @override
-  void update(double dt) {
-    if (_lastPosition != position || _lastRotation != rotation || _lastScale != scale) {
-      setDirty();
-      _lastPosition.setFrom(position);
-      _lastRotation.setFrom(rotation);
-      _lastScale.setFrom(scale);
-    }
   }
 }

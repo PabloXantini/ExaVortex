@@ -2,9 +2,11 @@ import 'package:exa_vortex/plx/plx.dart';
 import 'package:exa_vortex/plx/scene/view.dart';
 
 class World extends Entity {
+  late TransformUser transform;
   PlxView? view;
   World({super.name = 'World'}){
-    addComponent(TransformUser());
+    transform = TransformUser();
+    addComponent(transform);
   }
   @override
   void draw(PlxRenderer renderer) {
