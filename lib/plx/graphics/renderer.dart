@@ -1,32 +1,38 @@
-import 'dart:ui' as ui;
 import 'dart:ui';
 import 'package:flutter_gpu/gpu.dart' as gpu;
+import 'package:vector_math/vector_math.dart';
 import 'mesh.dart';
 import 'material.dart';
 
 class PlxRenderer {
-  Canvas canvas;
-  Size size;
+  Size size = Size.zero;
   gpu.CommandBuffer? _commandBuffer;
   gpu.RenderPass? _renderPass;
   gpu.Texture? _renderTexture;
   gpu.Texture? _depthTexture;
+  Vector4 _backgroundColor = Colors.black;
+  final double _depthClearValue = 1.0;
 
-  PlxRenderer({
-    required this.canvas,
-    required this.size
-  });
+  PlxRenderer();
+
+  void setBackgroundColor(Vector4 color){
+    _backgroundColor = color;
+  }
 
   /// Starts the rendering frame, creating textures for color and depth.
-  void beginFrame(int width, int height, {double depthClearValue = 1.0}) {
+  void beginFrame(Size size) {
+    this.size = size; 
+    int w = this.size.width.toInt();
+    int h = this.size.height.toInt();
+    
     _renderTexture = gpu.gpuContext.createTexture(
-        gpu.StorageMode.devicePrivate, width, height,
+        gpu.StorageMode.devicePrivate, w, h,
         enableRenderTargetUsage: true,
         enableShaderReadUsage: true,
         coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
 
     _depthTexture = gpu.gpuContext.createTexture(
-        gpu.StorageMode.deviceTransient, width, height,
+        gpu.StorageMode.deviceTransient, w, h,
         format: gpu.gpuContext.defaultDepthStencilFormat,
         enableRenderTargetUsage: true,
         coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
@@ -34,9 +40,12 @@ class PlxRenderer {
     _commandBuffer = gpu.gpuContext.createCommandBuffer();
     
     final renderTarget = gpu.RenderTarget.singleColor(
-      gpu.ColorAttachment(texture: _renderTexture!),
+      gpu.ColorAttachment(
+        texture: _renderTexture!,
+        clearValue: _backgroundColor,
+      ),
       depthStencilAttachment: gpu.DepthStencilAttachment(
-          texture: _depthTexture!, depthClearValue: depthClearValue),
+          texture: _depthTexture!, depthClearValue: _depthClearValue),
     );
     
     _renderPass = _commandBuffer!.createRenderPass(renderTarget);
@@ -71,7 +80,7 @@ class PlxRenderer {
   }
 
   /// Submits the command buffer and returns the rendered image.
-  ui.Image endFrame() {
+  Image endFrame() {
     _commandBuffer?.submit();
     return _renderTexture!.asImage();
   }

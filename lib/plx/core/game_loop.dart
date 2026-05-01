@@ -32,6 +32,7 @@ class PlxGame extends StatefulWidget {
 class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
   Ticker? _ticker;
   double _lastTime = 0.0;
+  late final PlxRenderer _renderer = PlxRenderer();
   late final SceneManager _manager = SceneManager(cache: widget.cache);
   final FocusNode _focusNode = FocusNode();
 
@@ -104,7 +105,7 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
                         RepaintBoundary(
                           child: CustomPaint(
                             size: size,
-                            painter: _GamePainter(activeScene, _manager.progress),
+                            painter: _GamePainter(_renderer, activeScene, _manager.progress),
                           ),
                         ),
                         if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
@@ -123,15 +124,15 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
 }
 
 class _GamePainter extends CustomPainter {
+  final PlxRenderer renderer;
   final GameScene scene;
   final double progress;
 
-  _GamePainter(this.scene, this.progress);
+  _GamePainter(this.renderer, this.scene, this.progress);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final renderer = PlxRenderer(canvas: canvas, size: size);
-    renderer.beginFrame(size.width.toInt(), size.height.toInt());
+    renderer.beginFrame(size);
     renderer.setDepthState(writeEnable: true, compareOp: gpu.CompareFunction.less);
     renderer.setBlendState(true);
     scene.draw(renderer);
