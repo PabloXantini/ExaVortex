@@ -14,19 +14,19 @@ class Entity2D extends Entity {
   set position(Vector2 value) {
     transform.position.x = value.x;
     transform.position.y = value.y;
-    transform.isDirty = true;
+    transform.setDirty();
   }
 
   double get rotation => transform.rotation.z;
   set rotation(double value) {
     transform.rotation.z = value;
-    transform.isDirty = true;
+    transform.setDirty();
   }
 
   Vector2 get scale => Vector2(transform.scale.x, transform.scale.y);
   set scale(Vector2 value) {
     transform.scale.x = value.x;
     transform.scale.y = value.y;
-    transform.isDirty = true;
+    transform.setDirty();
   }
 }

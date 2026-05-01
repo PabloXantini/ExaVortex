@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/math/plx_math.dart';
-import 'package:flutter/material.dart';
 
 /// A component that rotates an entity with a velocity vector
 class Rotator extends Component{
@@ -22,8 +21,7 @@ class Rotator extends Component{
     if (speed.x!=0) transform?.rotation.x = clampDouble(transform.rotation.x + speed.x * dt, radians(minAngle.x), radians(maxAngle.x));
     if (speed.y!=0) transform?.rotation.y = clampDouble(transform.rotation.y + speed.y * dt, radians(minAngle.y), radians(maxAngle.y));
     if (speed.z!=0) transform?.rotation.z = clampDouble(transform.rotation.z + speed.z * dt, radians(minAngle.z), radians(maxAngle.z));
-    //debugPrint('Rotation: ${transform?.rotation}');
-    transform?.isDirty = true;
+    transform?.setDirty();
     super.update(dt);
   }
 }

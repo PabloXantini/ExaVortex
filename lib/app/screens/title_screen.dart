@@ -1,6 +1,6 @@
 import 'package:exa_vortex/app/scenes/background_scene.dart';
 import 'package:exa_vortex/plx/plx.dart';
-import 'package:exa_vortex/plx/tests/testgame2.dart';
+//import 'package:exa_vortex/plx/tests/testgame2.dart';
 import 'package:exa_vortex/plx/tests/testinput.dart';
 import 'package:exa_vortex/plx/tests/testscene2.dart';
 import 'package:flutter/material.dart';

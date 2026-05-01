@@ -4,13 +4,13 @@ import 'package:exa_vortex/plx/plx.dart';
 import 'package:exa_vortex/plx/plx3d.dart';
 
 class BackgroundScene extends GameScene{
-  late World3D w1;
+  late World w1;
   late Background background;
   late Camera3D camera;
   late Rotator rotator;
   @override
   void onInit() {
-    w1 = World3D();
+    w1 = World();
     background = Background(name: 'BG', numSides: 6);
     camera = Camera3D(name: 'Camera', world: w1);
     

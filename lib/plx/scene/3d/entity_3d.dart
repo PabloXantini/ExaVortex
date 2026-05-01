@@ -13,18 +13,18 @@ class Entity3D extends Entity {
   Vector3 get position => transform.position;
   set position(Vector3 value) {
     transform.position = value;
-    transform.isDirty = true;
+    transform.setDirty();
   }
 
   Vector3 get rotation => transform.rotation;
   set rotation(Vector3 value) {
     transform.rotation = value;
-    transform.isDirty = true;
+    transform.setDirty();
   }
 
   Vector3 get scale => transform.scale;
   set scale(Vector3 value) {
     transform.scale = value;
-    transform.isDirty = true;
+    transform.setDirty();
   }
 }
