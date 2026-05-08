@@ -10,16 +10,21 @@ import 'type_adapter.dart';
 class MeshRenderer extends Component {
   Mesh? mesh;
   GfxMaterial? material;
+  bool blending = false;
+  bool depthTest = true;
 
   // The projection/view matrix can be passed from the Scene or Camera entity.
   // For now, you can set it directly before drawing.
   Matrix4 viewProjectionMatrix = Matrix4.identity();
 
-  MeshRenderer({this.mesh, this.material});
+  MeshRenderer({this.mesh, this.material, this.blending = false, this.depthTest = false});
 
   @override
   void draw(PlxRenderer renderer) {
     if (mesh == null || material == null || entity == null) return;
+
+    renderer.setBlendState(blending);
+    renderer.setDepthState(writeEnable: depthTest);
 
     final transform = entity!.getComponent<TransformUser>();
     if (transform != null) {
@@ -32,7 +37,7 @@ class MeshRenderer extends Component {
       
       // We assume your shader always uses 'FrameInfo' for the MVP matrix.
       // This can be customized if needed.
-      material!.setUniform('FrameInfo', mvpView);
+      material!.setUniform(GfxMaterialLayer.vertex, 'FrameInfo', mvpView);
       //renderer.setDepthState(writeEnable: true);
     }
 
