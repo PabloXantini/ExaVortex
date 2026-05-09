@@ -1,8 +1,18 @@
 import 'dart:ui';
 import 'package:flutter_gpu/gpu.dart' as gpu;
-import 'package:vector_math/vector_math.dart';
+import 'package:vector_math/vector_math_64.dart';
+import 'package:vector_math/vector_math.dart' as v32;
 import 'mesh.dart';
 import 'material.dart';
+import 'type_adapter.dart';
+
+class _RenderCommand {
+  final Mesh mesh;
+  final GfxMaterial material;
+  final Matrix4? transform;
+  final double depth;
+  _RenderCommand(this.mesh, this.material, this.transform, this.depth);
+}
 
 class PlxRenderer {
   Size size = Size.zero;
@@ -10,12 +20,15 @@ class PlxRenderer {
   gpu.RenderPass? _renderPass;
   gpu.Texture? _renderTexture;
   gpu.Texture? _depthTexture;
-  Vector4 _backgroundColor = Colors.black;
+  v32.Vector4? _backgroundColor = v32.Colors.black;
   final double _depthClearValue = 1.0;
+
+  final List<_RenderCommand> _opaqueQueue = [];
+  final List<_RenderCommand> _transparentQueue = [];
 
   PlxRenderer();
 
-  void setBackgroundColor(Vector4 color){
+  void setBackgroundColor(v32.Vector4 color){
     _backgroundColor = color;
   }
 
@@ -63,7 +76,7 @@ class PlxRenderer {
     if (enable) {
       _renderPass?.setColorBlendEquation(gpu.ColorBlendEquation(
         colorBlendOperation: gpu.BlendOperation.add,
-        sourceColorBlendFactor: gpu.BlendFactor.one,
+        sourceColorBlendFactor: gpu.BlendFactor.sourceAlpha,
         destinationColorBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
         alphaBlendOperation: gpu.BlendOperation.add,
         sourceAlphaBlendFactor: gpu.BlendFactor.one,
@@ -72,15 +85,47 @@ class PlxRenderer {
     }
   }
 
-  /// Draw a mesh using the provided material.
-  void drawMesh(Mesh mesh, GfxMaterial material) {
+  /// Submits a mesh to the render queue.
+  void submitMesh(Mesh mesh, GfxMaterial material, {Matrix4? transform, bool opaque = true, double depth = 0.0}) {
+    if (!opaque) {
+      _transparentQueue.add(_RenderCommand(mesh, material, transform, depth));
+    } else {
+      _opaqueQueue.add(_RenderCommand(mesh, material, transform, depth));
+    }
+  }
+
+  void _bindCommand(gpu.RenderPass pass, _RenderCommand cmd) {
+    if (cmd.transform != null) {
+      final transients = gpu.gpuContext.createHostBuffer();
+      final mvpView = transients.emplace(float32Mat(cmd.transform!));
+      cmd.material.setUniform(GfxMaterialLayer.vertex, 'FrameInfo', mvpView);
+    }
+    cmd.material.bind(pass);
+    cmd.mesh.bindAndDraw(pass);
+  }
+
+  void _flush() {
     if (_renderPass == null) return;
-    material.bind(_renderPass!);
-    mesh.bindAndDraw(_renderPass!);
+    // Opaque Pass
+    setBlendState(false);
+    setDepthState(writeEnable: true, compareOp: gpu.CompareFunction.less);
+    for (var cmd in _opaqueQueue) {
+      _bindCommand(_renderPass!, cmd);
+    }
+    // Transparent Pass
+    setBlendState(true);
+    setDepthState(writeEnable: false, compareOp: gpu.CompareFunction.lessEqual);
+    _transparentQueue.sort((a, b) => b.depth.compareTo(a.depth));
+    for (var cmd in _transparentQueue) {
+      _bindCommand(_renderPass!, cmd);
+    }
+    _opaqueQueue.clear();
+    _transparentQueue.clear();
   }
 
   /// Submits the command buffer and returns the rendered image.
   Image endFrame() {
+    _flush();
     _commandBuffer?.submit();
     return _renderTexture!.asImage();
   }

@@ -26,7 +26,7 @@ class SceneA extends GameScene {
     cameraEntity.addComponent(viewComponent);
 
     final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material1.setTexture('tex', getCubeTexture());
+    material1.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
     cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
@@ -85,7 +85,7 @@ class SceneB extends GameScene {
     cameraEntity.addComponent(viewComponent);
 
     final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material1.setTexture('tex', getCubeTexture());
+    material1.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
     cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);

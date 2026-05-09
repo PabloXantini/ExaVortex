@@ -14,14 +14,14 @@ class TransitionScene1 extends GameScene {
 
   @override
   Future<void> onLoad() async {
-    cameraEntity = Entity3D(name: 'Camera');
-    cube1 = Entity3D(name: 'Cube1');
-    cube2 = Entity3D(name: 'Cube2');
     cubeTex = await assets.loadTexture('.assets/textures/jijija.png');
   }
 
   @override
   void onInit() {
+    cameraEntity = Entity3D(name: 'Camera');
+    cube1 = Entity3D(name: 'Cube1');
+    cube2 = Entity3D(name: 'Cube2');
     cube1.position = Vector3(-2, 0, -5);
     cube2.position = Vector3(5, 0, -10);
     cube2.scale = Vector3.all(2);
@@ -30,10 +30,10 @@ class TransitionScene1 extends GameScene {
     addEntity(cameraEntity);
 
     final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material1.setTexture('tex', cubeTex);
+    material1.setTexture(GfxMaterialLayer.fragment, 'tex', cubeTex);
 
-    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
+    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
     cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
     addEntity(cube1);
     addEntity(cube2);
@@ -78,8 +78,8 @@ class TransitionScene2 extends GameScene {
     cube2 = Entity3D(name: 'Cube2');
     cube2.scale = Vector3.all(1.5);
     final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material.setTexture('tex', getCubeTexture());
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material));
+    material.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
+    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false));
     cube2.addComponent(RotatorComponent()..speedX = 3.0..speedY=0);
 
     addEntity(cube2);

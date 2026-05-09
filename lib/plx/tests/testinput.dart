@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:exa_vortex/plx/plx.dart' hide Colors;
 import 'package:exa_vortex/plx/plx3d.dart';
+import 'package:exa_vortex/plx/plx2d.dart';
 
 
 import 'testgame.dart'; // Reusing getCubeMesh and getCubeTexture
@@ -10,27 +11,45 @@ import 'testgame.dart'; // Reusing getCubeMesh and getCubeTexture
 class InputTestScene extends GameScene {
   late Entity3D cubeEntity;
   late Entity3D cameraEntity;
+  late Text2D helloW;
   late MeshRenderer renderComponent;
   late CameraView3D viewComponent;
+  late PlxFont font;
+
+  @override
+  Future<void> onLoad() async {
+    // Only load async assets here
+    font = await PlxFont.load('.assets/fonts/Goldman-Regular.ttf', fontFamily: 'Goldman');
+    
+    return super.onLoad();
+  }
   
   @override
   void onInit() {
-    // Basic setup
+    // Synchronous instantiation using loaded assets
     cubeEntity = Entity3D(name: 'InputControlledCube');
     cameraEntity = Entity3D(name: 'Camera');
-    
+    final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
+    material.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
+    renderComponent = MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false);
+    viewComponent = CameraView3D(lens: CameraLensType.orthographic);
+
+    helloW = Text2D(
+      name: 'HWTEXT',
+      text: 'Hello! ExaVortex Jijija',
+      font: font,
+      fontSize: 0.1, // Small scale for 2D in a 3D context or relative units
+      color: Vector4(0, 1, 0.8, 1),
+    );
+
+    helloW.position = Vector2(-0.9, -0.5); // Position it in the scene
     cubeEntity.position = Vector3(0, 0, 0);
     cameraEntity.position = Vector3(0, 0, 5);
     
-    final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material.setTexture('tex', getCubeTexture());
-    
-    renderComponent = MeshRenderer(mesh: getCubeMesh(), material: material);
     cubeEntity.addComponent(renderComponent);
-    
-    viewComponent = CameraView3D(lens: CameraLensType.orthographic);
     cameraEntity.addComponent(viewComponent);
     
+    addEntity(helloW);
     addEntity(cameraEntity);
     addEntity(cubeEntity);
     // Input Setup

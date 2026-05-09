@@ -1,46 +1,32 @@
-import 'package:vector_math/vector_math_64.dart';
-import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:exa_vortex/plx/core/plx_core.dart';
-import 'package:exa_vortex/plx/math/transform.dart';
+import 'package:exa_vortex/plx/math/plx_math.dart';
 import 'mesh.dart';
 import 'material.dart';
 import 'renderer.dart';
-import 'type_adapter.dart';
 
 class MeshRenderer extends Component {
   Mesh? mesh;
   GfxMaterial? material;
-  bool blending = false;
-  bool depthTest = true;
-
-  // The projection/view matrix can be passed from the Scene or Camera entity.
-  // For now, you can set it directly before drawing.
+  bool opaque = true;
   Matrix4 viewProjectionMatrix = Matrix4.identity();
 
-  MeshRenderer({this.mesh, this.material, this.blending = false, this.depthTest = false});
+  MeshRenderer({this.mesh, this.material, this.opaque = true});
 
   @override
   void draw(PlxRenderer renderer) {
     if (mesh == null || material == null || entity == null) return;
 
-    renderer.setBlendState(blending);
-    renderer.setDepthState(writeEnable: depthTest);
-
+    double depth = 0.0;
+    Matrix4? mvpMatrix;
     final transform = entity!.getComponent<TransformUser>();
     if (transform != null) {
-      //renderer.setDepthState(writeEnable: false);
       // Compute MVP
-      final mvpMatrix = viewProjectionMatrix * transform.modelMatrix;
-      
-      final transients = gpu.gpuContext.createHostBuffer();
-      final mvpView = transients.emplace(float32Mat(mvpMatrix));
-      
-      // We assume your shader always uses 'FrameInfo' for the MVP matrix.
-      // This can be customized if needed.
-      material!.setUniform(GfxMaterialLayer.vertex, 'FrameInfo', mvpView);
-      //renderer.setDepthState(writeEnable: true);
+      mvpMatrix = viewProjectionMatrix * transform.modelMatrix;
+      // Calculate depth (Z distance from camera in clip space)
+      final Vector4 centerClip = mvpMatrix!.transform(Vector4(0, 0, 0, 1));
+      depth = centerClip.z;
     }
 
-    renderer.drawMesh(mesh!, material!);
+    renderer.submitMesh(mesh!, material!, transform: mvpMatrix, opaque: opaque, depth: depth);
   }
 }
