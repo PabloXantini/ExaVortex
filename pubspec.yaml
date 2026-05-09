@@ -20,7 +20,7 @@ dependencies:
   rename: ^3.1.0
   flutter_soloud: ^3.5.4
   flutter_launcher_icons: ^0.14.4
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -32,3 +32,13 @@ flutter:
   - build/shaderbundles/shaders.shaderbundle
   - .assets/
   - .assets/textures/
+  - .assets/models/
+  - .assets/fonts/
+
+fonts:
+  - family: Goldman
+    fonts:
+      - asset: .assets/fonts/Goldman-Regular.ttf
+  - family: PressStart2P
+    fonts:
+      - asset: .assets/fonts/PressStart2P-Regular.ttf
