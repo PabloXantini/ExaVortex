@@ -14,5 +14,13 @@
     "tftest": {
         "type": "fragment",
         "file": "shaders/texture.frag"
+    },
+    "sdf_text_v": {
+        "type": "vertex",
+        "file": "shaders/text.vert"
+    },
+    "sdf_text_f": {
+        "type": "fragment",
+        "file": "shaders/text.frag"
     }
 }
