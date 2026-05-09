@@ -12,7 +12,7 @@ class SceneManager extends ChangeNotifier {
   GameScene? _activeScene;
   GameScene? _pendingScene;
   
-  SceneTransitionState _state = SceneTransitionState.idle;
+  SceneTransitionState _state = SceneTransitionState.loading;
   double _progress = 0.0;
   double _duration = 0.5;
 
@@ -21,11 +21,14 @@ class SceneManager extends ChangeNotifier {
   double get progress => _progress;
 
   Future<void> init(GameScene initialScene) async {
+    _state = SceneTransitionState.loading;
     _activeScene = initialScene;
     _activeScene?.cache = cache;
     
     await _activeScene?.onLoad();
     _activeScene?.onInit();
+    
+    _state = SceneTransitionState.idle;
     notifyListeners();
   }
 

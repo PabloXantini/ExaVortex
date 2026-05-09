@@ -25,10 +25,12 @@ abstract class GameScene {
     _nextScene = null;
   }
 
-  /// Asynchronous preloading of assets.
+  /// Asynchronous preloading of assets (fonts, textures, audio).
+  /// Do not instantiate Materials or Entities here, only use `await`.
   Future<void> onLoad() async {}
 
-  /// Synchronous initialization of entities and components.
+  /// Synchronous initialization of entities, components and materials.
+  /// Called automatically after `onLoad` finishes. All assets are guaranteed to be loaded.
   void onInit() {}
 
   void onClose() {}

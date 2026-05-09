@@ -54,10 +54,7 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
     double dt = time - _lastTime;
     _lastTime = time;
     if (dt > 0.1) dt = 0.1;
-    
-    _manager.update(dt);
-    
-    // Update audio system (3D and visualization data)
+    _manager.update(dt);    
     AudioManager.instance.update();
   }
 
@@ -73,7 +70,9 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final activeScene = _manager.activeScene;
-    if (activeScene == null) return const SizedBox.shrink();
+    if (activeScene == null || _manager.state == SceneTransitionState.loading) {
+      return const ColoredBox(color: Color(0xFF000000));
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
