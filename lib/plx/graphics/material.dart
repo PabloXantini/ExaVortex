@@ -14,8 +14,11 @@ class GfxMaterial {
   final String fragmentShaderName;
 
   final Map<String, gpu.UniformSlot> _cachedSlots = {};
+
   final Map<String, GfxTexture> _textures = {};
   final Map<String, gpu.BufferView> _uniforms = {};
+
+  final Set<String> _slotsToCache = {};
 
   GfxMaterial({
     required this.vertexShaderName,
@@ -31,6 +34,14 @@ class GfxMaterial {
     }
   }
 
+  GfxMaterialLayer stringToLayer(String layer){
+    switch(layer){
+      case 'vertex': return GfxMaterialLayer.vertex;
+      case 'fragment': return GfxMaterialLayer.fragment;
+      default: throw Exception('Invalid layer: $layer');
+    }
+  }
+
   void _initPipeline() {
     _cachedSlots.clear();
     final vertex = sh.baseShaderLibrary[vertexShaderName];
@@ -40,45 +51,56 @@ class GfxMaterial {
       return;
     }
     pipeline = gpu.gpuContext.createRenderPipeline(vertex, fragment);
-    for (var name in _uniforms.keys){
-      _cacheSlot(pipeline!.vertexShader, name);
-      _cacheSlot(pipeline!.fragmentShader, name);
-    }
-    for (var name in _textures.keys){
-      _cacheSlot(pipeline!.fragmentShader, name);
+    
+    // Process all pending slots that were requested before pipeline was ready
+    final pending = _slotsToCache.toList();
+    _slotsToCache.clear();
+    for (var item in pending) {
+      final parts = item.split(':');
+      final layer = stringToLayer(parts[0]);
+      final name = parts[1];
+      _cacheSlot(layer, name);
     }
   }
 
-  void _cacheSlot(gpu.Shader shader, String name){
-    if (pipeline == null) return;
+  void _cacheSlot(GfxMaterialLayer layer, String name){
+    final serialize = '$layer.$name';
+    if (pipeline == null) {
+      _slotsToCache.add('${layer.name}:$name');
+      return;
+    }
+    final shader = _getShader(layer);
     var slot = shader.getUniformSlot(name);
-    _cachedSlots[name] = slot;
+    _cachedSlots[serialize] = slot;
   }
 
   /// Add a texture to the material.
   void setTexture(GfxMaterialLayer layer, String name, GfxTexture texture) {
-    final shader = _getShader(layer);
-    _textures[name] = texture;
-    _cacheSlot(shader, name);
+    final serialize = '$layer.$name'; 
+    _textures[serialize] = texture;
+    _cacheSlot(layer, name);
   }
 
   /// Add a uniform to the material.
   void setUniform(GfxMaterialLayer layer, name, gpu.BufferView bufferView) {
-    final shader = _getShader(layer);
-    _uniforms[name] = bufferView;
-    _cacheSlot(shader, name);
+    final serialize = '$layer.$name';
+    _uniforms[serialize] = bufferView;
+    _cacheSlot(layer, name);
   }
 
   /// Bind pipeline, uniforms and textures to the render pass.
   void bind(gpu.RenderPass pass) {
-    if (pipeline == null) return;
+    if (pipeline == null) {
+      _initPipeline();
+      if (pipeline == null) return;
+    }
     pass.bindPipeline(pipeline!);
-    _uniforms.forEach((name, view){
-      final slot = _cachedSlots[name];
+    _uniforms.forEach((s, view){
+      final slot = _cachedSlots[s];
       if (slot != null) pass.bindUniform(slot, view);
     });
-    _textures.forEach((name, texture){
-      final slot = _cachedSlots[name];
+    _textures.forEach((s, texture){
+      final slot = _cachedSlots[s];
       if (slot != null) pass.bindTexture(slot, texture.gpuTexture);
     });
   }
