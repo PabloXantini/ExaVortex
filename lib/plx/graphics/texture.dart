@@ -17,6 +17,15 @@ class GfxTexture {
     return GfxTexture._(texture);
   }
 
+  /// Creates a texture from raw bytes (RGBA).
+  static GfxTexture fromBytes(int width, int height, ByteData bytes) {
+    final texture = gpu.gpuContext.createTexture(
+        gpu.StorageMode.hostVisible, width, height,
+        enableShaderReadUsage: true);
+    texture.overwrite(bytes);
+    return GfxTexture._(texture);
+  }
+
   /// Loads a texture from an asset path.
   static Future<GfxTexture> fromAsset(String path) async {
     final ByteData data = await rootBundle.load(path);
