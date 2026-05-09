@@ -25,14 +25,32 @@ class SoloudAudioManager implements PlxAudioManager {
     return _soloud!;
   }
 
+  Future<void>? _initFuture;
+
   @override
   Future<void> init() async {
     if (_isInitialized) return;
+    if (_initFuture != null) return _initFuture;
+
+    _initFuture = _doInit();
+    return _initFuture;
+  }
+  Future<void> _doInit() async {
     _soloud = SoLoud.instance;
-    if (!_soloud!.isInitialized) await _soloud!.init(bufferSize: 1024);
+    if (!_soloud!.isInitialized) {
+      try {
+        await _soloud!.init(bufferSize: 1024);
+      } catch (e) {
+        if (e.toString().contains("AlreadyInitialized")) {
+          debugPrint("SoLoud already initialized on native side.");
+        } else {
+          _initFuture = null;
+          rethrow;
+        }
+      }
+    }
     _soloud!.setVisualizationEnabled(true);
     _audioData = AudioData(GetSamplesKind.linear);
-    
     _isInitialized = true;
     debugPrint("SoloudAudioManager initialized with visualization enabled");
   }
