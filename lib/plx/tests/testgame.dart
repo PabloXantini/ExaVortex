@@ -56,7 +56,7 @@ class RotatorComponent extends Component {
     if (transform != null) {
       transform.rotation.x += speedX * dt;
       transform.rotation.y += speedY * dt;
-      transform.isDirty = true;
+      transform.dirty = true;
     }
   }
 }

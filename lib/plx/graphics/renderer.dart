@@ -20,6 +20,7 @@ class PlxRenderer {
   gpu.RenderPass? _renderPass;
   gpu.Texture? _renderTexture;
   gpu.Texture? _depthTexture;
+  gpu.HostBuffer? _hostBuffer;
   v32.Vector4? _backgroundColor = v32.Colors.black;
   final double _depthClearValue = 1.0;
 
@@ -51,6 +52,7 @@ class PlxRenderer {
         coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
 
     _commandBuffer = gpu.gpuContext.createCommandBuffer();
+    _hostBuffer = gpu.gpuContext.createHostBuffer();
     
     final renderTarget = gpu.RenderTarget.singleColor(
       gpu.ColorAttachment(
@@ -95,12 +97,14 @@ class PlxRenderer {
   }
 
   void _bindCommand(gpu.RenderPass pass, _RenderCommand cmd) {
-    if (cmd.transform != null) {
-      final transients = gpu.gpuContext.createHostBuffer();
-      final mvpView = transients.emplace(float32Mat(cmd.transform!));
-      cmd.material.setUniform(GfxMaterialLayer.vertex, 'FrameInfo', mvpView);
-    }
     cmd.material.bind(pass);
+    if (cmd.transform != null && _hostBuffer != null) {
+      final mvpView = _hostBuffer!.emplace(float32Mat4(cmd.transform!));
+      final slot = cmd.material.getSlot(GfxMaterialLayer.vertex, 'FrameInfo');
+      if (slot != null) {
+        pass.bindUniform(slot, mvpView);
+      }
+    }
     cmd.mesh.bindAndDraw(pass);
   }
 

@@ -21,7 +21,7 @@ class Rotator extends Component{
     if (speed.x!=0) transform?.rotation.x = clampDouble(transform.rotation.x + speed.x * dt, radians(minAngle.x), radians(maxAngle.x));
     if (speed.y!=0) transform?.rotation.y = clampDouble(transform.rotation.y + speed.y * dt, radians(minAngle.y), radians(maxAngle.y));
     if (speed.z!=0) transform?.rotation.z = clampDouble(transform.rotation.z + speed.z * dt, radians(minAngle.z), radians(maxAngle.z));
-    transform?.setDirty();
+    transform?.dirty = true;
     super.update(dt);
   }
 }
