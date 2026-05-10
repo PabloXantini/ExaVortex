@@ -35,13 +35,13 @@ ByteData float32(List<double> values) {
 }
 
 ByteData float32Mat2(Matrix2 matrix) {
-  return matrix.storage.buffer.asByteData();
+  return Float32List.fromList(matrix.storage).buffer.asByteData();
 }
 
 ByteData float32Mat3(Matrix3 matrix) {
-  return matrix.storage.buffer.asByteData();
+  return Float32List.fromList(matrix.storage).buffer.asByteData();
 }
 
 ByteData float32Mat4(Matrix4 matrix) {
-  return matrix.storage.buffer.asByteData();
+  return Float32List.fromList(matrix.storage).buffer.asByteData();
 }
