@@ -1,8 +1,9 @@
-import 'package:exa_vortex/plx/graphics/plx_rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:vector_math/vector_math_64.dart';
 import 'shader_loader.dart' as sh;
+import 'texture.dart';
+import 'type_adapter.dart';
 import 'dart:typed_data';
 
 enum GfxMaterialLayer {

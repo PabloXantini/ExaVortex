@@ -5,7 +5,6 @@ import 'package:exa_vortex/plx/plx.dart' hide Colors;
 import 'package:exa_vortex/plx/plx3d.dart';
 import 'package:exa_vortex/plx/plx2d.dart';
 
-
 import 'testgame.dart'; // Reusing getCubeMesh and getCubeTexture
 
 class InputTestScene extends GameScene {
@@ -18,14 +17,12 @@ class InputTestScene extends GameScene {
 
   @override
   Future<void> onLoad() async {
-    // Only load async assets here. Font is already in pubspec.yaml so loadToEngine: false
     font = await PlxFont.load('PressStart2P');
     return super.onLoad();
   }
   
   @override
   void onInit() {
-    // Synchronous instantiation using loaded assets
     world = World(name: 'MyWorld');
     camera = Camera3D(name: 'Camera', world: world);
     camera.view?.lensType = CameraLensType.orthographic;
@@ -80,7 +77,7 @@ class InputTestScene extends GameScene {
     if (input.isActionTriggered('MoveUp')) cube.rotation = Vector3(frot.x - speed * dt, frot.y, frot.z);
     if (input.isActionTriggered('MoveDown')) cube.rotation = Vector3(frot.x + speed * dt, frot.y, frot.z);
     if (input.isActionTriggered('MoveLeft')) cube.rotation = Vector3(frot.x, frot.y  - speed * dt, frot.z);
-    if (input.isActionTriggered('MoveRight')) cube.rotation = Vector3(frot.x, frot.y  - speed * dt, frot.z);
+    if (input.isActionTriggered('MoveRight')) cube.rotation = Vector3(frot.x, frot.y  + speed * dt, frot.z);
     if (input.wasActionTriggered('Reset')) cube.rotation = Vector3.zero();
     if (input.wasActionTriggered('SaveConfig')) InputConfig.saveConfig(input);
     if (input.wasActionTriggered('LoadConfig')) InputConfig.loadConfig(input);
