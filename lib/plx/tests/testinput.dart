@@ -9,49 +9,50 @@ import 'package:exa_vortex/plx/plx2d.dart';
 import 'testgame.dart'; // Reusing getCubeMesh and getCubeTexture
 
 class InputTestScene extends GameScene {
-  late Entity3D cubeEntity;
-  late Entity3D cameraEntity;
+  late World world;
+  late Entity3D cube;
+  late Camera3D camera;
   late Text2D helloW;
-  late MeshRenderer renderComponent;
-  late CameraView3D viewComponent;
+  late MeshRenderer renderM;
   late PlxFont font;
 
   @override
   Future<void> onLoad() async {
-    // Only load async assets here
-    font = await PlxFont.load('.assets/fonts/Goldman-Regular.ttf', fontFamily: 'Goldman');
-    
+    // Only load async assets here. Font is already in pubspec.yaml so loadToEngine: false
+    font = await PlxFont.load('PressStart2P');
     return super.onLoad();
   }
   
   @override
   void onInit() {
     // Synchronous instantiation using loaded assets
-    cubeEntity = Entity3D(name: 'InputControlledCube');
-    cameraEntity = Entity3D(name: 'Camera');
+    world = World(name: 'MyWorld');
+    camera = Camera3D(name: 'Camera', world: world);
+    camera.view?.lensType = CameraLensType.orthographic;
+    
+    cube = Entity3D(name: 'InputControlledCube');
     final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
     material.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
-    renderComponent = MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false);
-    viewComponent = CameraView3D(lens: CameraLensType.orthographic);
-
+    renderM = MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false);
+    
     helloW = Text2D(
       name: 'HWTEXT',
       text: 'Hello! ExaVortex Jijija',
       font: font,
-      fontSize: 0.1, // Small scale for 2D in a 3D context or relative units
+      fontSize: 1, // Small scale for 2D in a 3D context or relative units
       color: Vector4(0, 1, 0.8, 1),
     );
 
-    helloW.position = Vector2(-0.9, -0.5); // Position it in the scene
-    cubeEntity.position = Vector3(0, 0, 0);
-    cameraEntity.position = Vector3(0, 0, 5);
+    helloW.position = Vector2(-5, -5);
+    helloW.rotation = radians(90);
+    cube.position = Vector3(0, 0, 0);
+    camera.position = Vector3(0, 0, 5);
     
-    cubeEntity.addComponent(renderComponent);
-    cameraEntity.addComponent(viewComponent);
-    
-    addEntity(helloW);
-    addEntity(cameraEntity);
-    addEntity(cubeEntity);
+    cube.addComponent(renderM);
+    world.addChild(cube);
+    world.addChild(helloW);
+    addEntity(camera);
+    addEntity(world);
     // Input Setup
     input.clearBindings();
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowUp), 'MoveUp');
@@ -74,62 +75,39 @@ class InputTestScene extends GameScene {
   @override
   void update(double dt) {
     super.update(dt);
-    // Apply inputs to cube rotation
-    final transform = cubeEntity.getComponent<TransformUser>();
-    if (transform != null) {
-      double speed = 2.0;
-      if (input.isActionTriggered('MoveUp')) transform.rotation.x -= speed * dt;
-      if (input.isActionTriggered('MoveDown')) transform.rotation.x += speed * dt;
-      if (input.isActionTriggered('MoveLeft')) transform.rotation.y -= speed * dt;
-      if (input.isActionTriggered('MoveRight')) transform.rotation.y += speed * dt;
-      
-      if (input.wasActionTriggered('Reset')) transform.rotation = Vector3.zero();
-
-      if (input.wasActionTriggered('SaveConfig')) InputConfig.saveConfig(input);
-      if (input.wasActionTriggered('LoadConfig')) InputConfig.loadConfig(input);
-
-      // Mouse/Touch Drag logic
-      if (input.isActionTriggered('Drag')) {
-        input.cursor = CursorShape.move;
-        final delta = input.pointerDelta;
-        //debugPrint('Drag: ${delta.dx}, ${delta.dy}');
-        transform.rotation.y += delta.dx * 0.005;
-        transform.rotation.x += delta.dy * 0.005;
-      } else if (input.isActionTriggered('MouseHover')) {
-        debugPrint('Hovering at: ${input.mouse.position.dx}, ${input.mouse.position.dy}');
-      }
-      // Mouse drag
-      if (input.wasActionReleased('Drag')) {
-        input.cursor = CursorShape.basic;
-      }
-
-      /*/ Mouse Move Action (Any movement)
-      if (input.isActionTriggered('MouseMove')) {
-        
-      }*/
-
-      // Mouse Wheel Zoom
-      final scroll = input.mouse.scrollDelta;
-      if (scroll != 0) {
-        double factor = scroll > 0 ? 0.95 : 1.05;
-        cubeEntity.scale = cubeEntity.scale * factor;
-      }
-
-      if (input.isActionTriggered('DragScale')) {
-        final pinch = input.touch.pinch;
-        if (pinch!=0) cubeEntity.scale = cubeEntity.scale * pinch;
-      }
-      transform.isDirty = true;
+    double speed = 2.0;
+    Vector3 frot = cube.transform.rotation;
+    if (input.isActionTriggered('MoveUp')) cube.rotation = Vector3(frot.x - speed * dt, frot.y, frot.z);
+    if (input.isActionTriggered('MoveDown')) cube.rotation = Vector3(frot.x + speed * dt, frot.y, frot.z);
+    if (input.isActionTriggered('MoveLeft')) cube.rotation = Vector3(frot.x, frot.y  - speed * dt, frot.z);
+    if (input.isActionTriggered('MoveRight')) cube.rotation = Vector3(frot.x, frot.y  - speed * dt, frot.z);
+    if (input.wasActionTriggered('Reset')) cube.rotation = Vector3.zero();
+    if (input.wasActionTriggered('SaveConfig')) InputConfig.saveConfig(input);
+    if (input.wasActionTriggered('LoadConfig')) InputConfig.loadConfig(input);
+    // Mouse/Touch Drag logic
+    if (input.isActionTriggered('Drag')) {
+      input.cursor = CursorShape.move;
+      final delta = input.pointerDelta;
+      cube.rotation = Vector3(frot.x + delta.dy * 0.005, frot.y + delta.dx * 0.005, frot.z);
+    } else if (input.isActionTriggered('MouseHover')) {
+      debugPrint('Hovering at: ${input.mouse.position.dx}, ${input.mouse.position.dy}');
     }
-    // reset single frame flags
-    input.update();
-  }
+    // Mouse drag
+    if (input.wasActionReleased('Drag')) {
+      input.cursor = CursorShape.basic;
+    }
+    // Mouse Wheel Zoom
+    final scroll = input.mouse.scrollDelta;
+    if (scroll != 0) {
+      double factor = scroll > 0 ? 0.95 : 1.05;
+      cube.scale = cube.scale * factor;
+    }
 
-  @override
-  void draw(PlxRenderer renderer) {
-    final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
-    renderComponent.viewProjectionMatrix = res;
-    super.draw(renderer);
+    if (input.isActionTriggered('DragScale')) {
+      final pinch = input.touch.pinch;
+      if (pinch!=0) cube.scale = cube.scale * pinch;
+    }
+    input.update();
   }
 }
 
@@ -165,7 +143,7 @@ class _TestInputGameState extends State<TestInputGame> {
                     'Press L to load bindings\n'
                     'DRAG with Mouse or Touch to rotate\n'
                     'Pointers: ${_scene.input.pointerCount}',
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'PressStart2P'),
                   ),
                 );
               },

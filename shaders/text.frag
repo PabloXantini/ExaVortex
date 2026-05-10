@@ -5,14 +5,11 @@ in vec4 v_color;
 
 out vec4 frag_color;
 
+const float smoothing = 1.0 / 16.0;
+
 void main() {
-  // We store the distance in the red channel
-  float distance = texture(char_text, v_texture_coords).r;
-  
-  // Use derivatives to calculate the width for smoothing
-  // This provides consistent anti-aliasing across scales
-  float width = fwidth(distance);
-  float alpha = smoothstep(0.5 - width, 0.5 + width, distance);
+  float distance = texture(char_text, v_texture_coords).a;
+  float alpha = smoothstep(0.5 - smoothing, 0.5 + smoothing, distance);
   
   frag_color = vec4(v_color.rgb, v_color.a * alpha);
 }

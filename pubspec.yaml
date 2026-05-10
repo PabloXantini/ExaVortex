@@ -34,11 +34,10 @@ flutter:
   - .assets/textures/
   - .assets/models/
   - .assets/fonts/
-
-fonts:
-  - family: Goldman
-    fonts:
-      - asset: .assets/fonts/Goldman-Regular.ttf
-  - family: PressStart2P
-    fonts:
-      - asset: .assets/fonts/PressStart2P-Regular.ttf
+  fonts:
+    - family: Goldman
+      fonts:
+        - asset: .assets/fonts/Goldman-Regular.ttf
+    - family: PressStart2P
+      fonts:
+        - asset: .assets/fonts/PressStart2P-Regular.ttf
