@@ -1,5 +1,6 @@
 import 'package:exa_vortex/app/scenes/background_scene.dart';
 import 'package:exa_vortex/plx/plx.dart';
+import 'package:exa_vortex/plx/tests/test3d.dart';
 //import 'package:exa_vortex/plx/tests/testgame2.dart';
 import 'package:exa_vortex/plx/tests/testinput.dart';
 import 'package:exa_vortex/plx/tests/testscene2.dart';
@@ -21,16 +22,15 @@ class _TitleScreenState extends State<TitleScreen> {
           Expanded(
             child: PlxGame(initialScene: BackgroundScene())
           ),
-          //*
           Expanded(
             child: Column(
               children: [
                 Expanded(child: TestInputGame()),
                 Expanded(child: TestScene2Game()),
+                Expanded(child: TextureCubePage()),
               ],
             ),
           ),
-          //*/
         ],
       ),
     );

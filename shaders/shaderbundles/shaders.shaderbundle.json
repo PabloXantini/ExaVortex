@@ -1,25 +1,17 @@
 {
-    "vtest": {
+    "BaseTextureV": {
         "type": "vertex",
-        "file": "shaders/test.vert"
+        "file": "shaders/base_texture.vert"
     },
-    "ftest": {
+    "BaseTextureF": {
         "type": "fragment",
-        "file": "shaders/test.frag"
+        "file": "shaders/base_texture.frag"
     },
-    "tvtest": {
-        "type": "vertex",
-        "file": "shaders/texture.vert"
-    },
-    "tftest": {
-        "type": "fragment",
-        "file": "shaders/texture.frag"
-    },
-    "sdf_text_v": {
+    "TextV": {
         "type": "vertex",
         "file": "shaders/text.vert"
     },
-    "sdf_text_f": {
+    "TextF": {
         "type": "fragment",
         "file": "shaders/text.frag"
     }

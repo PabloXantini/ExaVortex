@@ -35,18 +35,17 @@ class Mesh {
     this.indexCount = 0,
   });
 
-  void bindAndDraw(gpu.RenderPass pass) {
+  void bind(gpu.RenderPass pass) {
     pass.bindVertexBuffer(
-        gpu.BufferView(vertexBuffer, offsetInBytes: 0, lengthInBytes: vertexBuffer.sizeInBytes),
-        vertexCount);
+      gpu.BufferView(vertexBuffer, offsetInBytes: 0, lengthInBytes: vertexBuffer.sizeInBytes),
+      vertexCount
+    );
     if (indexBuffer != null && indexCount > 0) {
       pass.bindIndexBuffer(
-          gpu.BufferView(indexBuffer!, offsetInBytes: 0, lengthInBytes: indexBuffer!.sizeInBytes),
-          indexType,
-          indexCount);
-      pass.draw();
-    } else {
-      pass.draw();
+        gpu.BufferView(indexBuffer!, offsetInBytes: 0, lengthInBytes: indexBuffer!.sizeInBytes),
+        indexType,
+        indexCount
+      );
     }
   }
 

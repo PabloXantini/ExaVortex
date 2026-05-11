@@ -29,8 +29,8 @@ class TransitionScene1 extends GameScene {
     cameraEntity.addComponent(CameraView3D(lens: CameraLensType.perspective));
     addEntity(cameraEntity);
 
-    final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material1.setTexture(GfxMaterialLayer.fragment, 'tex', cubeTex);
+    final material1 = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1.setTexture(GfxShader.fragment, 'tex', cubeTex);
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
@@ -77,8 +77,8 @@ class TransitionScene2 extends GameScene {
 
     cube2 = Entity3D(name: 'Cube2');
     cube2.scale = Vector3.all(1.5);
-    final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
+    final material = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material.setTexture(GfxShader.fragment, 'tex', getCubeTexture());
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false));
     cube2.addComponent(RotatorComponent()..speedX = 3.0..speedY=0);
 

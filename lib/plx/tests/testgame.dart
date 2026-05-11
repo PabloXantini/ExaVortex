@@ -78,8 +78,8 @@ class CubeDemoScene extends GameScene {
     cubeEntity.position = Vector3(0, 0, 0); // for the view from camera
     cameraEntity.position = Vector3(0, 0, 5); 
     // 3. Material setup
-    final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
+    final material = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material.setTexture(GfxShader.fragment, 'tex', getCubeTexture());
     // 4. Create the mesh renderer
     renderComponent = MeshRenderer(mesh: getCubeMesh(), material: material);
     // Cube:

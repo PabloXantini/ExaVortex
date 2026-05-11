@@ -25,8 +25,9 @@ class MeshRenderer extends Component {
       // Calculate depth (Z distance from camera in clip space)
       final Vector4 centerClip = mvpMatrix!.transform(Vector4(0, 0, 0, 1));
       depth = centerClip.z;
+      material?.setMatrix4(GfxShader.vertex, 'ModelInfo', mvpMatrix);
     }
-
-    renderer.submitMesh(mesh!, material!, transform: mvpMatrix, opaque: opaque, depth: depth);
+    
+    renderer.submitMesh(mesh!, material!, opaque: opaque, depth: depth);
   }
 }

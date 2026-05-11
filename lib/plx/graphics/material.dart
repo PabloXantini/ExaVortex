@@ -6,22 +6,24 @@ import 'texture.dart';
 import 'type_adapter.dart';
 import 'dart:typed_data';
 
-enum GfxMaterialLayer {
-  vertex,
-  fragment
+enum GfxShader { vertex, fragment }
+
+class ShaderState {
+  final String name;
+  final gpu.Shader shader;
+  final Map<String, ByteData> uniforms = {};
+  final Map<String, GfxTexture> textures = {};
+  ShaderState({required this.name, required this.shader});
 }
 
 class GfxMaterial {
   gpu.RenderPipeline? pipeline;
+  gpu.HostBuffer? transientBuffer;
+
   final String vertexShaderName;
   final String fragmentShaderName;
 
-  final Map<String, gpu.UniformSlot> _cachedSlots = {};
-
-  final Map<String, GfxTexture> _textures = {};
-  final Map<String, gpu.BufferView> _uniforms = {};
-
-  final Set<String> _slotsToCache = {};
+  final Map<GfxShader, ShaderState> _shaders = {};
 
   GfxMaterial({
     required this.vertexShaderName,
@@ -30,153 +32,139 @@ class GfxMaterial {
     _initPipeline();
   }
 
-  gpu.Shader _getShader(GfxMaterialLayer layer){
-    switch(layer){
-      case GfxMaterialLayer.vertex: return pipeline!.vertexShader;
-      case GfxMaterialLayer.fragment: return pipeline!.fragmentShader;
-    }
-  }
-
-  GfxMaterialLayer stringToLayer(String layer){
-    switch(layer){
-      case 'vertex': return GfxMaterialLayer.vertex;
-      case 'fragment': return GfxMaterialLayer.fragment;
-      default: throw Exception('Invalid layer: $layer');
-    }
-  }
-
   void _initPipeline() {
-    _cachedSlots.clear();
+    _shaders.clear();
     final vertex = sh.baseShaderLibrary[vertexShaderName];
     final fragment = sh.baseShaderLibrary[fragmentShaderName];
-    if (vertex == null || fragment == null){
-      debugPrint('Warning: Shader not found in library: $vertexShaderName or $fragmentShaderName');
+    if (vertex == null) {
+      debugPrint(
+        'Error: Vertex Shader not found in library: $vertexShaderName',
+      );
       return;
     }
+    if (fragment == null) {
+      debugPrint(
+        'Warning: Fragment Shader not found in library: $fragmentShaderName',
+      );
+      return;
+    }
+    // Create the pipeline and the host bufferon init
     pipeline = gpu.gpuContext.createRenderPipeline(vertex, fragment);
-    
-    // Process all pending slots that were requested before pipeline was ready
-    final pending = _slotsToCache.toList();
-    _slotsToCache.clear();
-    for (var item in pending) {
-      final parts = item.split(':');
-      final layer = stringToLayer(parts[0]);
-      final name = parts[1];
-      _cacheSlot(layer, name);
-    }
-  }
+    // Create a single transient buffer.
+    transientBuffer = gpu.gpuContext.createHostBuffer();
 
-  void _cacheSlot(GfxMaterialLayer layer, String name){
-    final serialize = '$layer.$name';
-    if (pipeline == null) {
-      _slotsToCache.add('${layer.name}:$name');
-      return;
-    }
-    final shader = _getShader(layer);
-    var slot = shader.getUniformSlot(name);
-    _cachedSlots[serialize] = slot;
-  }
-
-  gpu.BufferView _allocate(ByteData bytes){
-    gpu.HostBuffer buffer = gpu.gpuContext.createHostBuffer();
-    final view = buffer.emplace(bytes);
-    return view;
+    _shaders[GfxShader.vertex] = ShaderState(
+      name: vertexShaderName,
+      shader: pipeline!.vertexShader,
+    );
+    _shaders[GfxShader.fragment] = ShaderState(
+      name: fragmentShaderName,
+      shader: pipeline!.fragmentShader,
+    );
   }
 
   /// Add a texture to the material.
-  void setTexture(GfxMaterialLayer layer, String name, GfxTexture texture) {
-    final serialize = '$layer.$name'; 
-    _textures[serialize] = texture;
-    _cacheSlot(layer, name);
+  GfxTexture setTexture(GfxShader shader, String name, GfxTexture texture) {
+    _shaders[shader]!.textures[name] = texture;
+    return texture;
+  }
+
+  void _setUniform(GfxShader shader, String name, ByteData data) {
+    _shaders[shader]!.uniforms[name] = data;
   }
 
   /// Set a float uniform.
-  void setFloat(GfxMaterialLayer layer, String name, double value) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(float32([value]));
-    _cacheSlot(layer, name);
+  ByteData setFloat(GfxShader shader, String name, double value) {
+    final bin = float32([value]);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set an int uniform.
-  void setInt(GfxMaterialLayer layer, String name, int value) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(uint32([value]));
-    _cacheSlot(layer, name);
+  ByteData setInt(GfxShader shader, String name, int value) {
+    final bin = uint32([value]);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set a bool uniform.
-  void setBool(GfxMaterialLayer layer, String name, bool value) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(boolean([value]));
-    _cacheSlot(layer, name);
+  ByteData setBool(GfxShader shader, String name, bool value) {
+    final bin = boolean([value]);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set a Vector2 uniform.
-  void setVector2(GfxMaterialLayer layer, String name, Vector2 vector) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(float32([vector.x, vector.y]));
-    _cacheSlot(layer, name);
+  ByteData setVector2(GfxShader shader, String name, Vector2 vector) {
+    final bin = float32([vector.x, vector.y]);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set a Vector3 uniform.
-  void setVector3(GfxMaterialLayer layer, String name, Vector3 vector) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(float32([vector.x, vector.y, vector.z]));
-    _cacheSlot(layer, name);
+  ByteData setVector3(GfxShader shader, String name, Vector3 vector) {
+    final bin = float32([vector.x, vector.y, vector.z]);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set a Vector4 uniform.
-  void setVector4(GfxMaterialLayer layer, String name, Vector4 vector) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(float32([vector.x, vector.y, vector.z, vector.w]));
-    _cacheSlot(layer, name);
+  ByteData setVector4(GfxShader shader, String name, Vector4 vector) {
+    final bin = float32([vector.x, vector.y, vector.z, vector.w]);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set a Matrix2 uniform.
-  void setMatrix2(GfxMaterialLayer layer, String name, Matrix2 matrix) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(float32Mat2(matrix));
-    _cacheSlot(layer, name);
+  ByteData setMatrix2(GfxShader shader, String name, Matrix2 matrix) {
+    final bin = float32Mat2(matrix);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set a Matrix3 uniform.
-  void setMatrix3(GfxMaterialLayer layer, String name, Matrix3 matrix) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(float32Mat3(matrix));
-    _cacheSlot(layer, name);
+  ByteData setMatrix3(GfxShader shader, String name, Matrix3 matrix) {
+    final bin = float32Mat3(matrix);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Set a Matrix4 uniform.
-  void setMatrix4(GfxMaterialLayer layer, String name, Matrix4 matrix) {
-    final serialize = '$layer.$name';
-    _uniforms[serialize] = _allocate(float32Mat4(matrix));
-    _cacheSlot(layer, name);
+  ByteData setMatrix4(GfxShader shader, String name, Matrix4 matrix) {
+    final bin = float32Mat4(matrix);
+    _setUniform(shader, name, bin);
+    return bin;
   }
 
   /// Get a cached slot for a uniform.
-  gpu.UniformSlot? getSlot(GfxMaterialLayer layer, String name) {
-    final serialize = '$layer.$name';
-    if (!_cachedSlots.containsKey(serialize)) {
-      _cacheSlot(layer, name);
-    }
-    return _cachedSlots[serialize];
+  gpu.UniformSlot? _getSlot(ShaderState state, String name) {
+    return state.shader.getUniformSlot(name);
   }
 
   /// Bind pipeline, uniforms and textures to the render pass.
   void bind(gpu.RenderPass pass) {
-    if (pipeline == null) {
-      _initPipeline();
-      if (pipeline == null) return;
-    }
+    if (pipeline == null) return;
+    // Reset the transient buffer for this draw call.
+    transientBuffer!.reset();
+    // Bind Pipeline
     pass.bindPipeline(pipeline!);
-    _uniforms.forEach((s, view){
-      final slot = _cachedSlots[s];
-      if (slot != null) pass.bindUniform(slot, view);
-    });
-    _textures.forEach((s, texture){
-      final slot = _cachedSlots[s];
-      if (slot != null) pass.bindTexture(slot, texture.gpuTexture);
-    });
+    // Bind Uniforms and Textures each shader
+    for (var state in _shaders.values) {
+      for (var name in state.uniforms.keys) {
+        final slot = _getSlot(state, name);
+        if (slot != null) {
+          final data = state.uniforms[name]!;
+          final bufferv = transientBuffer!.emplace(data);
+          pass.bindUniform(slot, bufferv);
+        }
+      }
+      for (var name in state.textures.keys) {
+        final slot = _getSlot(state, name);
+        if (slot != null) {
+          final texture = state.textures[name]!;
+          pass.bindTexture(slot, texture.gpuTexture);
+        }
+      }
+    }
   }
 }
-

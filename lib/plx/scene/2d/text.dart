@@ -12,7 +12,7 @@ class Text2D extends Entity2D {
   final Vector4 color;
 
   Text2D({
-    super.name = 'TextEntity2D',
+    super.name = 'Text2D',
     required this.text,
     required this.font,
     this.fontSize = 1.0,
@@ -29,11 +29,12 @@ class Text2D extends Entity2D {
       color: color,
     );
     final textMaterial = GfxMaterial(
-      vertexShaderName: 'sdf_text_v',
-      fragmentShaderName: 'sdf_text_f',
+      vertexShaderName: 'TextV',
+      fragmentShaderName: 'TextF',
     );
+    textMaterial.setMatrix4(GfxShader.vertex, 'ModelInfo', transform.modelMatrix);
     if (font.atlasTexture != null) {
-      textMaterial.setTexture(GfxMaterialLayer.fragment, 'char_text', font.atlasTexture!);
+      textMaterial.setTexture(GfxShader.fragment, 'font_atlas', font.atlasTexture!);
     }
     final renderer = MeshRenderer(mesh: mesh, material: textMaterial, opaque: false);
     addComponent(renderer);

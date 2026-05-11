@@ -13,7 +13,7 @@ class Text3D extends Entity3D {
   final Vector4 color;
 
   Text3D({
-    super.name = 'TextEntity3D',
+    super.name = 'Text3D',
     required this.text,
     required this.font,
     this.fontSize = 1.0,
@@ -33,11 +33,11 @@ class Text3D extends Entity3D {
 
     final renderer = MeshRenderer(mesh: mesh, opaque: false);
     final textMaterial = GfxMaterial(
-      vertexShaderName: 'sdf_text_v',
-      fragmentShaderName: 'sdf_text_f',
+      vertexShaderName: 'TextV',
+      fragmentShaderName: 'TextF',
     );
     if (font.atlasTexture != null) {
-      textMaterial.setTexture(GfxMaterialLayer.fragment, 'char_text', font.atlasTexture!);
+      textMaterial.setTexture(GfxShader.fragment, 'font_atlas', font.atlasTexture!);
     }
     renderer.material = textMaterial;
     addComponent(renderer);

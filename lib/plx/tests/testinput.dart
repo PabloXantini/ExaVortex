@@ -28,8 +28,8 @@ class InputTestScene extends GameScene {
     camera.view?.lensType = CameraLensType.orthographic;
     
     cube = Entity3D(name: 'InputControlledCube');
-    final material = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material.setTexture(GfxMaterialLayer.fragment, 'tex', getCubeTexture());
+    final material = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material.setTexture(GfxShader.fragment, 'tex', getCubeTexture());
     renderM = MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false);
     
     helloW = Text2D(
@@ -73,21 +73,21 @@ class InputTestScene extends GameScene {
   void update(double dt) {
     super.update(dt);
     double speed = 2.0;
-    Vector3 frot = cube.transform.rotation;
-    if (input.isActionTriggered('MoveUp')) cube.rotation = Vector3(frot.x - speed * dt, frot.y, frot.z);
-    if (input.isActionTriggered('MoveDown')) cube.rotation = Vector3(frot.x + speed * dt, frot.y, frot.z);
-    if (input.isActionTriggered('MoveLeft')) cube.rotation = Vector3(frot.x, frot.y  - speed * dt, frot.z);
-    if (input.isActionTriggered('MoveRight')) cube.rotation = Vector3(frot.x, frot.y  + speed * dt, frot.z);
+    if (input.isActionTriggered('MoveUp')) cube.rotation = Vector3(cube.rotation.x + speed * dt, cube.rotation.y, cube.rotation.z);
+    if (input.isActionTriggered('MoveDown')) cube.rotation = Vector3(cube.rotation.x - speed * dt, cube.rotation.y, cube.rotation.z);
+    if (input.isActionTriggered('MoveLeft')) cube.rotation = Vector3(cube.rotation.x, cube.rotation.y  - speed * dt, cube.rotation.z);
+    if (input.isActionTriggered('MoveRight')) cube.rotation = Vector3(cube.rotation.x, cube.rotation.y  + speed * dt, cube.rotation.z);
     if (input.wasActionTriggered('Reset')) cube.rotation = Vector3.zero();
     if (input.wasActionTriggered('SaveConfig')) InputConfig.saveConfig(input);
     if (input.wasActionTriggered('LoadConfig')) InputConfig.loadConfig(input);
     // Mouse/Touch Drag logic
     if (input.isActionTriggered('Drag')) {
+      //debugPrint('Dragging at: ${cube.transform.modelMatrix}');
       input.cursor = CursorShape.move;
       final delta = input.pointerDelta;
-      cube.rotation = Vector3(frot.x + delta.dy * 0.005, frot.y + delta.dx * 0.005, frot.z);
+      cube.rotation = Vector3(cube.rotation.x + delta.dy * 0.005, cube.rotation.y + delta.dx * 0.005, cube.rotation.z);
     } else if (input.isActionTriggered('MouseHover')) {
-      debugPrint('Hovering at: ${input.mouse.position.dx}, ${input.mouse.position.dy}');
+      //debugPrint('Hovering at: ${input.mouse.position.dx}, ${input.mouse.position.dy}');
     }
     // Mouse drag
     if (input.wasActionReleased('Drag')) {

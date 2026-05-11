@@ -31,16 +31,17 @@ class TextGeometryBuilder {
       double y0 = glyph.top * fontSize;
       double x1 = x0 + glyph.width * fontSize;
       double y1 = y0 + glyph.height * fontSize;
+      double z = i * 0.0001;
 
       // 4 vertices for the quad
       // Top-Left
-      _addVertex(vertexData, Vector3(x0, -y0, 0), Vector2(glyph.u1, glyph.v1), finalColor);
+      _addVertex(vertexData, Vector3(x0, -y0, z), Vector2(glyph.u1, glyph.v1), finalColor);
       // Top-Right
-      _addVertex(vertexData, Vector3(x1, -y0, 0), Vector2(glyph.u2, glyph.v1), finalColor);
+      _addVertex(vertexData, Vector3(x1, -y0, z), Vector2(glyph.u2, glyph.v1), finalColor);
       // Bottom-Left
-      _addVertex(vertexData, Vector3(x0, -y1, 0), Vector2(glyph.u1, glyph.v2), finalColor);
+      _addVertex(vertexData, Vector3(x0, -y1, z), Vector2(glyph.u1, glyph.v2), finalColor);
       // Bottom-Right
-      _addVertex(vertexData, Vector3(x1, -y1, 0), Vector2(glyph.u2, glyph.v2), finalColor);
+      _addVertex(vertexData, Vector3(x1, -y1, z), Vector2(glyph.u2, glyph.v2), finalColor);
 
       // Two triangles (0,1,2) and (1,3,2)
       indices.addAll([

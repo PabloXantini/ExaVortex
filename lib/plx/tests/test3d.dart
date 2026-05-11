@@ -65,8 +65,8 @@ class TextureCubePainter extends CustomPainter {
     final pass = commandBuffer.createRenderPass(renderTarget);
 
     /// Create a RenderPipeline using shaders from the asset.
-    final vertex = sh.baseShaderLibrary['tvtest']!;
-    final fragment = sh.baseShaderLibrary['tftest']!;
+    final vertex = sh.baseShaderLibrary['BaseTextureV']!;
+    final fragment = sh.baseShaderLibrary['BaseTextureF']!;
     final pipeline = gpu.gpuContext.createRenderPipeline(vertex, fragment);
 
     pass.bindPipeline(pipeline);
@@ -124,7 +124,7 @@ class TextureCubePainter extends CustomPainter {
     /// slots. Although the locations are specified in the shader and are
     /// predictable, we can optionally fetch the uniform slots by name for
     /// convenience.
-    final frameInfoSlot = vertex.getUniformSlot('FrameInfo');
+    final frameInfoSlot = vertex.getUniformSlot('ModelInfo');
     pass.bindUniform(frameInfoSlot, mvp);
 
     final sampledTexture = gpu.gpuContext.createTexture(
@@ -193,32 +193,34 @@ class _TextureCubePageState extends State<TextureCubePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Slider(
-            value: seedX,
-            max: 1,
-            min: -1,
-            onChanged: (value) => {setState(() => seedX = value)}),
-        Slider(
-            value: seedY,
-            max: 1,
-            min: -1,
-            onChanged: (value) => {setState(() => seedY = value)}),
-        Slider(
-            value: scale,
-            max: 3,
-            min: 0.1,
-            onChanged: (value) => {setState(() => scale = value)}),
-        Slider(
-            value: depthClearValue,
-            max: 1,
-            min: 0,
-            onChanged: (value) => {setState(() => depthClearValue = value)}),
-        CustomPaint(
-          painter: TextureCubePainter(time, seedX, seedY, scale, depthClearValue),
-        ),
-      ],
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Slider(
+              value: seedX,
+              max: 1,
+              min: -1,
+              onChanged: (value) => {setState(() => seedX = value)}),
+          Slider(
+              value: seedY,
+              max: 1,
+              min: -1,
+              onChanged: (value) => {setState(() => seedY = value)}),
+          Slider(
+              value: scale,
+              max: 3,
+              min: 0.1,
+              onChanged: (value) => {setState(() => scale = value)}),
+          Slider(
+              value: depthClearValue,
+              max: 1,
+              min: 0,
+              onChanged: (value) => {setState(() => depthClearValue = value)}),
+          CustomPaint(
+            painter: TextureCubePainter(time, seedX, seedY, scale, depthClearValue),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
-uniform FrameInfo {
+uniform ModelInfo {
   mat4 mvp;
 }
-frame_info;
+model;
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texture_coords;
@@ -13,5 +13,5 @@ out vec4 v_color;
 void main() {
   v_texture_coords = texture_coords;
   v_color = color;
-  gl_Position = frame_info.mvp * vec4(position, 1.0);
+  gl_Position = model.mvp * vec4(position, 1.0);
 }

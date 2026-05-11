@@ -81,10 +81,9 @@ class Background extends Entity3D {
     model = Mesh.create(format, vertexData);
 
     // Attach renderer component
-    final renderer = MeshRenderer(mesh: model);
-    final material1 = GfxMaterial(vertexShaderName: 'tvtest', fragmentShaderName: 'tftest');
-    material1.setTexture(GfxMaterialLayer.fragment, 'tex', GfxTexture.fromPixels(1, 1, [0xFFFFFFFF]));
-    renderer.material = material1;
+    final material1 = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1.setTexture(GfxShader.fragment, 'tex', GfxTexture.fromPixels(1, 1, [0xFFFFFFFF]));
+    final renderer = MeshRenderer(mesh: model, material: material1);
     addComponent(renderer);
   }
 }

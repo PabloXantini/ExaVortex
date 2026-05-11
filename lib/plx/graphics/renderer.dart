@@ -1,17 +1,14 @@
 import 'dart:ui';
 import 'package:flutter_gpu/gpu.dart' as gpu;
-import 'package:vector_math/vector_math_64.dart';
 import 'package:vector_math/vector_math.dart' as v32;
 import 'mesh.dart';
 import 'material.dart';
-import 'type_adapter.dart';
 
 class _RenderCommand {
   final Mesh mesh;
   final GfxMaterial material;
-  final Matrix4? transform;
   final double depth;
-  _RenderCommand(this.mesh, this.material, this.transform, this.depth);
+  _RenderCommand(this.mesh, this.material, this.depth);
 }
 
 class PlxRenderer {
@@ -20,7 +17,6 @@ class PlxRenderer {
   gpu.RenderPass? _renderPass;
   gpu.Texture? _renderTexture;
   gpu.Texture? _depthTexture;
-  gpu.HostBuffer? _hostBuffer;
   v32.Vector4? _backgroundColor = v32.Colors.black;
   final double _depthClearValue = 1.0;
 
@@ -52,7 +48,6 @@ class PlxRenderer {
         coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
 
     _commandBuffer = gpu.gpuContext.createCommandBuffer();
-    _hostBuffer = gpu.gpuContext.createHostBuffer();
     
     final renderTarget = gpu.RenderTarget.singleColor(
       gpu.ColorAttachment(
@@ -88,24 +83,18 @@ class PlxRenderer {
   }
 
   /// Submits a mesh to the render queue.
-  void submitMesh(Mesh mesh, GfxMaterial material, {Matrix4? transform, bool opaque = true, double depth = 0.0}) {
+  void submitMesh(Mesh mesh, GfxMaterial material, {bool opaque = true, double depth = 0.0}) {
     if (!opaque) {
-      _transparentQueue.add(_RenderCommand(mesh, material, transform, depth));
+      _transparentQueue.add(_RenderCommand(mesh, material, depth));
     } else {
-      _opaqueQueue.add(_RenderCommand(mesh, material, transform, depth));
+      _opaqueQueue.add(_RenderCommand(mesh, material, depth));
     }
   }
 
   void _bindCommand(gpu.RenderPass pass, _RenderCommand cmd) {
+    cmd.mesh.bind(pass);
     cmd.material.bind(pass);
-    if (cmd.transform != null && _hostBuffer != null) {
-      final mvpView = _hostBuffer!.emplace(float32Mat4(cmd.transform!));
-      final slot = cmd.material.getSlot(GfxMaterialLayer.vertex, 'FrameInfo');
-      if (slot != null) {
-        pass.bindUniform(slot, mvpView);
-      }
-    }
-    cmd.mesh.bindAndDraw(pass);
+    pass.draw();
   }
 
   void _flush() {
