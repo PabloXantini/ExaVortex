@@ -6,7 +6,7 @@ import 'material.dart';
 
 class _RenderCommand {
   final Mesh mesh;
-  final GfxMaterial material;
+  final PlxMaterial material;
   final double depth;
   _RenderCommand(this.mesh, this.material, this.depth);
 }
@@ -83,7 +83,7 @@ class PlxRenderer {
   }
 
   /// Submits a mesh to the render queue.
-  void submitMesh(Mesh mesh, GfxMaterial material, {bool opaque = true, double depth = 0.0}) {
+  void submitMesh(Mesh mesh, PlxMaterial material, {bool opaque = true, double depth = 0.0}) {
     if (!opaque) {
       _transparentQueue.add(_RenderCommand(mesh, material, depth));
     } else {

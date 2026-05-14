@@ -34,8 +34,8 @@ Mesh getCubeMesh() {
 }
 
 // Textura del Cubo
-GfxTexture getCubeTexture() {
-  return GfxTexture.fromPixels(5, 5, [
+PlxTexture getCubeTexture() {
+  return PlxTexture.fromPixels(5, 5, [
     0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
     0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
     0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
@@ -78,8 +78,8 @@ class CubeDemoScene extends GameScene {
     cubeEntity.position = Vector3(0, 0, 0); // for the view from camera
     cameraEntity.position = Vector3(0, 0, 5); 
     // 3. Material setup
-    final material = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
-    material.setTexture(GfxShader.fragment, 'tex', getCubeTexture());
+    final material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
     // 4. Create the mesh renderer
     renderComponent = MeshRenderer(mesh: getCubeMesh(), material: material);
     // Cube:

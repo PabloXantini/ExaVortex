@@ -21,6 +21,11 @@ class Background extends Entity3D {
 
     skeleton = RegularPolygon2D(numvertices: numSides, radius: radius);
     _generateMesh();
+    // Attach renderer component
+    final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1.setTexture(PlxShader.fragment, 'tex', PlxTexture.fromPixels(1, 1, [0xFFFFFFFF]));
+    final renderer = MeshRenderer(mesh: model, material: material1);
+    addComponent(renderer);
   }
 
   final int vertexColoring;
@@ -77,13 +82,6 @@ class Background extends Entity3D {
         vertexCounter++;
       }
     }
-
     model = Mesh.create(format, vertexData);
-
-    // Attach renderer component
-    final material1 = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
-    material1.setTexture(GfxShader.fragment, 'tex', GfxTexture.fromPixels(1, 1, [0xFFFFFFFF]));
-    final renderer = MeshRenderer(mesh: model, material: material1);
-    addComponent(renderer);
   }
 }

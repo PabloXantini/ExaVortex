@@ -8,7 +8,7 @@ import 'glyph_info.dart';
 class PlxFont {
   final String fontFamily;
   final Map<int, GlyphInfo> glyphs = {};
-  GfxTexture? atlasTexture;
+  PlxTexture? atlasTexture;
 
   PlxFont._(this.fontFamily);
 
@@ -133,7 +133,7 @@ class PlxFont {
     final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     
     if (byteData != null) {
-      atlasTexture = GfxTexture.fromBytes(maxSize, maxSize, byteData);
+      atlasTexture = PlxTexture.fromBytes(maxSize, maxSize, byteData);
     }
   }
 }

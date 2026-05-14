@@ -32,12 +32,12 @@ class Text3D extends Entity3D {
     );
 
     final renderer = MeshRenderer(mesh: mesh, opaque: false);
-    final textMaterial = GfxMaterial(
+    final textMaterial = PlxMaterial(
       vertexShaderName: 'TextV',
       fragmentShaderName: 'TextF',
     );
     if (font.atlasTexture != null) {
-      textMaterial.setTexture(GfxShader.fragment, 'font_atlas', font.atlasTexture!);
+      textMaterial.setTexture(PlxShader.fragment, 'font_atlas', font.atlasTexture!);
     }
     renderer.material = textMaterial;
     addComponent(renderer);

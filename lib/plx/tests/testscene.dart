@@ -25,8 +25,8 @@ class SceneA extends GameScene {
     viewComponent = CameraView3D(lens: CameraLensType.orthographic);
     cameraEntity.addComponent(viewComponent);
 
-    final material1 = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
-    material1.setTexture(GfxShader.fragment, 'tex', getCubeTexture());
+    final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
     cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
@@ -84,8 +84,8 @@ class SceneB extends GameScene {
     viewComponent = CameraView3D(lens: CameraLensType.perspective);
     cameraEntity.addComponent(viewComponent);
 
-    final material1 = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
-    material1.setTexture(GfxShader.fragment, 'tex', getCubeTexture());
+    final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
     cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);

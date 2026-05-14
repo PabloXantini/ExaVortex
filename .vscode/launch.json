@@ -10,8 +10,8 @@
             "type": "dart",
             "windows": {
                 "args": [
-                    "--enable-impeller",
-                    "--enable-flutter-gpu"
+                    "--enable-flutter-gpu",
+                    "--enable-impeller"
                 ]
             }
         },
@@ -19,13 +19,25 @@
             "name": "exagon_plus (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "windows": {
+                "args": [
+                    "--enable-flutter-gpu",
+                    "--enable-impeller"
+                ]
+            }
         },
         {
             "name": "exagon_plus (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "windows": {
+                "args": [
+                    "--enable-flutter-gpu",
+                    "--enable-impeller"
+                ]
+            }
         }
     ]
 }

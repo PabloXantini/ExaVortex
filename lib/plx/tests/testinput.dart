@@ -28,8 +28,8 @@ class InputTestScene extends GameScene {
     camera.view?.lensType = CameraLensType.orthographic;
     
     cube = Entity3D(name: 'InputControlledCube');
-    final material = GfxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
-    material.setTexture(GfxShader.fragment, 'tex', getCubeTexture());
+    final material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
     renderM = MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false);
     
     helloW = Text2D(
