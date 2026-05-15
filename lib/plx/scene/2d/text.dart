@@ -17,7 +17,6 @@ class Text2D extends Entity2D {
     required this.font,
     this.fontSize = 1.0,
     Vector4? color,
-    PlxMaterial? material,
   }) : 
     color = color ?? Vector4(1, 1, 1, 1) 
   {

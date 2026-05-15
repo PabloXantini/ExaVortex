@@ -1,6 +1,5 @@
 import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/math/plx_math.dart';
-import 'package:flutter/material.dart';
 import 'mesh.dart';
 import 'material.dart';
 import 'renderer.dart';
@@ -26,7 +25,6 @@ class MeshRenderer extends Component {
       // Calculate depth (Z distance from camera in clip space).
       final Vector4 centerClip = mvpMatrix.transform(Vector4(0, 0, 0, 1));
       depth = centerClip.z;
-      //debugPrint('${renderer.hashCode}: ${entity!.name}:\n${transform.modelMatrix}');
         instance.setMatrix4('ModelInfo', mvpMatrix);
       }
     renderer.submit(mesh!, material!, opaque: opaque, depth: depth, instance: instance);
