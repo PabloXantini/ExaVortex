@@ -3,13 +3,13 @@
         "type": "vertex",
         "file": "shaders/base_texture.vert"
     },
-    "BaseTextureF": {
-        "type": "fragment",
-        "file": "shaders/base_texture.frag"
-    },
     "TextV": {
         "type": "vertex",
         "file": "shaders/text.vert"
+    },
+    "BaseTextureF": {
+        "type": "fragment",
+        "file": "shaders/base_texture.frag"
     },
     "TextF": {
         "type": "fragment",

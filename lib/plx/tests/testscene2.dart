@@ -31,7 +31,7 @@ class TransitionScene1 extends GameScene {
     final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', cubeTex);
 
-    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: true));
+    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
     cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
 

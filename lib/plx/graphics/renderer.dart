@@ -18,25 +18,29 @@ class _RenderCommand {
     this.depth,
     this.instance,
   );
-  void _setBlendState(gpu.RenderPass pass){
+  void _setBlendState(gpu.RenderPass pass) {
     pass.setColorBlendEnable(!opaque);
     if (!opaque) {
-      pass.setColorBlendEquation(gpu.ColorBlendEquation(
-        colorBlendOperation: gpu.BlendOperation.add,
-        sourceColorBlendFactor: gpu.BlendFactor.sourceAlpha,
-        destinationColorBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
-        alphaBlendOperation: gpu.BlendOperation.add,
-        sourceAlphaBlendFactor: gpu.BlendFactor.one,
-        destinationAlphaBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
-      ));
+      pass.setColorBlendEquation(
+        gpu.ColorBlendEquation(
+          colorBlendOperation: gpu.BlendOperation.add,
+          sourceColorBlendFactor: gpu.BlendFactor.sourceAlpha,
+          destinationColorBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
+          alphaBlendOperation: gpu.BlendOperation.add,
+          sourceAlphaBlendFactor: gpu.BlendFactor.one,
+          destinationAlphaBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
+        ),
+      );
     }
   }
-  void _setDepthState(gpu.RenderPass pass){
+
+  void _setDepthState(gpu.RenderPass pass) {
     pass.setDepthWriteEnable(opaque);
     pass.setDepthCompareOperation(
       opaque ? gpu.CompareFunction.less : gpu.CompareFunction.lessEqual,
     );
   }
+
   void execute(gpu.RenderPass pass) {
     // Apply depth and blend state per-command, before bindPipeline.
     _setDepthState(pass);
@@ -67,41 +71,47 @@ class PlxRenderer {
 
   PlxRenderer();
 
-  void setBackgroundColor(v32.Vector4 color){
+  void setBackgroundColor(v32.Vector4 color) {
     _backgroundColor = color;
   }
 
   /// Starts the rendering frame, creating textures for color and depth.
   void beginFrame(Size size) {
-    this.size = size; 
+    this.size = size;
     int w = this.size.width.toInt();
     int h = this.size.height.toInt();
-    
+
     _renderTexture = gpu.gpuContext.createTexture(
-        gpu.StorageMode.devicePrivate, w, h,
-        enableRenderTargetUsage: true,
-        enableShaderReadUsage: true,
-        coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
+      gpu.StorageMode.devicePrivate,
+      w,
+      h,
+      enableRenderTargetUsage: true,
+      enableShaderReadUsage: true,
+      coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture,
+    );
 
     _depthTexture = gpu.gpuContext.createTexture(
-        gpu.StorageMode.deviceTransient, w, h,
-        format: gpu.gpuContext.defaultDepthStencilFormat,
-        enableRenderTargetUsage: true,
-        coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture);
+      gpu.StorageMode.deviceTransient,
+      w,
+      h,
+      format: gpu.gpuContext.defaultDepthStencilFormat,
+      enableRenderTargetUsage: true,
+      coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture,
+    );
 
     _commandBuffer = gpu.gpuContext.createCommandBuffer();
-    
+
     final renderTarget = gpu.RenderTarget.singleColor(
       gpu.ColorAttachment(
         texture: _renderTexture!,
         clearValue: _backgroundColor,
       ),
       depthStencilAttachment: gpu.DepthStencilAttachment(
-          texture: _depthTexture!, 
-          depthClearValue: _depthClearValue
+        texture: _depthTexture!,
+        depthClearValue: _depthClearValue,
       ),
     );
-    
+
     _renderPass = _commandBuffer!.createRenderPass(renderTarget);
   }
 

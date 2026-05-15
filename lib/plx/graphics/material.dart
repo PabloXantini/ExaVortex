@@ -69,11 +69,6 @@ class PlxMaterial {
     );
   }
 
-  /// Set a uniform.
-  void _setUniform(PlxShader shader, String name, ByteData data) {
-    _shaders[shader]!.uniforms[name] = data;
-  }
-
   /// Get a cached slot for a uniform.
   gpu.UniformSlot? _getSlot(ShaderState state, String name) {
     return state.shader.getUniformSlot(name);
@@ -88,63 +83,63 @@ class PlxMaterial {
   /// Set a float uniform.
   ByteData setFloat(PlxShader shader, String name, double value) {
     final bin = float32([value]);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set an int uniform.
   ByteData setInt(PlxShader shader, String name, int value) {
     final bin = uint32([value]);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set a bool uniform.
   ByteData setBool(PlxShader shader, String name, bool value) {
     final bin = boolean([value]);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set a Vector2 uniform.
   ByteData setVector2(PlxShader shader, String name, Vector2 vector) {
     final bin = float32([vector.x, vector.y]);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set a Vector3 uniform.
   ByteData setVector3(PlxShader shader, String name, Vector3 vector) {
     final bin = float32([vector.x, vector.y, vector.z]);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set a Vector4 uniform.
   ByteData setVector4(PlxShader shader, String name, Vector4 vector) {
     final bin = float32([vector.x, vector.y, vector.z, vector.w]);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set a Matrix2 uniform.
   ByteData setMatrix2(PlxShader shader, String name, Matrix2 matrix) {
     final bin = float32Mat2(matrix);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set a Matrix3 uniform.
   ByteData setMatrix3(PlxShader shader, String name, Matrix3 matrix) {
     final bin = float32Mat3(matrix);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
   /// Set a Matrix4 uniform.
   ByteData setMatrix4(PlxShader shader, String name, Matrix4 matrix) {
     final bin = float32Mat4(matrix);
-    _setUniform(shader, name, bin);
+    _shaders[shader]!.uniforms[name] = bin;
     return bin;
   }
 
@@ -157,7 +152,13 @@ class PlxMaterial {
     pass.bindPipeline(pipeline!);
     // Bind Uniforms and Textures for each shader stage
     _shaders.forEach((stage, state) {
-      _bindShaderResources(pass, state, transientBuffer!, state.uniforms, state.textures);
+      _bindShaderResources(
+        pass,
+        state,
+        transientBuffer!,
+        state.uniforms,
+        state.textures,
+      );
     });
   }
 
@@ -236,17 +237,29 @@ class MaterialInstance {
   }
 
   MaterialInstance setVector2(String name, Vector2 vector) {
-    uniforms.putIfAbsent(_stage, () => {})[name] = float32([vector.x, vector.y]);
+    uniforms.putIfAbsent(_stage, () => {})[name] = float32([
+      vector.x,
+      vector.y,
+    ]);
     return this;
   }
 
   MaterialInstance setVector3(String name, Vector3 vector) {
-    uniforms.putIfAbsent(_stage, () => {})[name] = float32([vector.x, vector.y, vector.z]);
+    uniforms.putIfAbsent(_stage, () => {})[name] = float32([
+      vector.x,
+      vector.y,
+      vector.z,
+    ]);
     return this;
   }
 
   MaterialInstance setVector4(String name, Vector4 vector) {
-    uniforms.putIfAbsent(_stage, () => {})[name] = float32([vector.x, vector.y, vector.z, vector.w]);
+    uniforms.putIfAbsent(_stage, () => {})[name] = float32([
+      vector.x,
+      vector.y,
+      vector.z,
+      vector.w,
+    ]);
     return this;
   }
 

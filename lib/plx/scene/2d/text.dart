@@ -32,7 +32,6 @@ class Text2D extends Entity2D {
       vertexShaderName: 'TextV',
       fragmentShaderName: 'TextF',
     );
-    textMaterial.setMatrix4(PlxShader.vertex, 'ModelInfo', transform.modelMatrix);
     if (font.atlasTexture != null) {
       textMaterial.setTexture(PlxShader.fragment, 'font_atlas', font.atlasTexture!);
     }
