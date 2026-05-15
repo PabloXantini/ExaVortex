@@ -27,16 +27,18 @@ class TransitionScene1 extends GameScene {
     cube2.scale = Vector3.all(2);
     cameraEntity.position = Vector3(0, 0, 5);
     cameraEntity.addComponent(CameraView3D(lens: CameraLensType.perspective));
-    addEntity(cameraEntity);
 
     final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', cubeTex);
 
-    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
+    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: true));
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
     cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
+
+    addEntity(cameraEntity);
     addEntity(cube1);
     addEntity(cube2);
+    
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
     input.bindInput(PhysicalInput.touch(0), 'Switch');
   }

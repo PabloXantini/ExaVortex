@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/audio/plx_audio.dart';
 import 'game_scene.dart';
@@ -132,8 +131,6 @@ class _GamePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     renderer.beginFrame(size);
-    renderer.setDepthState(writeEnable: true, compareOp: gpu.CompareFunction.less);
-    renderer.setBlendState(true);
     scene.draw(renderer);
     final image = renderer.endFrame();
     canvas.drawImage(image, Offset.zero, Paint());

@@ -7,8 +7,50 @@ import 'material.dart';
 class _RenderCommand {
   final Mesh mesh;
   final PlxMaterial material;
+  final bool opaque;
   final double depth;
-  _RenderCommand(this.mesh, this.material, this.depth);
+  final MaterialInstance? instance;
+
+  _RenderCommand(
+    this.mesh,
+    this.material,
+    this.opaque,
+    this.depth,
+    this.instance,
+  );
+  void _setBlendState(gpu.RenderPass pass){
+    pass.setColorBlendEnable(!opaque);
+    if (!opaque) {
+      pass.setColorBlendEquation(gpu.ColorBlendEquation(
+        colorBlendOperation: gpu.BlendOperation.add,
+        sourceColorBlendFactor: gpu.BlendFactor.sourceAlpha,
+        destinationColorBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
+        alphaBlendOperation: gpu.BlendOperation.add,
+        sourceAlphaBlendFactor: gpu.BlendFactor.one,
+        destinationAlphaBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
+      ));
+    }
+  }
+  void _setDepthState(gpu.RenderPass pass){
+    pass.setDepthWriteEnable(opaque);
+    pass.setDepthCompareOperation(
+      opaque ? gpu.CompareFunction.less : gpu.CompareFunction.lessEqual,
+    );
+  }
+  void execute(gpu.RenderPass pass) {
+    // Apply depth and blend state per-command, before bindPipeline.
+    _setDepthState(pass);
+    _setBlendState(pass);
+
+    mesh.bind(pass);
+    // Bind base material (shared state: pipeline, textures, base uniforms).
+    material.bind(pass);
+    // Apply per-draw-call instances
+    if (instance != null) {
+      material.applyInstance(pass, instance!);
+    }
+    pass.draw();
+  }
 }
 
 class PlxRenderer {
@@ -55,62 +97,42 @@ class PlxRenderer {
         clearValue: _backgroundColor,
       ),
       depthStencilAttachment: gpu.DepthStencilAttachment(
-          texture: _depthTexture!, depthClearValue: _depthClearValue),
+          texture: _depthTexture!, 
+          depthClearValue: _depthClearValue
+      ),
     );
     
     _renderPass = _commandBuffer!.createRenderPass(renderTarget);
   }
 
-  /// Configures depth state for 3D rendering.
-  void setDepthState({bool writeEnable = true, gpu.CompareFunction compareOp = gpu.CompareFunction.less}) {
-    _renderPass?.setDepthWriteEnable(writeEnable);
-    _renderPass?.setDepthCompareOperation(compareOp);
-  }
-
-  /// Configures color blending for transparency support.
-  void setBlendState(bool enable) {
-    _renderPass?.setColorBlendEnable(enable);
-    if (enable) {
-      _renderPass?.setColorBlendEquation(gpu.ColorBlendEquation(
-        colorBlendOperation: gpu.BlendOperation.add,
-        sourceColorBlendFactor: gpu.BlendFactor.sourceAlpha,
-        destinationColorBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
-        alphaBlendOperation: gpu.BlendOperation.add,
-        sourceAlphaBlendFactor: gpu.BlendFactor.one,
-        destinationAlphaBlendFactor: gpu.BlendFactor.oneMinusSourceAlpha,
-      ));
-    }
-  }
-
   /// Submits a mesh to the render queue.
-  void submitMesh(Mesh mesh, PlxMaterial material, {bool opaque = true, double depth = 0.0}) {
+  /// [instance] carries per-entity uniform snapshots.
+  /// materials are never mutated between the submit and flush steps.
+  void submit(
+    Mesh mesh,
+    PlxMaterial material, {
+    bool opaque = true,
+    double depth = 0.0,
+    MaterialInstance? instance,
+  }) {
+    final cmd = _RenderCommand(mesh, material, opaque, depth, instance);
     if (!opaque) {
-      _transparentQueue.add(_RenderCommand(mesh, material, depth));
+      _transparentQueue.add(cmd);
     } else {
-      _opaqueQueue.add(_RenderCommand(mesh, material, depth));
+      _opaqueQueue.add(cmd);
     }
-  }
-
-  void _bindCommand(gpu.RenderPass pass, _RenderCommand cmd) {
-    cmd.mesh.bind(pass);
-    cmd.material.bind(pass);
-    pass.draw();
   }
 
   void _flush() {
     if (_renderPass == null) return;
-    // Opaque Pass
-    setBlendState(false);
-    setDepthState(writeEnable: true, compareOp: gpu.CompareFunction.less);
+    // Opaque pass — each command sets its own state before binding.
     for (var cmd in _opaqueQueue) {
-      _bindCommand(_renderPass!, cmd);
+      cmd.execute(_renderPass!);
     }
-    // Transparent Pass
-    setBlendState(true);
-    setDepthState(writeEnable: false, compareOp: gpu.CompareFunction.lessEqual);
+    // Transparent pass — sorted back-to-front; each command sets its own state.
     _transparentQueue.sort((a, b) => b.depth.compareTo(a.depth));
     for (var cmd in _transparentQueue) {
-      _bindCommand(_renderPass!, cmd);
+      cmd.execute(_renderPass!);
     }
     _opaqueQueue.clear();
     _transparentQueue.clear();

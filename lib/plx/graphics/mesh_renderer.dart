@@ -18,18 +18,17 @@ class MeshRenderer extends Component {
     if (mesh == null || material == null || entity == null) return;
 
     double depth = 0.0;
-    Matrix4? mvpMatrix;
+    final instance = material!.use(PlxShader.vertex);
     final transform = entity!.getComponent<TransformUser>();
     if (transform != null) {
-      // Compute MVP
-      mvpMatrix = viewProjectionMatrix * transform.modelMatrix;
-      // Calculate depth (Z distance from camera in clip space)
-      final Vector4 centerClip = mvpMatrix!.transform(Vector4(0, 0, 0, 1));
+      // Compute MVP.
+      final Matrix4 mvpMatrix = viewProjectionMatrix * transform.modelMatrix;
+      // Calculate depth (Z distance from camera in clip space).
+      final Vector4 centerClip = mvpMatrix.transform(Vector4(0, 0, 0, 1));
       depth = centerClip.z;
-      debugPrint('$renderer ${entity!.name}: ${transform.modelMatrix}');
-      material?.setMatrix4(PlxShader.vertex, 'ModelInfo', mvpMatrix);
+      //debugPrint('${renderer.hashCode}: ${entity!.name}:\n${transform.modelMatrix}');
+      instance.setMatrix4('ModelInfo', mvpMatrix);
     }
-    
-    renderer.submitMesh(mesh!, material!, opaque: opaque, depth: depth);
+    renderer.submit(mesh!, material!, opaque: opaque, depth: depth, instance: instance);
   }
 }
