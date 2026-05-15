@@ -1,7 +1,5 @@
 import 'package:exa_vortex/app/scenes/background_scene.dart';
 import 'package:exa_vortex/plx/plx.dart';
-//import 'package:exa_vortex/plx/tests/test3d.dart';
-//import 'package:exa_vortex/plx/tests/testgame2.dart';
 import 'package:exa_vortex/plx/tests/testinput.dart';
 import 'package:exa_vortex/plx/tests/testscene2.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +15,11 @@ class _TitleScreenState extends State<TitleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
+      body: 
+      //PlxGame(initialScene: BackgroundScene()) 
+      //TestInputGame() 
+      //*
+      Row(
         children: [
           Expanded(
             child: PlxGame(initialScene: BackgroundScene())
@@ -32,6 +34,7 @@ class _TitleScreenState extends State<TitleScreen> {
           ),
         ],
       ),
+      //*/
     );
   }
 }

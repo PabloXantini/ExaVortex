@@ -1,7 +1,10 @@
 uniform ModelInfo {
   mat4 mvp;
 }
-model;
+// Note: structname is parsed to snake_case by SPIR-V shader 
+//compiler (maybe a bug) for OpenGL / OpenGL ES backend.
+// This is why 'model_info' is used instead of 'model'.
+model_info;
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texture_coords;
@@ -13,5 +16,5 @@ out vec4 v_color;
 void main() {
   v_texture_coords = texture_coords;
   v_color = color;
-  gl_Position = model.mvp * vec4(position, 1.0);
+  gl_Position = model_info.mvp * vec4(position, 1.0);
 }

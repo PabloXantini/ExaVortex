@@ -58,7 +58,7 @@ class PlxFont {
     final recorder = ui.PictureRecorder();
     final canvas = ui.Canvas(recorder, Rect.fromLTWH(0, 0, maxSize.toDouble(), maxSize.toDouble()));
     // Solid black background for alpha/red channel SDF
-    canvas.drawRect(Rect.fromLTWH(0, 0, maxSize.toDouble(), maxSize.toDouble()), Paint()..color = const Color(0xFF000000));
+    canvas.drawRect(Rect.fromLTWH(0, 0, maxSize.toDouble(), maxSize.toDouble()), Paint()..color = const Color(0x00000000));
 
     final double renderFontSize = (glyphSize - padding * 2).toDouble();
     final double scale = 1.0 / renderFontSize; // Normalize to 1.0 unit = font size
