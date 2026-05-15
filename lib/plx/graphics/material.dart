@@ -18,8 +18,6 @@ class ShaderState {
 
 class PlxMaterial {
   gpu.RenderPipeline? pipeline;
-  gpu.HostBuffer? transientBuffer;
-  gpu.HostBuffer? _overrideBuffer;
 
   final String vertexShaderName;
   final String fragmentShaderName;
@@ -29,14 +27,14 @@ class PlxMaterial {
   PlxMaterial({
     required this.vertexShaderName,
     required this.fragmentShaderName,
-  }) {
-    _initPipeline();
+  }){
+    initPipeline();
   }
 
   /// Start a new material instance for a specific shader stage.
   MaterialInstance use(PlxShader stage) => MaterialInstance(this, stage);
 
-  void _initPipeline() {
+  void initPipeline() {
     _shaders.clear();
     final vertex = sh.baseShaderLibrary[vertexShaderName];
     final fragment = sh.baseShaderLibrary[fragmentShaderName];
@@ -52,12 +50,8 @@ class PlxMaterial {
       );
       return;
     }
-    // Create the pipeline and the host buffer on init
+    // Create the pipeline on init
     pipeline = gpu.gpuContext.createRenderPipeline(vertex, fragment);
-    // Create a single transient buffer for base uniforms.
-    transientBuffer = gpu.gpuContext.createHostBuffer();
-    // Separate buffer for per-draw-call overrides.
-    _overrideBuffer = gpu.gpuContext.createHostBuffer();
 
     _shaders[PlxShader.vertex] = ShaderState(
       name: vertexShaderName,
@@ -144,10 +138,8 @@ class PlxMaterial {
   }
 
   /// Bind pipeline, uniforms and textures to the render pass.
-  void bind(gpu.RenderPass pass) {
-    if (pipeline == null) return;
-    // Reset the transient buffer for this draw call.
-    transientBuffer!.reset();
+  void bind(gpu.RenderPass pass, gpu.HostBuffer buffer) {
+    //if (pipeline == null) return;
     // Bind Pipeline
     pass.bindPipeline(pipeline!);
     // Bind Uniforms and Textures for each shader stage
@@ -155,7 +147,7 @@ class PlxMaterial {
       _bindShaderResources(
         pass,
         state,
-        transientBuffer!,
+        buffer,
         state.uniforms,
         state.textures,
       );
@@ -187,9 +179,12 @@ class PlxMaterial {
 
   /// Apply per-draw-call overrides from a MaterialInstance.
   /// Must be called AFTER bind() so the instance values win over shared material state.
-  void applyInstance(gpu.RenderPass pass, MaterialInstance instance) {
-    if (pipeline == null) return;
-    _overrideBuffer!.reset();
+  void applyInstance(
+    gpu.RenderPass pass,
+    MaterialInstance instance,
+    gpu.HostBuffer buffer,
+  ) {
+    //if (pipeline == null) return;
     // Union of all stages that have overrides to process them efficiently.
     final stages = {...instance.uniforms.keys, ...instance.textures.keys};
     for (final stage in stages) {
@@ -198,7 +193,7 @@ class PlxMaterial {
       _bindShaderResources(
         pass,
         state,
-        _overrideBuffer!,
+        buffer,
         instance.uniforms[stage] ?? {},
         instance.textures[stage] ?? {},
       );

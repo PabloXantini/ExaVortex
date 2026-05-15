@@ -17,7 +17,10 @@ class Text2D extends Entity2D {
     required this.font,
     this.fontSize = 1.0,
     Vector4? color,
-  }) : color = color ?? Vector4(1, 1, 1, 1) {
+    PlxMaterial? material,
+  }) : 
+    color = color ?? Vector4(1, 1, 1, 1) 
+  {
     _build();
   }
 
@@ -28,14 +31,14 @@ class Text2D extends Entity2D {
       fontSize: fontSize,
       color: color,
     );
-    final textMaterial = PlxMaterial(
+    final material = PlxMaterial(
       vertexShaderName: 'TextV',
       fragmentShaderName: 'TextF',
     );
     if (font.atlasTexture != null) {
-      textMaterial.setTexture(PlxShader.fragment, 'font_atlas', font.atlasTexture!);
+      material.setTexture(PlxShader.fragment, 'text_atlas', font.atlasTexture!);
     }
-    final renderer = MeshRenderer(mesh: mesh, material: textMaterial, opaque: false);
+    final renderer = MeshRenderer(mesh: mesh, material: material, opaque: false);
     addComponent(renderer);
   }
 }

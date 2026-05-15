@@ -27,8 +27,8 @@ class MeshRenderer extends Component {
       final Vector4 centerClip = mvpMatrix.transform(Vector4(0, 0, 0, 1));
       depth = centerClip.z;
       //debugPrint('${renderer.hashCode}: ${entity!.name}:\n${transform.modelMatrix}');
-      instance.setMatrix4('ModelInfo', mvpMatrix);
-    }
+        instance.setMatrix4('ModelInfo', mvpMatrix);
+      }
     renderer.submit(mesh!, material!, opaque: opaque, depth: depth, instance: instance);
   }
 }

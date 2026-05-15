@@ -37,7 +37,7 @@ class Text3D extends Entity3D {
       fragmentShaderName: 'TextF',
     );
     if (font.atlasTexture != null) {
-      textMaterial.setTexture(PlxShader.fragment, 'font_atlas', font.atlasTexture!);
+      textMaterial.setTexture(PlxShader.fragment, 'text_atlas', font.atlasTexture!);
     }
     renderer.material = textMaterial;
     addComponent(renderer);

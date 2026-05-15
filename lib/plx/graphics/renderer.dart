@@ -41,17 +41,18 @@ class _RenderCommand {
     );
   }
 
-  void execute(gpu.RenderPass pass) {
+  void execute(gpu.RenderPass pass, gpu.HostBuffer buffer) {
+    pass.clearBindings();
     // Apply depth and blend state per-command, before bindPipeline.
     _setDepthState(pass);
     _setBlendState(pass);
-
+    // Bind de mesh buffers
     mesh.bind(pass);
     // Bind base material (shared state: pipeline, textures, base uniforms).
-    material.bind(pass);
+    material.bind(pass, buffer);
     // Apply per-draw-call instances
     if (instance != null) {
-      material.applyInstance(pass, instance!);
+      material.applyInstance(pass, instance!, buffer);
     }
     pass.draw();
   }
@@ -66,6 +67,7 @@ class PlxRenderer {
   v32.Vector4? _backgroundColor = v32.Colors.black;
   final double _depthClearValue = 1.0;
 
+  final gpu.HostBuffer _hostBuffer = gpu.gpuContext.createHostBuffer();
   final List<_RenderCommand> _opaqueQueue = [];
   final List<_RenderCommand> _transparentQueue = [];
 
@@ -113,6 +115,9 @@ class PlxRenderer {
     );
 
     _renderPass = _commandBuffer!.createRenderPass(renderTarget);
+
+    // Reset the global host buffer for the new frame.
+    _hostBuffer.reset();
   }
 
   /// Submits a mesh to the render queue.
@@ -137,12 +142,12 @@ class PlxRenderer {
     if (_renderPass == null) return;
     // Opaque pass — each command sets its own state before binding.
     for (var cmd in _opaqueQueue) {
-      cmd.execute(_renderPass!);
+      cmd.execute(_renderPass!, _hostBuffer);
     }
     // Transparent pass — sorted back-to-front; each command sets its own state.
     _transparentQueue.sort((a, b) => b.depth.compareTo(a.depth));
     for (var cmd in _transparentQueue) {
-      cmd.execute(_renderPass!);
+      cmd.execute(_renderPass!, _hostBuffer);
     }
     _opaqueQueue.clear();
     _transparentQueue.clear();
