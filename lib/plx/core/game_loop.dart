@@ -28,7 +28,10 @@ class PlxGame extends StatefulWidget {
   State<PlxGame> createState() => _PlxGameState();
 }
 
-class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
+class _PlxGameState extends State<PlxGame> with 
+  SingleTickerProviderStateMixin, 
+  WidgetsBindingObserver 
+{
   Ticker? _ticker;
   double _lastTime = 0.0;
   late final PlxRenderer _renderer = PlxRenderer();
@@ -55,6 +58,15 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
     if (dt > 0.1) dt = 0.1;
     _manager.update(dt);    
     AudioManager.instance.update();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _manager.activeScene?.onPause();
+    } else if (state == AppLifecycleState.resumed) {
+      _manager.activeScene?.onResume();
+    }
   }
 
   @override
@@ -136,6 +148,7 @@ class _GamePainter extends CustomPainter {
     scene.draw(renderer);
     final image = renderer.endFrame();
     canvas.drawImage(image, Offset.zero, Paint());
+    image.dispose();
   }
 
   @override
