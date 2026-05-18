@@ -34,6 +34,7 @@ flutter:
   - .assets/textures/
   - .assets/models/
   - .assets/fonts/
+  - .assets/audio/
   fonts:
     - family: Goldman
       fonts:
