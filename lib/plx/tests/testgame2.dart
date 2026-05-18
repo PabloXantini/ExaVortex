@@ -104,6 +104,12 @@ class CubeDemoScene extends GameScene {
     // Ejecuta el draw de todas las entidades y componentes base
     super.draw(renderer);
   }
+
+  @override
+  void dispose() {
+    renderComponent.material?.dispose();
+    super.dispose();
+  }
 }
 
 /// UI Widget

@@ -42,11 +42,12 @@ class SoloudAudioManager implements PlxAudioManager {
     } catch (e) {
       if (e.toString().contains("AlreadyInitialized")) {
         debugPrint("SoLoud already initialized on native side.");
+        await _soloud!.disposeAllSources();
       } else {
         _initFuture = null;
         rethrow;
+        }
       }
-    }
     _soloud!.setVisualizationEnabled(true);
     _audioData = AudioData(GetSamplesKind.linear);
     _isInitialized = true;

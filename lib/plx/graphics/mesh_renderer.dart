@@ -29,4 +29,11 @@ class MeshRenderer extends Component {
       }
     renderer.submit(mesh!, material!, opaque: opaque, depth: depth, instance: instance);
   }
+
+  @override
+  void dispose() {
+    material = null;
+    mesh = null;
+    super.dispose();
+  }
 }

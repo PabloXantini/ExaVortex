@@ -79,27 +79,29 @@ class PlxRenderer {
 
   /// Starts the rendering frame, creating textures for color and depth.
   void beginFrame(Size size) {
-    this.size = size;
-    int w = this.size.width.toInt();
-    int h = this.size.height.toInt();
+    int w = size.width.toInt();
+    int h = size.height.toInt();
 
-    _renderTexture = gpu.gpuContext.createTexture(
-      gpu.StorageMode.devicePrivate,
-      w,
-      h,
-      enableRenderTargetUsage: true,
-      enableShaderReadUsage: true,
-      coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture,
-    );
+    if (this.size != size || _renderTexture == null || _depthTexture == null) {
+      this.size = size;
+      _renderTexture = gpu.gpuContext.createTexture(
+        gpu.StorageMode.devicePrivate,
+        w,
+        h,
+        enableRenderTargetUsage: true,
+        enableShaderReadUsage: true,
+        coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture,
+      );
 
-    _depthTexture = gpu.gpuContext.createTexture(
-      gpu.StorageMode.deviceTransient,
-      w,
-      h,
-      format: gpu.gpuContext.defaultDepthStencilFormat,
-      enableRenderTargetUsage: true,
-      coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture,
-    );
+      _depthTexture = gpu.gpuContext.createTexture(
+        gpu.StorageMode.deviceTransient,
+        w,
+        h,
+        format: gpu.gpuContext.defaultDepthStencilFormat,
+        enableRenderTargetUsage: true,
+        coordinateSystem: gpu.TextureCoordinateSystem.renderToTexture,
+      );
+    }
 
     _commandBuffer = gpu.gpuContext.createCommandBuffer();
 
@@ -158,5 +160,12 @@ class PlxRenderer {
     _flush();
     _commandBuffer?.submit();
     return _renderTexture!.asImage();
+  }
+
+  void dispose() {
+    _renderTexture = null;
+    _depthTexture = null;
+    _commandBuffer = null;
+    _renderPass = null;
   }
 }

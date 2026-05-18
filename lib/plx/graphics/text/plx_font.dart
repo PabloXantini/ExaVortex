@@ -132,8 +132,16 @@ class PlxFont {
     final image = await picture.toImage(maxSize, maxSize);
     final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     
+    picture.dispose();
+    image.dispose();
+    
     if (byteData != null) {
       atlasTexture = PlxTexture.fromBytes(maxSize, maxSize, byteData);
     }
+  }
+
+  void dispose() {
+    atlasTexture = null;
+    glyphs.clear();
   }
 }

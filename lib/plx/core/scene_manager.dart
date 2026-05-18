@@ -23,11 +23,8 @@ class SceneManager extends ChangeNotifier {
   Future<void> init(GameScene initialScene) async {
     _state = SceneTransitionState.loading;
     _activeScene = initialScene;
-    _activeScene?.cache = cache;
-    
-    await _activeScene?.onLoad();
-    _activeScene?.onInit();
-    
+    await _loadScene(_activeScene!);
+    _initializeScene(_activeScene!);
     _state = SceneTransitionState.idle;
     notifyListeners();
   }
@@ -71,19 +68,37 @@ class SceneManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _performSwitch() async {
-    // 1. Preload the new scene while the old one might still be in memory
-    if (_pendingScene != null) {
-      _pendingScene!.cache = cache;
-      await _pendingScene!.onLoad();
-    }    
-    // 2. Now that the new scene is ready, close the old one and swap
+  @override
+  void dispose(){
     _activeScene?.onClose();
+    _activeScene?.dispose();
+    _pendingScene?.dispose();
+    _activeScene = null;
+    _pendingScene = null;
+    super.dispose();
+  }
+
+  Future<void> _performSwitch() async {
+    // 1. Load the new scene
+    await _loadScene(_pendingScene!);
+    // 2. Close the old scene and swap
+    _activeScene?.onClose();
+    _activeScene?.dispose();
     _activeScene = _pendingScene;
-    // 3. Initialize entities
-    _activeScene?.onInit();
+    _initializeScene(_activeScene!);
     _pendingScene = null;
     _state = SceneTransitionState.fadingIn;
     notifyListeners();
+  }
+  Future<void> _loadScene(GameScene scene) async {
+    if(scene.wasLoaded) return;
+    scene.cache = cache;
+    await scene.onLoad();
+    scene.loaded = true;
+  }
+  void _initializeScene(GameScene scene) {
+    if(scene.wasInitialized) return;
+    scene.onInit();
+    scene.initalized = true;
   }
 }

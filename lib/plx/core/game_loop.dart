@@ -62,7 +62,9 @@ class _PlxGameState extends State<PlxGame> with SingleTickerProviderStateMixin {
     _ticker?.dispose();
     _focusNode.dispose();
     _manager.removeListener(_onManagerUpdate);
-    _manager.activeScene?.onClose();
+    _manager.dispose();
+    _renderer.dispose();
+    AudioManager.instance.dispose();
     super.dispose();
   }
 

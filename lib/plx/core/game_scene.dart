@@ -5,9 +5,10 @@ import 'resources.dart';
 
 abstract class GameScene {
   GameCache? _cache;
-  GameCache get cache => _cache ?? const NonCache();
-  set cache(GameCache value) => _cache = value;
-
+  // Flags
+  bool _loaded = false;
+  bool _initialized = false;
+  // Dependencies
   final InputManager input = InputManager();
   final AssetManager assets = AssetManager();
   final List<Entity> entities = [];
@@ -15,6 +16,13 @@ abstract class GameScene {
 
   GameScene({GameCache? cache}) : _cache = cache;
 
+  set initalized(bool value) => _initialized = value;
+  set loaded(bool value) => _loaded = value;
+  set cache(GameCache value) => _cache = value;
+
+  bool get wasLoaded => _loaded;
+  bool get wasInitialized => _initialized;
+  GameCache get cache => _cache ?? const NonCache();
   GameScene? get nextScene => _nextScene;
 
   void requestSceneChange(GameScene scene) {
@@ -34,6 +42,10 @@ abstract class GameScene {
   void onInit() {}
 
   void onClose() {}
+
+  void onPause() {}
+  
+  void onResume() {}
   
   void update(double dt) {
     for (var entity in entities) {
@@ -55,5 +67,18 @@ abstract class GameScene {
   void removeEntity(Entity entity) {
     entities.remove(entity);
     entity.scene = null;
+  }
+
+  /// Disposes of the scene and all its entities.
+  void dispose() {
+    final entitiesCopy = List<Entity>.of(entities);
+    for (var entity in entitiesCopy) {
+      entity.dispose();
+    }
+    entities.clear();
+    _loaded = false;
+    _initialized = false;
+    _cache = null;
+    _nextScene = null;
   }
 }

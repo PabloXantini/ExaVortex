@@ -11,6 +11,12 @@ class World extends Entity {
     addComponent(transform);
   }
 
+  @override
+  void dispose() {
+    view = null;
+    super.dispose();
+  }
+
   void _propagateViewProjection(Entity entity, Matrix4 vp) {
     for (var child in entity.children) {
       child.getComponent<MeshRenderer>()?.viewProjectionMatrix = vp;

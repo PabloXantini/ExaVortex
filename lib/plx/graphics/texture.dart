@@ -31,7 +31,9 @@ class PlxTexture {
     final ByteData data = await rootBundle.load(path);
     final Codec codec = await instantiateImageCodec(data.buffer.asUint8List());
     final FrameInfo fi = await codec.getNextFrame();
-    return fromImage(fi.image);
+    final texture = await fromImage(fi.image);
+    fi.image.dispose();
+    return texture;
   }
 
   /// Creates a texture from a ui.Image.

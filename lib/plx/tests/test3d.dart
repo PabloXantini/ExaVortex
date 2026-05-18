@@ -192,6 +192,12 @@ class _TextureCubePageState extends State<TextureCubePage> {
   }
 
   @override
+  void dispose() {
+    tick?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(

@@ -34,6 +34,15 @@ class PlxMaterial {
   /// Start a new material instance for a specific shader stage.
   MaterialInstance use(PlxShader stage) => MaterialInstance(this, stage);
 
+  void dispose() {
+    _shaders.forEach((_, state) {
+      state.uniforms.clear();
+      state.textures.clear();
+    });
+    _shaders.clear();
+    pipeline = null;
+  }
+
   void initPipeline() {
     _shaders.clear();
     final vertex = sh.baseShaderLibrary[vertexShaderName];

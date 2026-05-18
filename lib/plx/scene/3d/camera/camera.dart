@@ -106,4 +106,12 @@ class Camera3D extends Entity3D{
     addComponent(view!);
     world?.view = view;
   }
+
+  @override
+  void dispose() {
+    world?.view = null;
+    world = null;
+    view = null;
+    super.dispose();
+  }
 }

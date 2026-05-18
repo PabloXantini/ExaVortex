@@ -20,6 +20,12 @@ class InputTestScene extends GameScene {
     font = await PlxFont.load('PressStart2P');
     return super.onLoad();
   }
+
+  @override
+  void dispose() {
+    font.dispose();
+    super.dispose();
+  }
   
   @override
   void onInit() {
@@ -73,10 +79,10 @@ class InputTestScene extends GameScene {
   void update(double dt) {
     super.update(dt);
     double speed = 2.0;
-    if (input.isActionTriggered('MoveUp')) cube.rotation = Vector3(cube.rotation.x + speed * dt, cube.rotation.y, cube.rotation.z);
-    if (input.isActionTriggered('MoveDown')) cube.rotation = Vector3(cube.rotation.x - speed * dt, cube.rotation.y, cube.rotation.z);
-    if (input.isActionTriggered('MoveLeft')) cube.rotation = Vector3(cube.rotation.x, cube.rotation.y  - speed * dt, cube.rotation.z);
-    if (input.isActionTriggered('MoveRight')) cube.rotation = Vector3(cube.rotation.x, cube.rotation.y  + speed * dt, cube.rotation.z);
+    if (input.isActionTriggered('MoveUp')) cube.rotation = Vector3(cube.rotation.x - speed * dt, cube.rotation.y, cube.rotation.z);
+    if (input.isActionTriggered('MoveDown')) cube.rotation = Vector3(cube.rotation.x + speed * dt, cube.rotation.y, cube.rotation.z);
+    if (input.isActionTriggered('MoveLeft')) cube.rotation = Vector3(cube.rotation.x, cube.rotation.y - speed * dt, cube.rotation.z);
+    if (input.isActionTriggered('MoveRight')) cube.rotation = Vector3(cube.rotation.x, cube.rotation.y + speed * dt, cube.rotation.z);
     if (input.wasActionTriggered('Reset')) cube.rotation = Vector3.zero();
     if (input.wasActionTriggered('SaveConfig')) InputConfig.saveConfig(input);
     if (input.wasActionTriggered('LoadConfig')) InputConfig.loadConfig(input);

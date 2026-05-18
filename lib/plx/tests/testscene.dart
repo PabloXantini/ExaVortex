@@ -10,6 +10,7 @@ class SceneA extends GameScene {
   late Entity3D cube2;
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
+  late PlxMaterial material1;
   
   @override
   void onInit() {
@@ -25,7 +26,7 @@ class SceneA extends GameScene {
     viewComponent = CameraView3D(lens: CameraLensType.orthographic);
     cameraEntity.addComponent(viewComponent);
 
-    final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
@@ -39,6 +40,12 @@ class SceneA extends GameScene {
     addEntity(cube2);
 
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
+  }
+
+  @override
+  void dispose() {
+    material1.dispose();
+    super.dispose();
   }
 
   @override
@@ -67,6 +74,7 @@ class SceneB extends GameScene {
   late Entity3D cube2;
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
+  late PlxMaterial material1;
   
   @override
   void onInit() {
@@ -84,7 +92,7 @@ class SceneB extends GameScene {
     viewComponent = CameraView3D(lens: CameraLensType.perspective);
     cameraEntity.addComponent(viewComponent);
 
-    final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
@@ -97,6 +105,12 @@ class SceneB extends GameScene {
     addEntity(cube2);
 
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
+  }
+
+  @override
+  void dispose() {
+    material1.dispose();
+    super.dispose();
   }
 
   @override

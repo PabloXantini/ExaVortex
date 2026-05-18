@@ -11,10 +11,17 @@ class TransitionScene1 extends GameScene {
   late Entity3D cube1;
   late Entity3D cube2;
   late Entity3D cameraEntity;
+  late PlxMaterial material1;
 
   @override
   Future<void> onLoad() async {
     cubeTex = await assets.loadTexture('.assets/textures/jijija.png');
+  }
+
+  @override
+  void dispose() {
+    material1.dispose();
+    super.dispose();
   }
 
   @override
@@ -28,7 +35,7 @@ class TransitionScene1 extends GameScene {
     cameraEntity.position = Vector3(0, 0, 5);
     cameraEntity.addComponent(CameraView3D(lens: CameraLensType.perspective));
 
-    final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', cubeTex);
 
     cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
@@ -69,7 +76,14 @@ class TransitionScene1 extends GameScene {
 class TransitionScene2 extends GameScene {
   late Entity3D cube2;
   late Entity3D cameraEntity;
+  late PlxMaterial material;
   
+  @override
+  void dispose() {
+    material.dispose();
+    super.dispose();
+  }
+
   @override
   void onInit() {
     cameraEntity = Entity3D(name: 'Camera');
@@ -79,7 +93,7 @@ class TransitionScene2 extends GameScene {
 
     cube2 = Entity3D(name: 'Cube2');
     cube2.scale = Vector3.all(1.5);
-    final material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
     cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false));
     cube2.addComponent(RotatorComponent()..speedX = 3.0..speedY=0);

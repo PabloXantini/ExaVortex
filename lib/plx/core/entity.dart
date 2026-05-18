@@ -75,4 +75,24 @@ class Entity {
       if (e.active) e.draw(renderer);
     }
   }
+
+  /// Disposes of all components and children entities recursively.
+  void dispose() {
+    // Dispose components and clear them.
+    for (var comp in _components) {
+      comp.dispose();
+    }
+    _components.clear();
+    // Dispose children creating a copy first, then clear them.
+    final childrenCopy = List<Entity>.of(_children);
+    for (var child in childrenCopy) {
+      child.dispose();
+    }
+    _children.clear();
+    // Remove from parent and scene.
+    parent?.removeChild(this);
+    scene?.removeEntity(this);
+    parent = null;
+    scene = null;
+  }
 }
