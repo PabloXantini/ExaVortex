@@ -54,7 +54,7 @@ class PlxMaterial {
       return;
     }
     if (fragment == null) {
-      PlxLogger.warning(
+      PlxLogger.error(
         'Fragment Shader not found in library: $fragmentShaderName', system: 'Graphics'
       );
       return;
