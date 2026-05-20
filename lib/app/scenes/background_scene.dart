@@ -69,11 +69,19 @@ class BackgroundScene extends GameScene{
     addEntity(w1);
     handler.playSoundtrack('Song', volume: 1);
   }
+
   @override
-  void update(double dt) {
-    //background.rotation = background.rotation + Vector3(dt*0.5, dt*0.5, dt*2);
-    super.update(dt);
+  void onPause() {
+    handler.pauseSoundtrack();
+    super.onPause();
   }
+
+  @override
+  void onResume() {
+    handler.resumeSoundtrack();
+    super.onResume();
+  }
+
   @override
   void draw(PlxRenderer renderer) {
     final cb = background.colorPalette.first;

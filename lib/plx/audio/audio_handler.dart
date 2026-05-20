@@ -40,17 +40,27 @@ class AudioHandler {
 
   /// Detiene el soundtrack actual
   void stopSoundtrack() {
-    if (_currentSoundtrack != null) {
-      AudioManager.instance.stop(_currentSoundtrack!);
-      _currentSoundtrack = null;
-    }
+    if (_currentSoundtrack == null) return;
+    AudioManager.instance.stop(_currentSoundtrack!);
+    _currentSoundtrack = null;
+  }
+
+  /// Pausa el soundtrack actual
+  void pauseSoundtrack() {
+    if (_currentSoundtrack == null) return;
+    AudioManager.instance.setPause(_currentSoundtrack!, true);
+  }
+
+  /// Resume el soundtrack actual
+  void resumeSoundtrack() {
+    if (_currentSoundtrack == null) return;
+    AudioManager.instance.setPause(_currentSoundtrack!, false);
   }
 
   /// Cambia el volumen del soundtrack
   void setSoundtrackVolume(double volume) {
-    if (_currentSoundtrack != null) {
-      AudioManager.instance.setVolume(_currentSoundtrack!, volume);
-    }
+    if (_currentSoundtrack == null) return;
+    AudioManager.instance.setVolume(_currentSoundtrack!, volume);
   }
 
   /// Reproduce un efecto de sonido global 2D (ej. UI)
