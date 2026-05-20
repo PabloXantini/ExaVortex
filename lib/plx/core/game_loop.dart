@@ -4,6 +4,7 @@ import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/audio/plx_audio.dart';
 import 'package:exa_vortex/plx/input/input_layer.dart';
 import 'package:exa_vortex/plx/core/screen_layer.dart';
+import 'logger.dart';
 import 'scene/widgets.dart';
 import 'scene/scene_manager.dart';
 import 'scene/game_scene.dart';
@@ -31,6 +32,7 @@ class _PlxGameState extends State<PlxGame> with
   SingleTickerProviderStateMixin, 
   WidgetsBindingObserver 
 {
+  bool _wasPaused = false;
   Ticker? _ticker;
   double _lastTime = 0.0;
   final FocusNode _focusNode = FocusNode();
@@ -63,21 +65,36 @@ class _PlxGameState extends State<PlxGame> with
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    bool shouldPause = false;
     switch(state){
-      case AppLifecycleState.paused:
-        _manager.activeScene?.onPause();
-        break;
       case AppLifecycleState.resumed:
-        _manager.activeScene?.onResume();
+        PlxLogger.log('Application Resumed');
+        shouldPause = false;
+        break;
+      case AppLifecycleState.hidden:
+        PlxLogger.log('Application Hidden');
+        shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenHidden;
+        break;
+      case AppLifecycleState.paused:
+        PlxLogger.log('Application Paused');
+        shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenHidden;
         break;
       case AppLifecycleState.inactive:
-        _manager.activeScene?.onPause();
+        PlxLogger.log('Application Inactive (Out of focus)');
+        shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenOffFocus;
         break;
       case AppLifecycleState.detached:
-        _manager.activeScene?.onPause();
+        PlxLogger.log('Application Detached (Closing)');
         break;
-      default:
-        break;
+    }
+    if(shouldPause && !_wasPaused){
+      PlxLogger.log('Pausing scene');
+      _manager.activeScene!.onPause();
+      _wasPaused = true;
+    } else if(!shouldPause && _wasPaused){
+      _wasPaused = false;
+      PlxLogger.log('Resuming scene');
+      _manager.activeScene!.onResume();
     }
   }
 
@@ -89,6 +106,7 @@ class _PlxGameState extends State<PlxGame> with
     _manager.dispose();
     _renderer.dispose();
     AudioManager.instance.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
