@@ -10,6 +10,7 @@ class Text2D extends Entity2D {
   final PlxFont font;
   final double fontSize;
   final Vector4 color;
+  MeshRenderer? renderer;
 
   Text2D({
     super.name = 'Text2D',
@@ -17,6 +18,7 @@ class Text2D extends Entity2D {
     required this.font,
     this.fontSize = 1.0,
     Vector4? color,
+    MeshRenderer? renderer
   }) : 
     color = color ?? Vector4(1, 1, 1, 1) 
   {
@@ -30,8 +32,12 @@ class Text2D extends Entity2D {
       fontSize: fontSize,
       color: color,
     );
-    final renderer = MeshRenderer(material: font.defaultMaterial, opaque: false);
     addComponent(MeshComponent(mesh));
-    addComponent(renderer);
+    //Fallback renderer if not specified
+    if(renderer==null){
+      addComponent(font.defaultRenderer!);
+    }else{
+      addComponent(renderer!);
+    }
   }
 }

@@ -11,6 +11,7 @@ class Text3D extends Entity3D {
   final double fontSize;
   final double extrudeDepth;
   final Vector4 color;
+  MeshRenderer? renderer;
 
   Text3D({
     super.name = 'Text3D',
@@ -19,6 +20,7 @@ class Text3D extends Entity3D {
     this.fontSize = 1.0,
     this.extrudeDepth = 0.1,
     Vector4? color,
+    MeshRenderer? renderer
   }) : color = color ?? Vector4(1, 1, 1, 1) {
     _build();
   }
@@ -30,9 +32,12 @@ class Text3D extends Entity3D {
       fontSize: fontSize,
       color: color,
     );
-
-    final renderer = MeshRenderer(material: font.defaultMaterial, opaque: false);
     addComponent(MeshComponent(mesh));
-    addComponent(renderer);
+    //Fallback renderer if not specified
+    if(renderer==null){
+      addComponent(font.defaultRenderer!);
+    }else{
+      addComponent(renderer!);
+    }
   }
 }

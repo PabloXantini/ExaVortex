@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:exa_vortex/plx/core/logger.dart';
 import 'package:exa_vortex/plx/graphics/texture.dart';
 import 'package:exa_vortex/plx/graphics/material.dart';
+import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
 import 'glyph_info.dart';
 
 class PlxFont {
@@ -12,6 +13,7 @@ class PlxFont {
   final Map<int, GlyphInfo> glyphs = {};
   PlxTexture? atlasTexture;
   PlxMaterial? defaultMaterial;
+  MeshRenderer? defaultRenderer;
 
   PlxFont._(this.fontFamily);
 
@@ -62,7 +64,8 @@ class PlxFont {
 
     final image = await _createAtlasImage(characters, glyphSize, padding, maxSize, scale, renderFontSize, cols);
     await _generateTextureFromImage(image, maxSize);
-
+    //Initialize default text renderer components
+    // Text Default Material
     defaultMaterial = PlxMaterial(
       vertexShaderName: 'TextV',
       fragmentShaderName: 'TextF',
@@ -70,6 +73,11 @@ class PlxFont {
     if (atlasTexture != null) {
       defaultMaterial!.setTexture(PlxShader.fragment, 'text_atlas', atlasTexture!);
     }
+    // Text Default Renderer
+    defaultRenderer = MeshRenderer(
+      material: defaultMaterial!,
+      opaque: false
+    );
   }
 
   Future<ui.Image> _createAtlasImage(String characters, int glyphSize, int padding, int maxSize, double scale, double renderFontSize, int cols) async {
@@ -164,7 +172,10 @@ class PlxFont {
 
   void dispose() {
     atlasTexture = null;
+    defaultMaterial?.dispose();
+    defaultRenderer?.dispose();
     defaultMaterial = null;
+    defaultRenderer = null;
     glyphs.clear();
   }
 }
