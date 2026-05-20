@@ -65,33 +65,30 @@ class _PlxGameState extends State<PlxGame> with
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    PlxLogger.log('Lifecycle current state: ${state.name}');
+    if(_manager.activeScene == null) return;
     bool shouldPause = false;
     switch(state){
       case AppLifecycleState.resumed:
-        PlxLogger.log('Application Resumed');
         shouldPause = false;
         break;
       case AppLifecycleState.hidden:
-        PlxLogger.log('Application Hidden');
         shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenHidden;
         break;
       case AppLifecycleState.paused:
-        PlxLogger.log('Application Paused');
         shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenHidden;
         break;
       case AppLifecycleState.inactive:
-        PlxLogger.log('Application Inactive (Out of focus)');
         shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenOffFocus;
         break;
       case AppLifecycleState.detached:
-        PlxLogger.log('Application Detached (Closing)');
         break;
     }
     if(shouldPause && !_wasPaused){
       PlxLogger.log('Pausing scene');
       _manager.activeScene!.onPause();
       _wasPaused = true;
-    } else if(!shouldPause && _wasPaused){
+    } else if(!shouldPause && _wasPaused && state != AppLifecycleState.detached){
       _wasPaused = false;
       PlxLogger.log('Resuming scene');
       _manager.activeScene!.onResume();
