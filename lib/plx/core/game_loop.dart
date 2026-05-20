@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/audio/plx_audio.dart';
+import 'package:exa_vortex/plx/input/input_layer.dart';
 import 'game_scene.dart';
 import 'game_cache.dart';
 import 'scene_manager.dart';
@@ -105,44 +106,20 @@ class _PlxGameState extends State<PlxGame> with
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = constraints.biggest;
-        //TODO: Make an abstraction/encapsulation for the inputs
-        return TapRegion(
-          onTapInside: (_) => _focusNode.requestFocus(),
-          child: Focus(
-            focusNode: _focusNode,
-            autofocus: true,
-            onKeyEvent: (node, event) {
-              final handled = activeScene.input.handleKeyEvent(event);
-              return handled ? KeyEventResult.handled : KeyEventResult.ignored;
-            },
-            child: ListenableBuilder(
-              listenable: activeScene.input,
-              builder: (context, _) {
-                return MouseRegion(
-                  cursor: activeScene.input.cursor,
-                  child: Listener(
-                    onPointerDown: (event) => activeScene.input.handlePointerEvent(event),    // Events when something is pressed (keys, buttons)
-                    onPointerUp: (event) => activeScene.input.handlePointerEvent(event),      // Events when something is released (keys, buttons)
-                    onPointerMove: (event) => activeScene.input.handlePointerEvent(event),    // Events that track position when something is touched (drag mouse, touch)
-                    onPointerHover: (event) => activeScene.input.handlePointerEvent(event),   // Events that track position when something is on widget (mouse hover)
-                    onPointerCancel: (event) => activeScene.input.handlePointerEvent(event),  // Events when OS interrupts
-                    onPointerSignal: (event) => activeScene.input.handlePointerSignal(event), // Other events (mouse wheels, trackpads)
-                    child: Stack(
-                      children: [
-                        RepaintBoundary(
-                          child: CustomPaint(
-                            size: size,
-                            painter: _GamePainter(_renderer, activeScene, _manager.progress),
-                          ),
-                        ),
-                        if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
-                          widget.transitionBuilder!(context, _manager.progress, _manager.state),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+        return PlxInputLayer(
+          focusNode: _focusNode,
+          inputManager: activeScene.input,
+          child: Stack(
+            children: [
+              RepaintBoundary(
+                child: CustomPaint(
+                  size: size,
+                  painter: _GamePainter(_renderer, activeScene, _manager.progress),
+                ),
+              ),
+              if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
+                widget.transitionBuilder!(context, _manager.progress, _manager.state),
+            ],
           ),
         );
       },
