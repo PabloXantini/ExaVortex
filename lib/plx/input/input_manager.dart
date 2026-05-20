@@ -8,7 +8,7 @@ import 'mouse/mouse_state.dart';
 import 'mouse/cursor.dart';
 import 'touch/touch_state.dart';
 
-class InputManager extends ChangeNotifier {
+class PlxInputManager extends ChangeNotifier {
   // Specialized States
   final KeyboardState keyboard = KeyboardState();
   final MouseState mouse = MouseState();

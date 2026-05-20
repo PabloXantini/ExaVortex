@@ -5,6 +5,7 @@ import 'package:exa_vortex/plx/audio/plx_audio.dart';
 import 'package:exa_vortex/plx/input/input_layer.dart';
 import 'package:exa_vortex/plx/core/screen_layer.dart';
 import 'logger.dart';
+import 'resources/resources.dart';
 import 'scene/widgets.dart';
 import 'scene/scene_manager.dart';
 import 'scene/game_scene.dart';
@@ -38,7 +39,11 @@ class _PlxGameState extends State<PlxGame> with
   final FocusNode _focusNode = FocusNode();
   //PlxGame most important dependencies
   late final PlxRenderer _renderer = PlxRenderer();
-  late final SceneManager _manager = SceneManager(cache: widget.cache);
+  late final PlxAssetManager _assets = PlxAssetManager();
+  late final SceneManager _manager = SceneManager(
+    assetManager: _assets, 
+    cache: widget.cache
+  );
 
   void _onManagerUpdate() {
     setState(() {});
@@ -102,6 +107,7 @@ class _PlxGameState extends State<PlxGame> with
     _manager.removeListener(_onManagerUpdate);
     _manager.dispose();
     _renderer.dispose();
+    _assets.dispose();
     AudioManager.instance.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();

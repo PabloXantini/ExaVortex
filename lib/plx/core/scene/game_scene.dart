@@ -1,8 +1,8 @@
 import 'package:exa_vortex/plx/core/game_lifecycle.dart';
 import 'package:exa_vortex/plx/core/plx_core.dart';
+import 'package:exa_vortex/plx/core/resources/resources.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/input/plx_input.dart';
-import '../resources.dart';
 
 abstract class GameScene {
   GameCache? _cache;
@@ -10,9 +10,9 @@ abstract class GameScene {
   bool _loaded = false;
   bool _initialized = false;
   // Dependencies
-  final GameLifecycle lifecycle = GameLifecycle();
-  final InputManager input = InputManager();
-  final AssetManager assets = AssetManager();
+  final PlxLifecyclePolicy lifecycle = PlxLifecyclePolicy();
+  final PlxInputManager input = PlxInputManager();
+  late PlxAssetManager asset;
   final List<Entity> entities = [];
   GameScene? _nextScene;
 

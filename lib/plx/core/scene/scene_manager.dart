@@ -1,14 +1,17 @@
+import 'package:exa_vortex/plx/core/resources/resources.dart';
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
-import '../game_cache.dart';
+import 'package:exa_vortex/plx/core/game_cache.dart';
 
 enum SceneTransitionState { idle, fadingOut, loading, fadingIn }
 
 class SceneManager extends ChangeNotifier {
   final GameCache cache;
+  final PlxAssetManager assetManager;
   
-  SceneManager({GameCache? cache}) : 
-  cache = cache ?? const NonCache()
+  SceneManager({PlxAssetManager? assetManager, GameCache? cache}) : 
+    assetManager = assetManager ?? PlxAssetManager(),
+    cache = cache ?? const NonCache()
   ; 
 
   GameScene? _activeScene;
@@ -96,7 +99,10 @@ class SceneManager extends ChangeNotifier {
   }
   Future<void> _loadScene(GameScene scene) async {
     if(scene.wasLoaded) return;
+    // Pass the necessary dependencies to the scene
+    scene.asset = assetManager;
     scene.cache = cache;
+    // Load scene
     await scene.onLoad();
     scene.loaded = true;
   }

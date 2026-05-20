@@ -13,7 +13,7 @@ class InputConfig {
     return File('${directory.path}/$_fileName');
   }
 
-  static Future<void> saveConfig(InputManager manager) async {
+  static Future<void> saveConfig(PlxInputManager manager) async {
     try {
       final file = await _getConfigFile();
       final bindings = manager.getBindings();
@@ -31,7 +31,7 @@ class InputConfig {
     }
   }
 
-  static Future<bool> loadConfig(InputManager manager) async {
+  static Future<bool> loadConfig(PlxInputManager manager) async {
     try {
       final file = await _getConfigFile();
       if (!await file.exists()) {

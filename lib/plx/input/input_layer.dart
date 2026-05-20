@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class PlxInputLayer extends StatelessWidget {
   final FocusNode focusNode;
-  final InputManager inputManager;
+  final PlxInputManager inputManager;
   final Widget child;
   
   const PlxInputLayer(

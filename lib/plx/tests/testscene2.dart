@@ -15,7 +15,7 @@ class TransitionScene1 extends GameScene {
 
   @override
   Future<void> onLoad() async {
-    cubeTex = await assets.loadTexture('.assets/textures/jijija.png');
+    cubeTex = await asset.loadTexture('TrollFace', '.assets/textures/jijija.png');
   }
 
   @override
