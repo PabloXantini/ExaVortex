@@ -1,5 +1,5 @@
 import '../graphics/renderer.dart';
-import 'game_scene.dart';
+import 'scene/game_scene.dart';
 import 'component.dart';
 
 class Entity {

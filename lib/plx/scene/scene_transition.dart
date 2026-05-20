@@ -1,5 +1,5 @@
-import '../core/game_scene.dart';
-import '../core/component.dart';
+import 'package:exa_vortex/plx/core/component.dart';
+import 'package:exa_vortex/plx/core/scene/game_scene.dart';
 
 class SceneTransition extends Component {
   final GameScene targetScene;

@@ -1,7 +1,7 @@
 import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/input/plx_input.dart';
-import 'resources.dart';
+import '../resources.dart';
 
 abstract class GameScene {
   GameCache? _cache;

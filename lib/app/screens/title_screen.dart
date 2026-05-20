@@ -16,9 +16,9 @@ class _TitleScreenState extends State<TitleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-        PlxGame(initialScene: BackgroundScene()) 
+      //  PlxGame(initialScene: BackgroundScene()) 
       //TestInputGame() 
-      /*
+      //*
       Row(
         children: [
           Expanded(
@@ -34,7 +34,7 @@ class _TitleScreenState extends State<TitleScreen> {
           ),
         ],
       ),
-      */
+      //*/
     );
   }
 }

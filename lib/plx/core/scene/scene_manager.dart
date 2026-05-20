@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
-import 'game_cache.dart';
+import '../game_cache.dart';
 
 enum SceneTransitionState { idle, fadingOut, loading, fadingIn }
 
 class SceneManager extends ChangeNotifier {
   final GameCache cache;
   
-  SceneManager({GameCache? cache}) : cache = cache ?? const NonCache(); 
+  SceneManager({GameCache? cache}) : 
+  cache = cache ?? const NonCache()
+  ; 
 
   GameScene? _activeScene;
   GameScene? _pendingScene;
@@ -16,6 +18,8 @@ class SceneManager extends ChangeNotifier {
   double _progress = 0.0;
   double _duration = 0.5;
 
+  bool get isLoading => _activeScene == null || _state == SceneTransitionState.loading;
+  bool get isTransitioning => _state != SceneTransitionState.idle;
   GameScene? get activeScene => _activeScene;
   SceneTransitionState get state => _state;
   double get progress => _progress;

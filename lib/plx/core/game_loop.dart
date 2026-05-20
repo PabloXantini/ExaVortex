@@ -3,26 +3,24 @@ import 'package:flutter/scheduler.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/audio/plx_audio.dart';
 import 'package:exa_vortex/plx/input/input_layer.dart';
-import 'game_scene.dart';
+import 'package:exa_vortex/plx/core/screen_layer.dart';
+import 'scene/game_scene.dart';
 import 'game_cache.dart';
-import 'scene_manager.dart';
-
-typedef PlxTransitionBuilder = Widget Function(
-  BuildContext context, 
-  double progress, 
-  SceneTransitionState state
-);
+import 'scene/scene_manager.dart';
+import 'scene/widgets.dart';
 
 class PlxGame extends StatefulWidget {
   final GameScene initialScene;
   final GameCache? cache;
   final PlxTransitionBuilder? transitionBuilder;
+  final WidgetBuilder? loadingBuilder;
 
   const PlxGame({
     super.key,
     required this.initialScene,
     this.cache,
     this.transitionBuilder,
+    this.loadingBuilder,
   });
 
   @override
@@ -35,19 +33,10 @@ class _PlxGameState extends State<PlxGame> with
 {
   Ticker? _ticker;
   double _lastTime = 0.0;
+  final FocusNode _focusNode = FocusNode();
+  //PlxGame most important dependencies
   late final PlxRenderer _renderer = PlxRenderer();
   late final SceneManager _manager = SceneManager(cache: widget.cache);
-  final FocusNode _focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    AudioManager.instance.init();
-    _manager.init(widget.initialScene);
-    _manager.addListener(_onManagerUpdate);
-    _ticker = createTicker(_onTick)..start();
-  }
 
   void _onManagerUpdate() {
     setState(() {});
@@ -60,6 +49,16 @@ class _PlxGameState extends State<PlxGame> with
     if (dt > 0.1) dt = 0.1;
     _manager.update(dt);    
     AudioManager.instance.update();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    AudioManager.instance.init();
+    _manager.init(widget.initialScene);
+    _manager.addListener(_onManagerUpdate);
+    _ticker = createTicker(_onTick)..start();
   }
 
   @override
@@ -96,28 +95,24 @@ class _PlxGameState extends State<PlxGame> with
   @override
   Widget build(BuildContext context) {
     final activeScene = _manager.activeScene;
-    //Thing i must change in the future
-    // TODO: Make an elegant way to handle this. The idea is to show a loading screen 
-    // TODO: until the scene is loaded.
-    if (activeScene == null || _manager.state == SceneTransitionState.loading) {
-      return const ColoredBox(color: Color(0xFF000000));
+    if (_manager.isLoading) {
+      if (widget.loadingBuilder == null) return const ColoredBox(color: Color(0x00000000));
+      return widget.loadingBuilder!(context);
     }
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = constraints.biggest;
         return PlxInputLayer(
           focusNode: _focusNode,
-          inputManager: activeScene.input,
+          inputManager: activeScene!.input,
           child: Stack(
             children: [
-              RepaintBoundary(
-                child: CustomPaint(
-                  size: size,
-                  painter: _GamePainter(_renderer, activeScene, _manager.progress),
-                ),
+              PlxScreenLayer(
+                size: size,
+                scene: activeScene,
+                renderer: _renderer,
               ),
-              if (widget.transitionBuilder != null && _manager.state != SceneTransitionState.idle)
+              if (widget.transitionBuilder != null && _manager.isTransitioning)
                 widget.transitionBuilder!(context, _manager.progress, _manager.state),
             ],
           ),
@@ -125,24 +120,4 @@ class _PlxGameState extends State<PlxGame> with
       },
     );
   }
-}
-
-class _GamePainter extends CustomPainter {
-  final PlxRenderer renderer;
-  final GameScene scene;
-  final double progress;
-
-  _GamePainter(this.renderer, this.scene, this.progress);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    renderer.beginFrame(size);
-    scene.draw(renderer);
-    final image = renderer.endFrame();
-    canvas.drawImage(image, Offset.zero, Paint());
-    image.dispose();
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
