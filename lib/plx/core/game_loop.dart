@@ -41,6 +41,7 @@ class _PlxGameState extends State<PlxGame> with
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     AudioManager.instance.init();
     _manager.init(widget.initialScene);
     _manager.addListener(_onManagerUpdate);
@@ -62,10 +63,21 @@ class _PlxGameState extends State<PlxGame> with
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      _manager.activeScene?.onPause();
-    } else if (state == AppLifecycleState.resumed) {
-      _manager.activeScene?.onResume();
+    switch(state){
+      case AppLifecycleState.paused:
+        _manager.activeScene?.onPause();
+        break;
+      case AppLifecycleState.resumed:
+        _manager.activeScene?.onResume();
+        break;
+      case AppLifecycleState.inactive:
+        _manager.activeScene?.onPause();
+        break;
+      case AppLifecycleState.detached:
+        _manager.activeScene?.onPause();
+        break;
+      default:
+        break;
     }
   }
 
@@ -83,6 +95,9 @@ class _PlxGameState extends State<PlxGame> with
   @override
   Widget build(BuildContext context) {
     final activeScene = _manager.activeScene;
+    //Thing i must change in the future
+    // TODO: Make an elegant way to handle this. The idea is to show a loading screen 
+    // TODO: until the scene is loaded.
     if (activeScene == null || _manager.state == SceneTransitionState.loading) {
       return const ColoredBox(color: Color(0xFF000000));
     }
@@ -90,7 +105,7 @@ class _PlxGameState extends State<PlxGame> with
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = constraints.biggest;
-        
+        //TODO: Make an abstraction/encapsulation for the inputs
         return TapRegion(
           onTapInside: (_) => _focusNode.requestFocus(),
           child: Focus(
