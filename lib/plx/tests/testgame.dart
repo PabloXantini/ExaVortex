@@ -81,11 +81,12 @@ class CubeDemoScene extends GameScene {
     final material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
     // 4. Create the mesh renderer
-    renderComponent = MeshRenderer(mesh: getCubeMesh(), material: material);
+    renderComponent = MeshRenderer(material: material);
     // Cube:
     rotator = RotatorComponent()
       ..speedX = -0.5
       ..speedY = 0.5;
+    cubeEntity.addComponent(MeshComponent(getCubeMesh()));
     cubeEntity.addComponent(renderComponent);
     cubeEntity.addComponent(rotator);
     addEntity(cameraEntity);
@@ -99,8 +100,8 @@ class CubeDemoScene extends GameScene {
   void draw(PlxRenderer renderer) {
     // Calculamos la cámara (proyección) basándonos en el tamaño actual de la pantalla
     final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
-    // Le pasamos la matriz de la cámara al componente de renderizado antes de que se dibuje
-    renderComponent.viewProjectionMatrix = res;
+    // Le pasamos la matriz de la cámara al renderer global
+    renderer.viewProjectionMatrix = res;
     // Ejecuta el draw de todas las entidades y componentes base
     super.draw(renderer);
   }

@@ -21,11 +21,7 @@ class Background extends Entity3D {
 
     skeleton = RegularPolygon2D(numvertices: numSides, radius: radius);
     _generateMesh();
-    // Attach renderer component
-    final material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
-    material1.setTexture(PlxShader.fragment, 'tex', PlxTexture.fromPixels(1, 1, [0xFFFFFFFF]));
-    final renderer = MeshRenderer(mesh: model, material: material1);
-    addComponent(renderer);
+    addComponent(MeshComponent(model));
   }
 
   final int vertexColoring;

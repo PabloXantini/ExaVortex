@@ -59,7 +59,10 @@ class Entity {
   void update(double dt) {
     for (var comp in _components) {
       if (comp.active) {
+        final oldEntity = comp.entity;
+        comp.entity = this;
         comp.update(dt);
+        comp.entity = oldEntity;
       }
     }
     for (var e in _children){
@@ -69,7 +72,12 @@ class Entity {
 
   void draw(PlxRenderer renderer) {
     for (var comp in _components) {
-      if (comp.active) comp.draw(renderer);
+      if (comp.active) {
+        final oldEntity = comp.entity;
+        comp.entity = this;
+        comp.draw(renderer);
+        comp.entity = oldEntity;
+      }
     }
     for (var e in _children){
       if (e.active) e.draw(renderer);

@@ -36,7 +36,7 @@ class InputTestScene extends GameScene {
     cube = Entity3D(name: 'InputControlledCube');
     final material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
-    renderM = MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false);
+    renderM = MeshRenderer(material: material, opaque: false);
     
     helloW = Text2D(
       name: 'HWTEXT',
@@ -51,6 +51,7 @@ class InputTestScene extends GameScene {
     cube.position = Vector3(0, 0, 0);
     camera.position = Vector3(0, 0, 5);
     
+    cube.addComponent(MeshComponent(getCubeMesh()));
     cube.addComponent(renderM);
     world.addChild(cube);
     world.addChild(helloW);

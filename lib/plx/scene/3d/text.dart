@@ -1,4 +1,4 @@
-import 'package:exa_vortex/plx/graphics/material.dart';
+import 'package:exa_vortex/plx/graphics/mesh_component.dart';
 import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
 import 'package:exa_vortex/plx/graphics/text/plx_font.dart';
 import 'package:exa_vortex/plx/graphics/text/text_geometry_builder.dart';
@@ -31,15 +31,8 @@ class Text3D extends Entity3D {
       color: color,
     );
 
-    final renderer = MeshRenderer(mesh: mesh, opaque: false);
-    final textMaterial = PlxMaterial(
-      vertexShaderName: 'TextV',
-      fragmentShaderName: 'TextF',
-    );
-    if (font.atlasTexture != null) {
-      textMaterial.setTexture(PlxShader.fragment, 'text_atlas', font.atlasTexture!);
-    }
-    renderer.material = textMaterial;
+    final renderer = MeshRenderer(material: font.defaultMaterial, opaque: false);
+    addComponent(MeshComponent(mesh));
     addComponent(renderer);
   }
 }

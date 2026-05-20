@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter_gpu/gpu.dart' as gpu;
+import 'package:vector_math/vector_math_64.dart';
 import 'package:vector_math/vector_math.dart' as v32;
 import 'mesh.dart';
 import 'material.dart';
@@ -66,6 +67,7 @@ class PlxRenderer {
   gpu.Texture? _depthTexture;
   v32.Vector4? _backgroundColor = v32.Colors.black;
   final double _depthClearValue = 1.0;
+  Matrix4 viewProjectionMatrix = Matrix4.identity();
 
   final gpu.HostBuffer _hostBuffer = gpu.gpuContext.createHostBuffer();
   final List<_RenderCommand> _opaqueQueue = [];

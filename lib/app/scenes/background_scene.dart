@@ -9,6 +9,8 @@ class BackgroundScene extends GameScene{
   //Resources
   late AudioHandler handler;
   late PlxFont font;
+  late PlxMaterial material1;
+  late MeshRenderer rM;
   //Components
   late AudioListener3D listener;
   late AudioSource3D song;
@@ -29,6 +31,9 @@ class BackgroundScene extends GameScene{
   @override
   void onInit() {
     super.onInit();
+    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1.setTexture(PlxShader.fragment, 'tex', PlxTexture.fromPixels(1, 1, [0xFFFFFFFF]));
+    rM = MeshRenderer(material: material1);
     w1 = World();
     title = Text2D(
       name: 'GameTitle', 
@@ -60,6 +65,7 @@ class BackgroundScene extends GameScene{
     rotator.maxAngle = Vector3(45, 45, double.infinity);
     
     camera.addComponent(listener);
+    background.addComponent(rM);
     background.addComponent(rotator);
     
     w1.addChild(background);
@@ -93,6 +99,8 @@ class BackgroundScene extends GameScene{
   void dispose() {
     font.dispose();
     handler.dispose();
+    material1.dispose();
+    rM.dispose();
     super.dispose();
   }
 }

@@ -1,39 +1,38 @@
 import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/math/plx_math.dart';
-import 'mesh.dart';
+import 'mesh_component.dart';
 import 'material.dart';
 import 'renderer.dart';
 
 class MeshRenderer extends Component {
-  Mesh? mesh;
   PlxMaterial? material;
   bool opaque = true;
-  Matrix4 viewProjectionMatrix = Matrix4.identity();
 
-  MeshRenderer({this.mesh, this.material, this.opaque = true});
+  MeshRenderer({this.material, this.opaque = true});
 
   @override
   void draw(PlxRenderer renderer) {
-    if (mesh == null || material == null || entity == null) return;
+    if (material == null || entity == null) return;
+    final meshComponent = entity!.getComponent<MeshComponent>();
+    if (meshComponent == null || meshComponent.mesh == null) return;
 
     double depth = 0.0;
     final instance = material!.use(PlxShader.vertex);
     final transform = entity!.getComponent<TransformUser>();
     if (transform != null) {
       // Compute MVP.
-      final Matrix4 mvpMatrix = viewProjectionMatrix * transform.modelMatrix;
+      final Matrix4 mvpMatrix = renderer.viewProjectionMatrix * transform.modelMatrix;
       // Calculate depth (Z distance from camera in clip space).
       final Vector4 centerClip = mvpMatrix.transform(Vector4(0, 0, 0, 1));
       depth = centerClip.z;
         instance.setMatrix4('ModelInfo', mvpMatrix);
       }
-    renderer.submit(mesh!, material!, opaque: opaque, depth: depth, instance: instance);
+    renderer.submit(meshComponent.mesh!, material!, opaque: opaque, depth: depth, instance: instance);
   }
 
   @override
   void dispose() {
     material = null;
-    mesh = null;
     super.dispose();
   }
 }

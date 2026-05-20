@@ -11,6 +11,7 @@ class SceneA extends GameScene {
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
   late PlxMaterial material1;
+  late MeshRenderer rM;
   
   @override
   void onInit() {
@@ -29,10 +30,14 @@ class SceneA extends GameScene {
     material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
-    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    rM = MeshRenderer(material: material1);
+
+    cube1.addComponent(MeshComponent(getCubeMesh()));
+    cube1.addComponent(rM);
     cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
 
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    cube2.addComponent(MeshComponent(getCubeMesh()));
+    cube2.addComponent(rM);
     cube2.addComponent(RotatorComponent()..speedX = 0.5..speedY = -0.5);
 
     addEntity(cameraEntity);
@@ -45,6 +50,7 @@ class SceneA extends GameScene {
   @override
   void dispose() {
     material1.dispose();
+    rM.dispose();
     super.dispose();
   }
 
@@ -59,12 +65,7 @@ class SceneA extends GameScene {
   @override
   void draw(PlxRenderer renderer) {
     final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
-    for (var entity in entities) {
-      final rendererComp = entity.getComponent<MeshRenderer>();
-      if (rendererComp != null) {
-        rendererComp.viewProjectionMatrix = res;
-      }
-    }
+    renderer.viewProjectionMatrix = res;
     super.draw(renderer);
   }
 }
@@ -75,6 +76,7 @@ class SceneB extends GameScene {
   late Entity3D cameraEntity;
   late CameraView3D viewComponent;
   late PlxMaterial material1;
+  late MeshRenderer rM;
   
   @override
   void onInit() {
@@ -95,9 +97,14 @@ class SceneB extends GameScene {
     material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
-    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    rM = MeshRenderer(material: material1);
+
+    cube1.addComponent(MeshComponent(getCubeMesh()));
+    cube1.addComponent(rM);
     cube1.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1));
+    
+    cube2.addComponent(MeshComponent(getCubeMesh()));
+    cube2.addComponent(rM);
     cube2.addComponent(RotatorComponent()..speedX = -0.5..speedY = 0.5);
 
     addEntity(cameraEntity);
@@ -110,6 +117,7 @@ class SceneB extends GameScene {
   @override
   void dispose() {
     material1.dispose();
+    rM.dispose();
     super.dispose();
   }
 
@@ -124,12 +132,7 @@ class SceneB extends GameScene {
   @override
   void draw(PlxRenderer renderer) {
     final res = viewComponent.getResult(renderer.size.width, renderer.size.height);
-    for (var entity in entities) {
-      final rendererComp = entity.getComponent<MeshRenderer>();
-      if (rendererComp != null) {
-        rendererComp.viewProjectionMatrix = res;
-      }
-    }
+    renderer.viewProjectionMatrix = res;
     super.draw(renderer);
   }
 }

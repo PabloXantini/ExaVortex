@@ -1,6 +1,7 @@
 export 'material.dart';
 export 'renderer.dart';
 export 'mesh_renderer.dart';
+export 'mesh_component.dart';
 export 'mesh.dart';
 export 'shader_loader.dart';
 export 'texture.dart';

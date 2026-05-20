@@ -12,6 +12,7 @@ class TransitionScene1 extends GameScene {
   late Entity3D cube2;
   late Entity3D cameraEntity;
   late PlxMaterial material1;
+  late MeshRenderer rM;
 
   @override
   Future<void> onLoad() async {
@@ -21,6 +22,7 @@ class TransitionScene1 extends GameScene {
   @override
   void dispose() {
     material1.dispose();
+    rM.dispose();
     super.dispose();
   }
 
@@ -38,8 +40,12 @@ class TransitionScene1 extends GameScene {
     material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', cubeTex);
 
-    cube1.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material1, opaque: false));
+    rM = MeshRenderer(material: material1, opaque: false);
+
+    cube1.addComponent(MeshComponent(getCubeMesh()));
+    cube1.addComponent(rM);
+    cube2.addComponent(MeshComponent(getCubeMesh()));
+    cube2.addComponent(rM);
     cube1.addComponent(RotatorComponent()..speedX = 0.0..speedY=2);
 
     addEntity(cameraEntity);
@@ -66,8 +72,7 @@ class TransitionScene1 extends GameScene {
     final view = cameraEntity.getComponent<CameraView3D>();
     if (view != null) {
       final res = view.getResult(renderer.size.width, renderer.size.height);
-      cube1.getComponent<MeshRenderer>()?.viewProjectionMatrix = res;
-      cube2.getComponent<MeshRenderer>()?.viewProjectionMatrix = res;
+      renderer.viewProjectionMatrix = res;
     }
     super.draw(renderer);
   }
@@ -77,10 +82,12 @@ class TransitionScene2 extends GameScene {
   late Entity3D cube2;
   late Entity3D cameraEntity;
   late PlxMaterial material;
+  late MeshRenderer rM;
   
   @override
   void dispose() {
     material.dispose();
+    rM.dispose();
     super.dispose();
   }
 
@@ -95,7 +102,9 @@ class TransitionScene2 extends GameScene {
     cube2.scale = Vector3.all(1.5);
     material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
-    cube2.addComponent(MeshRenderer(mesh: getCubeMesh(), material: material, opaque: false));
+    rM = MeshRenderer(material: material, opaque: false);
+    cube2.addComponent(MeshComponent(getCubeMesh()));
+    cube2.addComponent(rM);
     cube2.addComponent(RotatorComponent()..speedX = 3.0..speedY=0);
 
     addEntity(cube2);
@@ -113,7 +122,7 @@ class TransitionScene2 extends GameScene {
     final view = cameraEntity.getComponent<CameraView3D>();
     if (view != null) {
       final res = view.getResult(renderer.size.width, renderer.size.height);
-      cube2.getComponent<MeshRenderer>()?.viewProjectionMatrix = res;
+      renderer.viewProjectionMatrix = res;
     }
     super.draw(renderer);
   }
