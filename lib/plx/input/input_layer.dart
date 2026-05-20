@@ -19,6 +19,12 @@ class PlxInputLayer extends StatelessWidget {
       onTapInside: (_)=>focusNode.requestFocus(),
       onTapOutside: (_)=>focusNode.unfocus(),
       child: Focus(
+        focusNode: focusNode,
+        autofocus: true,
+        onKeyEvent: (node, event){
+          final handled = inputManager.handleKeyEvent(event);
+          return handled ? KeyEventResult.handled : KeyEventResult.ignored;
+        },
         child: ListenableBuilder(
           listenable: inputManager, 
           builder: (context, _) {
