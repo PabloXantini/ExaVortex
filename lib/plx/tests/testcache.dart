@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../plx.dart';
+import 'package:exa_vortex/plx/plx.dart';
 
 class MyGameCache extends GameCache {
   int score = 0;
@@ -10,9 +10,9 @@ class CacheScene extends GameScene {
   @override
   void onInit() {
     final myCache = cache as MyGameCache;
-    debugPrint('Current Score: ${myCache.score}');
+    PlxLogger.message('Current Score: ${myCache.score}', system: 'Cache');
     myCache.score += 10;
-    debugPrint('New Score: ${myCache.score}');
+    PlxLogger.message('New Score: ${myCache.score}', system: 'Cache');
   }
 }
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:exa_vortex/plx/core/logger.dart';
 import 'physical_input.dart';
 import 'input_manager.dart';
 
@@ -25,9 +25,9 @@ class InputConfig {
       });
 
       await file.writeAsString(jsonEncode(jsonMap));
-      debugPrint('Input config saved to ${file.path}');
+      PlxLogger.message('Input config saved to ${file.path}', system: 'Input');
     } catch (e) {
-      debugPrint('Error saving input config: $e');
+      PlxLogger.error('Error saving input config: $e', system: 'Input');
     }
   }
 
@@ -35,7 +35,7 @@ class InputConfig {
     try {
       final file = await _getConfigFile();
       if (!await file.exists()) {
-        debugPrint('Config file does not exist, using defaults.');
+        PlxLogger.warning('Config file does not exist, using defaults.', system: 'Input');
         return false;
       }
 
@@ -54,10 +54,10 @@ class InputConfig {
         }
       });
       
-      debugPrint('Input config loaded from ${file.path}');
+      PlxLogger.message('Input config loaded from ${file.path}', system: 'Input');
       return true;
     } catch (e) {
-      debugPrint('Error loading input config: $e');
+      PlxLogger.error('Error loading input config: $e', system: 'Input');
       return false;
     }
   }

@@ -4,10 +4,10 @@ import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/audio/plx_audio.dart';
 import 'package:exa_vortex/plx/input/input_layer.dart';
 import 'package:exa_vortex/plx/core/screen_layer.dart';
+import 'scene/widgets.dart';
+import 'scene/scene_manager.dart';
 import 'scene/game_scene.dart';
 import 'game_cache.dart';
-import 'scene/scene_manager.dart';
-import 'scene/widgets.dart';
 
 class PlxGame extends StatefulWidget {
   final GameScene initialScene;

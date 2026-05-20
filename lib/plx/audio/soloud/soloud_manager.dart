@@ -1,7 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:vector_math/vector_math_64.dart';
-import '../audio_core.dart';
+import 'package:exa_vortex/plx/audio/audio_core.dart';
+import 'package:exa_vortex/plx/core/logger.dart';
+import 'dart:typed_data';
 
 class SoloudAudioSource implements PlxAudioSource {
   final AudioSource source;
@@ -41,7 +42,7 @@ class SoloudAudioManager implements PlxAudioManager {
       await _soloud!.init(bufferSize: 1024);
     } catch (e) {
       if (e.toString().contains("AlreadyInitialized")) {
-        debugPrint("SoLoud already initialized on native side.");
+        PlxLogger.message("SoLoud already initialized on native side.", system: 'Audio');
         await _soloud!.disposeAllSources();
       } else {
         _initFuture = null;
@@ -51,7 +52,7 @@ class SoloudAudioManager implements PlxAudioManager {
     _soloud!.setVisualizationEnabled(true);
     _audioData = AudioData(GetSamplesKind.linear);
     _isInitialized = true;
-    debugPrint("SoloudAudioManager initialized with visualization enabled");
+    PlxLogger.message("SoloudAudioManager initialized with visualization enabled", system: 'Audio');
   }
 
   Future<void> _ensureInitialized() async {
@@ -69,7 +70,7 @@ class SoloudAudioManager implements PlxAudioManager {
       _audioData?.dispose();
       _soloud?.deinit();
       _isInitialized = false;
-      debugPrint("SoloudAudioManager disposed");
+      PlxLogger.message("SoloudAudioManager disposed", system: 'Audio');
     }
   }
 
@@ -186,7 +187,7 @@ class SoloudAudioManager implements PlxAudioManager {
     try {
       _audioData?.updateSamples();
     } catch (e) {
-      debugPrint("Error updating audio samples: $e");
+      PlxLogger.error("Error updating audio samples: $e", system: 'Audio');
     }
   }
 

@@ -14,7 +14,7 @@ class SceneA extends GameScene {
   
   @override
   void onInit() {
-    debugPrint('Initializing Scene A');
+    PlxLogger.message('Initializing Scene A', system: 'Scene');
     
     cameraEntity = Entity3D(name: 'Camera');
     cube1 = Entity3D(name: 'RedCube');
@@ -78,7 +78,7 @@ class SceneB extends GameScene {
   
   @override
   void onInit() {
-    debugPrint('Initializing Scene B');
+    PlxLogger.message('Initializing Scene B', system: 'Scene');
 
     cameraEntity = Entity3D(name: 'Camera');
     cube1 = Entity3D(name: 'BlueCube');

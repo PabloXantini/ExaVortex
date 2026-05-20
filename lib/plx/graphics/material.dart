@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:vector_math/vector_math_64.dart';
+import 'package:exa_vortex/plx/core/logger.dart';
 import 'shader_loader.dart' as sh;
 import 'texture.dart';
 import 'type_adapter.dart';
@@ -48,14 +48,14 @@ class PlxMaterial {
     final vertex = sh.baseShaderLibrary[vertexShaderName];
     final fragment = sh.baseShaderLibrary[fragmentShaderName];
     if (vertex == null) {
-      debugPrint(
-        'Error: Vertex Shader not found in library: $vertexShaderName',
+      PlxLogger.error(
+        'Vertex Shader not found in library: $vertexShaderName', system: 'Graphics'
       );
       return;
     }
     if (fragment == null) {
-      debugPrint(
-        'Warning: Fragment Shader not found in library: $fragmentShaderName',
+      PlxLogger.warning(
+        'Fragment Shader not found in library: $fragmentShaderName', system: 'Graphics'
       );
       return;
     }

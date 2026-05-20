@@ -2,7 +2,8 @@ import 'dart:ui' as ui;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../texture.dart';
+import 'package:exa_vortex/plx/core/logger.dart';
+import 'package:exa_vortex/plx/graphics/texture.dart';
 import 'glyph_info.dart';
 
 class PlxFont {
@@ -21,7 +22,7 @@ class PlxFont {
   ) async {
     if (assetPath != null) { // if asset path is specified, then load dynamically the font
       final String name = assetPath.split('/').last.split('.').first;
-      debugPrint('Loading font $name ($fontFamily) from $assetPath');
+      PlxLogger.message('Loading font $name ($fontFamily) from $assetPath', system: 'Graphics');
       try {
         final ByteData data = await rootBundle.load(assetPath);
         // Load font into Flutter's engine
@@ -29,7 +30,7 @@ class PlxFont {
         loader.addFont(Future.value(data));
         await loader.load();
       } catch (e) {
-        debugPrint('Warning: Failed to load font to engine (may already be in pubspec.yaml): $e');
+        PlxLogger.warning('Failed to load font to engine (may already be in pubspec.yaml): $e', system: 'Graphics');
       }
     }
     final font = PlxFont._(fontFamily);
@@ -52,7 +53,7 @@ class PlxFont {
       maxSize *= 2;
     }
     
-    debugPrint('Generating SDF atlas for font $fontFamily: $maxSize x $maxSize');
+    PlxLogger.message('Generating SDF atlas for font $fontFamily: $maxSize x $maxSize', system: 'Graphics');
 
     // Render everything to a single picture for massive performance gain
     final recorder = ui.PictureRecorder();

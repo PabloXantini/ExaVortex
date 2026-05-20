@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:exa_vortex/plx/core/logger.dart';
 import 'audio_core.dart';
 import 'audio_manager.dart';
 
@@ -20,7 +20,7 @@ class AudioHandler {
   /// Reproduce un soundtrack en bucle, deteniendo el anterior si existe
   Future<void> playSoundtrack(String id, {double volume = 0.5}) async {
     if (!_audioCache.containsKey(id)) {
-      debugPrint('Soundtrack $id not found in cache. Call preload first.');
+      PlxLogger.warning('Soundtrack $id not found in cache. Call preload first.', system: 'Audio');
       return;
     }
 
@@ -66,7 +66,7 @@ class AudioHandler {
   /// Reproduce un efecto de sonido global 2D (ej. UI)
   Future<PlxSoundHandle?> playSound(String id, {double volume = 1.0, double pitch = 1.0}) async {
     if (!_audioCache.containsKey(id)) {
-      debugPrint('Sound $id not found in cache. Call preload first.');
+      PlxLogger.warning('Sound $id not found in cache. Call preload first.', system: 'Audio');
       return null;
     }
     
