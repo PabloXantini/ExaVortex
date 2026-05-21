@@ -1,3 +1,5 @@
+export 'text/plx_text_rendering.dart';
+export 'vertex.dart';
 export 'material.dart';
 export 'renderer.dart';
 export 'mesh_renderer.dart';
@@ -6,5 +8,3 @@ export 'mesh.dart';
 export 'shader_loader.dart';
 export 'texture.dart';
 export 'type_adapter.dart';
-export 'text/plx_font.dart';
-export 'text/geometry.dart';

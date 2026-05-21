@@ -1,4 +1,3 @@
-import 'package:exa_vortex/app/utils/shapes/polygons.dart';
 import 'package:exa_vortex/plx/plx.dart';
 import 'package:exa_vortex/plx/plx3d.dart';
 
@@ -70,11 +69,9 @@ class Background extends Entity3D {
         }
         
         final color = colorPalette[colorIndex];
-        
-        vertexData.addAll([pos.x, pos.y, pos.z]); // pos
-        vertexData.addAll([0.0, 0.0]);            // uv
-        vertexData.addAll([color.x, color.y, color.z, color.w]); // col
-        
+
+        Vector2 placeHolderUV = Vector2(0.0, 0.0);
+        Vertex.add(vertexData, pos, placeHolderUV, color);
         vertexCounter++;
       }
     }

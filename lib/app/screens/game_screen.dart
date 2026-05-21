@@ -1,5 +1,6 @@
 import 'package:exa_vortex/app/scenes/background_scene.dart';
 import 'package:exa_vortex/plx/plx.dart';
+import 'package:exa_vortex/plx/tests/test_rich_text.dart';
 import 'package:exa_vortex/plx/tests/testinput.dart';
 import 'package:exa_vortex/plx/tests/testscene2.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,8 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-        PlxGame(initialScene: BackgroundScene()) 
-      //TestInputGame() 
+      //  PlxGame(initialScene: BackgroundScene()) 
+      TestRichTextGame()
       /*
       Row(
         children: [
