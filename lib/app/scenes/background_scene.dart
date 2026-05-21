@@ -39,20 +39,22 @@ class BackgroundScene extends GameScene{
       name: 'GameTitle', 
       text: 'ExaVortex', 
       font: font,
-      fontSize: 1
+      fontSize: 1,
+      anchor: TextAnchor.center
     );
     titleShadow = Text2D(
       name: 'GameTitleShadow', 
       text: 'ExaVortex', 
       font: font,
       fontSize: 1,
-      color: Vector4(0, 0, 0, 1)
+      color: Vector4(0, 0, 0, 1),
+      anchor: TextAnchor.center
     );
     background = Background(name: 'BG', numSides: 6, radius: 1000);
     camera = Camera3D(name: 'Camera', world: w1);
 
-    title.position = Vector2(-4.2,-0.3);
-    titleShadow.position = Vector2(-4.27,-0.37);
+    title.position = Vector2(0,0);
+    titleShadow.position = Vector2(0.05,-0.05);
     background.position = Vector3(0,0,0);
     camera.position = Vector3(0,0,5);
     camera.view?.far = 1000;

@@ -7,3 +7,4 @@ export 'shader_loader.dart';
 export 'texture.dart';
 export 'type_adapter.dart';
 export 'text/plx_font.dart';
+export 'text/geometry.dart';

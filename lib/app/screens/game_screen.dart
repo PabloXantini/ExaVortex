@@ -8,17 +8,17 @@ class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
   @override
-  State<GameScreen> createState() => _TitleScreenState();
+  State<GameScreen> createState() => _GameScreenState();
 }
 
-class _TitleScreenState extends State<GameScreen> {
+class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-      //  PlxGame(initialScene: BackgroundScene()) 
+        PlxGame(initialScene: BackgroundScene()) 
       //TestInputGame() 
-      //*
+      /*
       Row(
         children: [
           Expanded(
@@ -34,7 +34,7 @@ class _TitleScreenState extends State<GameScreen> {
           ),
         ],
       ),
-      //*/
+      */
     );
   }
 }

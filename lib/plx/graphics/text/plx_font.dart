@@ -2,15 +2,16 @@ import 'dart:ui' as ui;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vector_math/vector_math_64.dart';
 import 'package:exa_vortex/plx/core/logger.dart';
 import 'package:exa_vortex/plx/graphics/texture.dart';
 import 'package:exa_vortex/plx/graphics/material.dart';
 import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
-import 'glyph_info.dart';
+import 'glyph.dart';
 
 class PlxFont {
   final String fontFamily;
-  final Map<int, GlyphInfo> glyphs = {};
+  final Map<int, GlyphMetrics> glyphs = {};
   PlxTexture? atlasTexture;
   PlxMaterial? defaultMaterial;
   MeshRenderer? defaultRenderer;
@@ -63,7 +64,8 @@ class PlxFont {
     final double scale = 1.0 / renderFontSize; // Normalize to 1.0 unit = font size
 
     final image = await _createAtlasImage(characters, glyphSize, padding, maxSize, scale, renderFontSize, cols);
-    await _generateTextureFromImage(image, maxSize);
+    atlasTexture = await PlxTexture.fromImage(image);
+    image.dispose();
     //Initialize default text renderer components
     // Text Default Material
     defaultMaterial = PlxMaterial(
@@ -98,10 +100,9 @@ class PlxFont {
       double cellX = (col * glyphSize).toDouble();
       double cellY = (row * glyphSize).toDouble();
       
-      double drawX = cellX + padding;
-      double drawY = cellY + padding;
+      final offset = Offset(cellX + padding, cellY + padding);
 
-      glyphs[charCode] = _convertCharToGlyph(canvas, char, drawX, drawY, padding, renderFontSize, maxSize, scale);
+      glyphs[charCode] = _convertCharToGlyph(canvas, char, offset, padding, renderFontSize, maxSize, scale);
     }
 
     final picture = recorder.endRecording();
@@ -110,7 +111,7 @@ class PlxFont {
     return image;
   }
 
-  GlyphInfo _convertCharToGlyph(ui.Canvas canvas, String char, double drawX, double drawY, int padding, double renderFontSize, int maxSize, double scale) {
+  GlyphMetrics _convertCharToGlyph(ui.Canvas canvas, String char, Offset offset, int padding, double renderFontSize, int maxSize, double scale) {
     final textPainter = TextPainter(
       text: TextSpan(
         text: char,
@@ -123,7 +124,7 @@ class PlxFont {
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
-    textPainter.paint(canvas, Offset(drawX, drawY));
+    textPainter.paint(canvas, offset);
 
     // Calculate tight bounding box for the mesh with padding included
     // This ensures the mesh is exactly the size of the glyph (plus padding for smoothing)
@@ -139,35 +140,25 @@ class PlxFont {
     double ascent = lineMetrics.isNotEmpty ? lineMetrics.first.ascent : renderFontSize;
 
     // The UVs will cover exactly the drawn character + padding
-    double u1 = (drawX - padding) / maxSize;
-    double v1 = (drawY - padding) / maxSize;
-    double u2 = (drawX + charW + padding) / maxSize;
-    double v2 = (drawY + charH + padding) / maxSize;
+    double u1 = (offset.dx - padding) / maxSize;
+    double v1 = (offset.dy - padding) / maxSize;
+    double u2 = (offset.dx + charW + padding) / maxSize;
+    double v2 = (offset.dy + charH + padding) / maxSize;
+
+    double width = (charW + padding * 2) * scale;
+    double height = (charH + padding * 2) * scale;
 
     // Adjust metrics: 
     // left starts at -padding to align visual center with cursor
     // top moves up by ascent, offset by padding
     // advance is the actual width, tweaked slightly for better kerning visual
-    return GlyphInfo(
-      u1: u1,
-      v1: v1,
-      u2: u2,
-      v2: v2,
-      width: (charW + padding * 2) * scale,
-      height: (charH + padding * 2) * scale,
-      left: -padding * scale,
-      top: -(ascent - padding) * scale,
-      advance: textPainter.width * scale * 0.95, // 0.95 for slightly tighter inter-spacing
+    return GlyphMetrics(
+      uv1: Vector2(u1, v1),
+      uv2: Vector2(u2, v2),
+      size: Size(width, height),
+      bearing: Offset(-padding * scale, -(ascent - padding) * scale),
+      advance: width * 0.95, // 0.95 for slightly tighter inter-spacing
     );
-  }
-
-  Future<void> _generateTextureFromImage(ui.Image image, int maxSize) async {
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
-    image.dispose();
-    
-    if (byteData != null) {
-      atlasTexture = PlxTexture.fromBytes(maxSize, maxSize, byteData);
-    }
   }
 
   void dispose() {

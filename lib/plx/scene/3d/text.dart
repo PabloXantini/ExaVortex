@@ -1,7 +1,8 @@
 import 'package:exa_vortex/plx/graphics/mesh_component.dart';
 import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
 import 'package:exa_vortex/plx/graphics/text/plx_font.dart';
-import 'package:exa_vortex/plx/graphics/text/text_geometry_builder.dart';
+import 'package:exa_vortex/plx/graphics/text/text_builder.dart';
+import 'package:exa_vortex/plx/graphics/text/geometry.dart';
 import 'package:exa_vortex/plx/scene/3d/entity_3d.dart';
 import 'package:vector_math/vector_math_64.dart';
 
@@ -11,6 +12,7 @@ class Text3D extends Entity3D {
   final double fontSize;
   final double extrudeDepth;
   final Vector4 color;
+  final TextAnchor anchor;
   MeshRenderer? renderer;
 
   Text3D({
@@ -20,7 +22,8 @@ class Text3D extends Entity3D {
     this.fontSize = 1.0,
     this.extrudeDepth = 0.1,
     Vector4? color,
-    MeshRenderer? renderer
+    this.anchor = TextAnchor.bottomLeft,
+    MeshRenderer? renderer,
   }) : color = color ?? Vector4(1, 1, 1, 1) {
     _build();
   }
@@ -31,6 +34,7 @@ class Text3D extends Entity3D {
       font,
       fontSize: fontSize,
       color: color,
+      anchor: anchor,
     );
     addComponent(MeshComponent(mesh));
     //Fallback renderer if not specified
