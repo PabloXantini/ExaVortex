@@ -11,6 +11,7 @@ class RichTextTestScene extends GameScene {
   late World world;
   late Camera3D camera;
   late TextField2D textField;
+  late TextField3D textField3d;
 
   @override
   Future<void> onLoad() async {
@@ -38,6 +39,7 @@ class RichTextTestScene extends GameScene {
     final composition = TextComposition(
       segments: [
         TextSegment(
+          letterSpacing: 0.02,
           text: 'This is a test of ',
           font: fontRegular,
           fontSize: 1.0,
@@ -71,17 +73,35 @@ class RichTextTestScene extends GameScene {
     );
 
     textField = TextField2D(
+      lineSpacing: -0.3,
       composition: composition,
       bounds: const Size(20, 10), // Wrap at 10 units wide
       align: TextAlign.justified,
       anchor: TextAnchor.center,
     );
     
+    textField3d = TextField3D(
+      composition: composition,
+      bounds: const Size(20, 10), // Wrap at 10 units wide
+      align: TextAlign.justified,
+      anchor: TextAnchor.center,
+    );
+
+    textField3d.position = Vector3(2, 0, 5);
     textField.position = Vector2(0, 0);
     textField.rotation = radians(15);
     
     world.addChild(textField);
+    world.addChild(textField3d);
     addEntity(world);
+  }
+
+  @override
+  void update(double dt) {
+    Vector3 rotSpeed = Vector3(2, 4, 2);
+    textField.rotation += 2 * dt;
+    textField3d.rotation += rotSpeed * dt;
+    super.update(dt);
   }
 }
 

@@ -17,8 +17,8 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-      //  PlxGame(initialScene: BackgroundScene()) 
-      TestRichTextGame()
+        PlxGame(initialScene: BackgroundScene()) 
+      //  TestRichTextGame()
       /*
       Row(
         children: [
