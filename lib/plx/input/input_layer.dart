@@ -6,13 +6,13 @@ class PlxInputLayer extends StatelessWidget {
   final FocusNode focusNode;
   final List<PlxInputManager> inputManagers;
   final Widget child;
-  
-  const PlxInputLayer(
-    {super.key,
+
+  const PlxInputLayer({
+    super.key,
     required this.focusNode,
     required this.inputManagers,
-    required this.child}
-  );
+    required this.child,
+  });
 
   bool get _hasMouse => inputManagers.any((m) => m.mouse != null);
   bool get _hasTouch => inputManagers.any((m) => m.touch != null);
@@ -52,7 +52,7 @@ class PlxInputLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: Listenable.merge(inputManagers), 
+      listenable: Listenable.merge(inputManagers),
       builder: (context, _) {
         Widget current = child;
 
@@ -70,17 +70,15 @@ class PlxInputLayer extends StatelessWidget {
         }
         // Apply mouse region if mouse is enabled
         if (_hasMouse) {
-          current = MouseRegion(
-            cursor: _currentCursor,
-            child: current,
-          );
+          current = MouseRegion(cursor: _currentCursor, child: current);
         }
-        // Apply focus and keyboard handling if keyboard is enabled (TODO: tap region must be tap to touch)
+        // Apply focus and keyboard handling if keyboard is enabled
         if (_hasKeyboard) {
           current = TapRegion(
             onTapInside: (_) => focusNode.requestFocus(),
             onTapOutside: (_) => focusNode.unfocus(),
             child: Focus(
+              skipTraversal: true,
               focusNode: focusNode,
               autofocus: true,
               onKeyEvent: (node, event) {
@@ -88,12 +86,12 @@ class PlxInputLayer extends StatelessWidget {
                 return handled ? KeyEventResult.handled : KeyEventResult.ignored;
               },
               child: current,
-            )
+            ),
           );
         }
 
         return current;
-      }
+      },
     );
   }
 }
