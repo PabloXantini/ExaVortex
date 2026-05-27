@@ -10,25 +10,56 @@ import 'touch/touch_state.dart';
 
 class PlxInputManager extends ChangeNotifier {
   // Specialized States
-  final KeyboardState keyboard = KeyboardState();
-  final MouseState mouse = MouseState();
-  final TouchState touch = TouchState();
+  KeyboardState? keyboard;
+  MouseState? mouse;
+  TouchState? touch;
 
   // Actions and Bindings
   final Map<String, InputAction> _actions = {};
   final Map<PhysicalInput, List<String>> _bindings = {};
 
+  // Initialization Factories
+  /// Enables the keyboard inputs
+  void enableKeyboard() {
+    keyboard ??= KeyboardState();
+  }
+  /// Enables the mouse inputs
+  void enableMouse() {
+    mouse ??= MouseState();
+  }
+  /// Enables the touch inputs
+  void enableTouch() {
+    touch ??= TouchState();
+  }
+
   // Getters
   /// Total number of active pointers (Mouse + Touches)
-  int get pointerCount => (mouse.isDown ? 1 : 0) + touch.count;
+  int get pointerCount => (mouse?.isDown == true ? 1 : 0) + (touch?.count ?? 0);
+  
   /// Shorthand for the primary pointer position (Mouse or first Touch)
-  Offset get pointerPosition => mouse.isDown || touch.count == 0 ? mouse.position : touch.pointers.first.position;
+  Offset get pointerPosition {
+    if (mouse?.isDown == true || (touch?.count ?? 0) == 0) {
+      return mouse?.position ?? Offset.zero;
+    }
+    return touch!.pointers.first.position;
+  }
+  
   /// Shorthand for the primary pointer delta (Mouse or first Touch)
-  Offset get pointerDelta => mouse.delta != Offset.zero ? mouse.delta : (touch.count > 0 ? touch.pointers.first.delta : Offset.zero);
+  Offset get pointerDelta {
+    if (mouse != null && mouse!.delta != Offset.zero) {
+      return mouse!.delta;
+    }
+    if (touch != null && touch!.count > 0) {
+      return touch!.pointers.first.delta;
+    }
+    return Offset.zero;
+  }
+  
   /// Current mouse cursor
-  MouseCursor get cursor => mouse.c;
+  MouseCursor get cursor => mouse?.c ?? MouseCursor.defer;
   set cursor(CursorShape value) {
-    mouse.cursor = value;
+    if (mouse == null) return;
+    mouse!.cursor = value;
     notifyListeners();
   }
   // Configuration
@@ -44,7 +75,7 @@ class PlxInputManager extends ChangeNotifier {
   }
   void clearBindings() {
     _bindings.clear();
-    keyboard.clear();
+    keyboard?.clear();
   }
 
   Map<PhysicalInput, List<String>> getBindings() => _bindings; 
@@ -62,38 +93,48 @@ class PlxInputManager extends ChangeNotifier {
   // Event handling
   // Keyboard events
   bool handleKeyEvent(KeyEvent event) {
-    final handled = keyboard.handleEvent(event, _triggerBindings);
+    if (keyboard == null) return false;
+    final handled = keyboard!.handleEvent(event, _triggerBindings);
     if (handled) notifyListeners();
     return handled;
   }
   // Pointer events
   bool handlePointerEvent(PointerEvent event) {
     bool handled = false;
-    if (event.kind == PointerDeviceKind.mouse) {
-      handled = mouse.handlePointerEvent(event, _triggerBindings);
-    } else if (event.kind == PointerDeviceKind.touch) {
-      handled = touch.handlePointerEvent(event, _triggerBindings);
+    switch(event.kind){
+      case PointerDeviceKind.mouse:
+        if (mouse == null) break;
+        handled = mouse!.handlePointerEvent(event, _triggerBindings);
+        break;
+      case PointerDeviceKind.touch:
+        if (touch == null) break;
+        handled = touch!.handlePointerEvent(event, _triggerBindings);
+        break;
+      default: {
+      }
+      break;
     }
-    notifyListeners();
+    if (handled) notifyListeners();
     return handled;
   }
   void handlePointerSignal(PointerSignalEvent event) {
-    mouse.handlePointerSignal(event);
+    if (mouse==null) return;
+    mouse!.handlePointerSignal(event);
     notifyListeners();
   }
 
   // Update
   void update() {
     // Update device states
-    mouse.update();
-    touch.update();
+    mouse?.update();
+    touch?.update();
     // Reset actions
     for (final action in _actions.values) {
       action.resetFrame();
     }
     // Clear inputs
-    keyboard.clear(); // Keyboard repeat logic is handled by OS events, but we reset frame-based stuff if any
-    mouse.cleanup();
+    keyboard?.clear();
+    mouse?.cleanup();
   }
   bool _triggerBindings(PhysicalInput input, bool pressed, double value) {
     final actionsToUpdate = _bindings[input];

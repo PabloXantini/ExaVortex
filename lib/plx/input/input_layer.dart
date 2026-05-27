@@ -1,48 +1,99 @@
 import 'package:exa_vortex/plx/input/input_manager.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class PlxInputLayer extends StatelessWidget {
   final FocusNode focusNode;
-  final PlxInputManager inputManager;
+  final List<PlxInputManager> inputManagers;
   final Widget child;
   
   const PlxInputLayer(
     {super.key,
     required this.focusNode,
-    required this.inputManager,
+    required this.inputManagers,
     required this.child}
   );
 
+  bool get _hasMouse => inputManagers.any((m) => m.mouse != null);
+  bool get _hasTouch => inputManagers.any((m) => m.touch != null);
+  bool get _hasKeyboard => inputManagers.any((m) => m.keyboard != null);
+
+  MouseCursor get _currentCursor {
+    for (var m in inputManagers) {
+      if (m.mouse != null && m.cursor != MouseCursor.defer) {
+        return m.cursor;
+      }
+    }
+    return MouseCursor.defer;
+  }
+
+  void _handlePointerEvent(PointerEvent event) {
+    for (var m in inputManagers) {
+      m.handlePointerEvent(event);
+    }
+  }
+
+  void _handlePointerSignal(PointerSignalEvent event) {
+    for (var m in inputManagers) {
+      m.handlePointerSignal(event);
+    }
+  }
+
+  bool _handleKeyEvent(KeyEvent event) {
+    bool handled = false;
+    for (var m in inputManagers) {
+      if (m.handleKeyEvent(event)) {
+        handled = true;
+      }
+    }
+    return handled;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return TapRegion(
-      onTapInside: (_)=>focusNode.requestFocus(),
-      onTapOutside: (_)=>focusNode.unfocus(),
-      child: Focus(
-        focusNode: focusNode,
-        autofocus: true,
-        onKeyEvent: (node, event){
-          final handled = inputManager.handleKeyEvent(event);
-          return handled ? KeyEventResult.handled : KeyEventResult.ignored;
-        },
-        child: ListenableBuilder(
-          listenable: inputManager, 
-          builder: (context, _) {
-            return MouseRegion(
-              cursor: inputManager.cursor,
-              child: Listener(
-                onPointerDown: (event) => inputManager.handlePointerEvent(event),
-                onPointerUp: (event) => inputManager.handlePointerEvent(event),
-                onPointerMove: (event) => inputManager.handlePointerEvent(event),
-                onPointerHover: (event) => inputManager.handlePointerEvent(event),
-                onPointerCancel: (event) => inputManager.handlePointerEvent(event),
-                onPointerSignal: (event) => inputManager.handlePointerSignal(event),
-                child: child,
-              ),
-            );
-          }
-        )
-      )
+    return ListenableBuilder(
+      listenable: Listenable.merge(inputManagers), 
+      builder: (context, _) {
+        Widget current = child;
+
+        // Apply pointer listener if mouse or touch is enabled
+        if (_hasMouse || _hasTouch) {
+          current = Listener(
+            onPointerDown: _handlePointerEvent,
+            onPointerUp: _handlePointerEvent,
+            onPointerMove: _handlePointerEvent,
+            onPointerHover: _handlePointerEvent,
+            onPointerCancel: _handlePointerEvent,
+            onPointerSignal: _handlePointerSignal,
+            child: current,
+          );
+        }
+        // Apply mouse region if mouse is enabled
+        if (_hasMouse) {
+          current = MouseRegion(
+            cursor: _currentCursor,
+            child: current,
+          );
+        }
+        // Apply focus and keyboard handling if keyboard is enabled (TODO: tap region must be tap to touch)
+        if (_hasKeyboard) {
+          current = TapRegion(
+            onTapInside: (_) => focusNode.requestFocus(),
+            onTapOutside: (_) => focusNode.unfocus(),
+            child: Focus(
+              focusNode: focusNode,
+              autofocus: true,
+              onKeyEvent: (node, event) {
+                final handled = _handleKeyEvent(event);
+                return handled ? KeyEventResult.handled : KeyEventResult.ignored;
+              },
+              child: current,
+            )
+          );
+        }
+
+        return current;
+      }
     );
   }
 }
