@@ -13,17 +13,26 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  // Use lazy instantiation to keep game logic out of build
+  late final PlxGame _game = PlxGame(initialScene: BackgroundScene());
+
+  @override
+  void dispose() {
+    _game.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-        PlxGame(initialScene: BackgroundScene()) 
+        PlxGameFrame(game: _game) 
       //  TestRichTextGame()
       /*
       Row(
         children: [
           Expanded(
-            child: PlxGame(initialScene: BackgroundScene())
+            child: PlxGameFrame(game: PlxGame(initialScene: BackgroundScene()))
           ),
           Expanded(
             child: Column(

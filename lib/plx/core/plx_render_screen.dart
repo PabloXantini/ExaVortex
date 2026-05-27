@@ -1,26 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:exa_vortex/plx/core/plx_game.dart';
 import 'package:exa_vortex/plx/core/scene/game_scene.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
-import 'package:flutter/material.dart';
 
-class PlxScreenLayer extends StatelessWidget {
+class PlxRenderScreen extends StatelessWidget {
   final Size size;
-  final GameScene scene;
-  final PlxRenderer renderer;
-  const PlxScreenLayer(
+  final PlxGame game;
+  
+  const PlxRenderScreen(
     {super.key,
     required this.size, 
-    required this.scene, 
-    required this.renderer}
+    required this.game}
   );
 
   @override
   Widget build(BuildContext context) {
+    final activeScene = game.sceneManager.activeScene;
+    if (activeScene == null) return const SizedBox.shrink();
+
     return Stack(
       children: [
         RepaintBoundary(
           child: CustomPaint(
             size: size,
-            painter: _GamePainter(renderer, scene)
+            painter: _GamePainter(game.renderer, activeScene)
           ),
         ),
       ],

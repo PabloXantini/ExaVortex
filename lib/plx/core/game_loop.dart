@@ -1,144 +1,30 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:exa_vortex/plx/graphics/renderer.dart';
-import 'package:exa_vortex/plx/audio/plx_audio.dart';
-import 'package:exa_vortex/plx/input/input_layer.dart';
-import 'package:exa_vortex/plx/core/screen_layer.dart';
-import 'logger.dart';
-import 'resources/resources.dart';
-import 'scene/widgets.dart';
-import 'scene/scene_manager.dart';
-import 'scene/game_scene.dart';
-import 'game_cache.dart';
 
-class PlxGame extends StatefulWidget {
-  final GameScene initialScene;
-  final GameCache? cache;
-  final PlxTransitionBuilder? transitionBuilder;
-  final WidgetBuilder? loadingBuilder;
-
-  const PlxGame({
-    super.key,
-    required this.initialScene,
-    this.cache,
-    this.transitionBuilder,
-    this.loadingBuilder,
-  });
-
-  @override
-  State<PlxGame> createState() => _PlxGameState();
-}
-
-class _PlxGameState extends State<PlxGame> with 
-  SingleTickerProviderStateMixin, 
-  WidgetsBindingObserver 
-{
-  bool _wasPaused = false;
-  Ticker? _ticker;
+class PlxGameLoop {
+  final void Function(double dt) onTick;
+  late final Ticker _ticker;
   double _lastTime = 0.0;
-  final FocusNode _focusNode = FocusNode();
-  //PlxGame most important dependencies
-  late final PlxRenderer _renderer = PlxRenderer();
-  late final PlxAssetManager _assets = PlxAssetManager();
-  late final SceneManager _manager = SceneManager(
-    assetManager: _assets, 
-    cache: widget.cache
-  );
 
-  void _onManagerUpdate() {
-    setState(() {});
+  PlxGameLoop({required this.onTick, required TickerProvider vsync}) {
+    _ticker = vsync.createTicker(_tick);
   }
 
-  void _onTick(Duration elapsed) {
+  void _tick(Duration elapsed) {
     double time = elapsed.inMicroseconds / 1000000.0;
     double dt = time - _lastTime;
     _lastTime = time;
-    if (dt > 0.1) dt = 0.1;
-    _manager.update(dt);    
-    AudioManager.instance.update();
+    onTick(dt);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    AudioManager.instance.init();
-    _manager.init(widget.initialScene);
-    _manager.addListener(_onManagerUpdate);
-    _ticker = createTicker(_onTick)..start();
+  void start() {
+    _ticker.start();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    PlxLogger.log('Lifecycle current state: ${state.name}');
-    if(_manager.activeScene == null) return;
-    bool shouldPause = false;
-    switch(state){
-      case AppLifecycleState.resumed:
-        shouldPause = false;
-        break;
-      case AppLifecycleState.hidden:
-        shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenHidden;
-        break;
-      case AppLifecycleState.paused:
-        shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenHidden;
-        break;
-      case AppLifecycleState.inactive:
-        shouldPause = _manager.activeScene!.lifecycle.shouldPauseWhenOffFocus;
-        break;
-      case AppLifecycleState.detached:
-        break;
-    }
-    if(shouldPause && !_wasPaused){
-      PlxLogger.log('Pausing scene');
-      _manager.activeScene!.onPause();
-      _wasPaused = true;
-    } else if(!shouldPause && _wasPaused && state != AppLifecycleState.detached){
-      _wasPaused = false;
-      PlxLogger.log('Resuming scene');
-      _manager.activeScene!.onResume();
-    }
+  void stop() {
+    _ticker.stop();
   }
 
-  @override
   void dispose() {
-    _ticker?.dispose();
-    _focusNode.dispose();
-    _manager.removeListener(_onManagerUpdate);
-    _manager.dispose();
-    _renderer.dispose();
-    _assets.dispose();
-    AudioManager.instance.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final activeScene = _manager.activeScene;
-    if (_manager.isLoading) {
-      if (widget.loadingBuilder == null) return const ColoredBox(color: Color(0x00000000));
-      return widget.loadingBuilder!(context);
-    }
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final size = constraints.biggest;
-        return PlxInputLayer(
-          focusNode: _focusNode,
-          inputManager: activeScene!.input,
-          child: Stack(
-            children: [
-              PlxScreenLayer(
-                size: size,
-                scene: activeScene,
-                renderer: _renderer,
-              ),
-              if (widget.transitionBuilder != null && _manager.isTransitioning)
-                widget.transitionBuilder!(context, _manager.progress, _manager.state),
-            ],
-          ),
-        );
-      },
-    );
+    _ticker.dispose();
   }
 }
