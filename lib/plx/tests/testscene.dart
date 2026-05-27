@@ -111,6 +111,8 @@ class SceneB extends GameScene {
     addEntity(cube1);
     addEntity(cube2);
 
+    input.clearBindings();
+    input.enableKeyboard();
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
   }
 

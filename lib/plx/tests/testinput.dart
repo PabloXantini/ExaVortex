@@ -59,6 +59,10 @@ class InputTestScene extends GameScene {
     addEntity(world);
     // Input Setup
     input.clearBindings();
+    input.enableKeyboard();
+    input.enableMouse();
+    input.enableTouch();
+    // Keyboard Bindings
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowUp), 'MoveUp');
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowDown), 'MoveDown');
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.arrowLeft), 'MoveLeft');
@@ -66,7 +70,6 @@ class InputTestScene extends GameScene {
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Reset');
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyS), 'SaveConfig');
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.keyL), 'LoadConfig');
-
     // Drag Bindings: Mouse Left Click (0) and Touch (0)
     input.bindInput(PhysicalInput.mouse(MouseInput.leftButton), 'Drag');
     input.bindInput(PhysicalInput.touch(0), 'Drag');
@@ -101,14 +104,14 @@ class InputTestScene extends GameScene {
       input.cursor = CursorShape.basic;
     }
     // Mouse Wheel Zoom
-    final scroll = input.mouse.scrollDelta;
+    final scroll = input.mouse!.scrollDelta;
     if (scroll != 0) {
       double factor = scroll > 0 ? 0.95 : 1.05;
       cube.scale = cube.scale * factor;
     }
 
     if (input.isActionTriggered('DragScale')) {
-      final pinch = input.touch.pinch;
+      final pinch = input.touch!.pinch;
       if (pinch!=0) cube.scale = cube.scale * pinch;
     }
     input.update();

@@ -52,6 +52,9 @@ class TransitionScene1 extends GameScene {
     addEntity(cube1);
     addEntity(cube2);
     
+    input.clearBindings();
+    input.enableKeyboard();
+    input.enableTouch();
     input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'Switch');
     input.bindInput(PhysicalInput.touch(0), 'Switch');
   }
