@@ -124,13 +124,20 @@ class TestInputGame extends StatefulWidget {
 
 class _TestInputGameState extends State<TestInputGame> {
   late final InputTestScene _scene = InputTestScene();
+  late final PlxGame _game = PlxGame(initialScene: _scene);
+
+  @override
+  void dispose() {
+    _game.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          PlxGame(initialScene: _scene),
+          PlxGameFrame(game: _game),
           Positioned(
             top: 20,
             left: 20,

@@ -16,14 +16,30 @@ class CacheScene extends GameScene {
   }
 }
 
-class TestCacheGame extends StatelessWidget {
+class TestCacheGame extends StatefulWidget {
   const TestCacheGame({super.key});
 
   @override
+  State<TestCacheGame> createState() => _TestCacheGameState();
+}
+
+class _TestCacheGameState extends State<TestCacheGame> {
+  late final CacheScene _scene = CacheScene();
+  late final PlxGame _game = PlxGame(
+    initialScene: _scene,
+    cache: MyGameCache(),
+  );
+
+  @override
+  void dispose() {
+    _game.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return PlxGame(
-      initialScene: CacheScene(),
-      cache: MyGameCache(),
+    return PlxGameFrame(
+      game: _game,
     );
   }
 }

@@ -114,12 +114,19 @@ class TestRichTextGame extends StatefulWidget {
 
 class _TestRichTextGameState extends State<TestRichTextGame> {
   late final RichTextTestScene _scene = RichTextTestScene();
+  late final PlxGame _game = PlxGame(initialScene: _scene);
+
+  @override
+  void dispose() {
+    _game.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PlxGame(
-        initialScene: _scene,
+      body: PlxGameFrame(
+        game: _game,
       ),
     );
   }

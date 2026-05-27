@@ -145,12 +145,13 @@ class TestSceneGame extends StatefulWidget {
 }
 
 class _TestSceneGameState extends State<TestSceneGame> {
-  late SceneA _initialScene;
+  late final SceneA _initialScene = SceneA();
+  late final PlxGame _game = PlxGame(initialScene: _initialScene);
 
   @override
-  void initState() {
-    super.initState();
-    _initialScene = SceneA();
+  void dispose() {
+    _game.dispose();
+    super.dispose();
   }
 
   @override
@@ -162,8 +163,8 @@ class _TestSceneGameState extends State<TestSceneGame> {
           _initialScene.input.handleKeyEvent(event);
           return KeyEventResult.handled;
         },
-        child: PlxGame(
-          initialScene: _initialScene,
+        child: PlxGameFrame(
+          game: _game,
         ),
       ),
     );

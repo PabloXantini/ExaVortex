@@ -123,7 +123,14 @@ class TestGame2 extends StatefulWidget {
 
 class _TestGame2State extends State<TestGame2> {
   final CubeDemoScene _scene = CubeDemoScene();
+  late final PlxGame _game = PlxGame(initialScene: _scene);
   double _scale = 1.0;
+
+  @override
+  void dispose() {
+    _game.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,8 +141,8 @@ class _TestGame2State extends State<TestGame2> {
           Expanded(
             child: Stack(
               children: [
-                PlxGame(
-                  initialScene: _scene,
+                PlxGameFrame(
+                  game: _game,
                 ),
                 
                 // Capa superior: UI de Flutter

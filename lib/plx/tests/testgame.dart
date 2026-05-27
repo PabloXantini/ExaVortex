@@ -123,7 +123,14 @@ class TestGame extends StatefulWidget {
 
 class _TestGameState extends State<TestGame> {
   final CubeDemoScene _scene = CubeDemoScene();
+  late final PlxGame _game = PlxGame(initialScene: _scene);
   double _scale = 1.0;
+
+  @override
+  void dispose() {
+    _game.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +138,8 @@ class _TestGameState extends State<TestGame> {
       body: Stack(
         children: [
           // Capa base: El motor 3D
-          PlxGame(
-            initialScene: _scene,
+          PlxGameFrame(
+            game: _game,
           ),
           
           // Capa superior: UI de Flutter

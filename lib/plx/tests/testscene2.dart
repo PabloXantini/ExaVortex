@@ -137,12 +137,19 @@ class TestScene2Game extends StatefulWidget {
 
 class _TestScene2GameState extends State<TestScene2Game> {
   late final TransitionScene1 _scene = TransitionScene1();
+  late final PlxGame _game = PlxGame(initialScene: _scene);
+
+  @override
+  void dispose() {
+    _game.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PlxGame(
-        initialScene: _scene,
+      body: PlxGameFrame(
+        game: _game,
         transitionBuilder: (context, alpha, state) {
           // Ejemplo de UI de transición limpia
           return IgnorePointer(
