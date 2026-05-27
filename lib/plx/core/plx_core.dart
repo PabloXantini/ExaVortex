@@ -1,9 +1,11 @@
-// game loop
+// logging
 export 'logger.dart';
-export 'game_loop.dart';
-export 'plx_game.dart';
-export 'plx_game_frame.dart';
-export 'game_cache.dart';
+// game
+export 'game/game_loop.dart';
+export 'game/game.dart';
+export 'game/game_frame.dart';
+export 'game/game_cache.dart';
+// scene
 export 'scene/game_scene.dart';
 export 'scene/scene_manager.dart';
 // ECS

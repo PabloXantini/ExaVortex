@@ -1,4 +1,4 @@
-import 'package:exa_vortex/plx/core/game_lifecycle.dart';
+import 'package:exa_vortex/plx/core/game/game_lifecycle.dart';
 import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/core/resources/resources.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:exa_vortex/plx/core/plx_game.dart';
+import 'package:exa_vortex/plx/core/game/game.dart';
 import 'package:exa_vortex/plx/core/scene/game_scene.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 

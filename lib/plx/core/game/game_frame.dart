@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:exa_vortex/plx/core/plx_game.dart';
-import 'package:exa_vortex/plx/core/game_loop.dart';
-import 'package:exa_vortex/plx/core/plx_render_screen.dart';
+import 'package:exa_vortex/plx/core/game/game.dart';
+import 'package:exa_vortex/plx/core/game/game_loop.dart';
+import 'package:exa_vortex/plx/core/render_screen.dart';
 import 'package:exa_vortex/plx/input/input_layer.dart';
 import 'package:exa_vortex/plx/core/scene/widgets.dart';
 

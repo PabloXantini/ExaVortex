@@ -3,10 +3,10 @@ import 'package:exa_vortex/plx/audio/plx_audio.dart';
 import 'package:exa_vortex/plx/core/resources/resources.dart';
 import 'package:exa_vortex/plx/core/scene/scene_manager.dart';
 import 'package:exa_vortex/plx/core/scene/game_scene.dart';
-import 'package:exa_vortex/plx/core/game_cache.dart';
+import 'package:exa_vortex/plx/core/game/game_cache.dart';
 import 'package:exa_vortex/plx/input/input_manager.dart';
 import 'package:flutter/widgets.dart';
-import 'logger.dart';
+import '../logger.dart';
 
 class PlxGame {
   final GameScene initialScene;

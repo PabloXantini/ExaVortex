@@ -1,7 +1,7 @@
 import 'package:exa_vortex/plx/core/resources/resources.dart';
 import 'package:flutter/material.dart';
 import 'game_scene.dart';
-import 'package:exa_vortex/plx/core/game_cache.dart';
+import 'package:exa_vortex/plx/core/game/game_cache.dart';
 
 enum SceneTransitionState { idle, fadingOut, loading, fadingIn }
 
