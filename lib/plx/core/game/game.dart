@@ -22,13 +22,16 @@ class PlxGame {
   // Global input manager
   final PlxInputManager input = PlxInputManager();
   
+  bool _initialized = false;
   bool _wasPaused = false;
   
   PlxGame({required this.initialScene, this.cache});
   
   void init() {
+    if(_initialized) return;
     AudioManager.instance.init();
     sceneManager.init(initialScene);
+    _initialized = true;
   }
   
   void onTick(double dt) {
@@ -75,7 +78,6 @@ class PlxGame {
     renderer.dispose();
     assets.dispose();
     input.dispose();
-    // Assuming AudioManager can be disposed safely here if it's singleton
     AudioManager.instance.dispose();
   }
 }

@@ -57,7 +57,6 @@ class _PlxGameFrameState<T extends PlxGame> extends State<PlxGameFrame<T>>
     _gameLoop.dispose();
     _focusNode.dispose();
     widget.game.sceneManager.removeListener(_onManagerUpdate);
-    widget.game.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

@@ -20,9 +20,8 @@ class PlxInputLayer extends StatelessWidget {
 
   MouseCursor get _currentCursor {
     for (var m in inputManagers) {
-      if (m.mouse != null && m.cursor != MouseCursor.defer) {
-        return m.cursor;
-      }
+      if (m.mouse == null || m.cursor == MouseCursor.defer) continue;
+      return m.cursor;
     }
     return MouseCursor.defer;
   }
