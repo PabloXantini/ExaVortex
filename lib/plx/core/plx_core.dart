@@ -13,6 +13,8 @@ export 'utils/platform_hints.dart';
 // scene
 export 'scene/game_scene.dart';
 export 'scene/scene_manager.dart';
+export 'scene/ui_notifier.dart';
+export 'scene/scene_ui.dart';
 // ECS
 export 'entity.dart';
 export 'component.dart';

@@ -29,7 +29,7 @@ class InputTestScene extends GameScene {
   
   @override
   void onInit() {
-    PlxPlatform.toggleFullScreen(true);
+    PlxPlatform.toggleFullScreen(false);
     PlxPlatform.mobile.setOrientation(ScreenOrientation.landscape);
     world = World(name: 'MyWorld');
     camera = Camera3D(name: 'Camera', world: world);
@@ -118,6 +118,41 @@ class InputTestScene extends GameScene {
     }
     input.update();
   }
+
+  @override
+  Future<bool> onAppExit() async {
+    super.onAppExit();
+    debugPrint("Seguro que quieres salir?");
+    return false;
+  }
+
+  @override
+  List<Widget> buildUI(BuildContext context) {
+    return [
+      Positioned(
+        top: 20,
+        left: 20,
+        child: ListenableBuilder(
+          listenable: input,
+          builder: (context, child) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.black54,
+              child: Text(
+                'Use Arrow Keys to rotate the cube\n'
+                'Press SPACE to reset rotation\n'
+                'Press S to save bindings\n'
+                'Press L to load bindings\n'
+                'DRAG with Mouse or Touch to rotate\n'
+                'Pointers: ${input.pointerCount}',
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'PressStart2P'),
+              ),
+            );
+          },
+        ),
+      ),
+    ];
+  }
 }
 
 class TestInputGame extends StatefulWidget {
@@ -136,37 +171,11 @@ class _TestInputGameState extends State<TestInputGame> {
     _game.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PlxGameFrame(game: _game),
-          Positioned(
-            top: 20,
-            left: 20,
-            child: ListenableBuilder(
-              listenable: _scene.input,
-              builder: (context, child) {
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  color: Colors.black54,
-                  child: Text(
-                    'Use Arrow Keys to rotate the cube\n'
-                    'Press SPACE to reset rotation\n'
-                    'Press S to save bindings\n'
-                    'Press L to load bindings\n'
-                    'DRAG with Mouse or Touch to rotate\n'
-                    'Pointers: ${_scene.input.pointerCount}',
-                    style: const TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'PressStart2P'),
-                  ),
-                );
-              },
-            ),
-          )
-        ],
-      ),
+      body: PlxGameFrame(game: _game),
     );
   }
 }

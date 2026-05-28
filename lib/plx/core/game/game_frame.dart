@@ -4,7 +4,9 @@ import 'package:exa_vortex/plx/core/game/game_loop.dart';
 import 'package:exa_vortex/plx/core/render_screen.dart';
 import 'package:exa_vortex/plx/input/input_layer.dart';
 import 'package:exa_vortex/plx/core/scene/widgets.dart';
+import 'package:exa_vortex/plx/core/scene/scene_ui.dart';
 import 'package:exa_vortex/plx/core/utils/platform_hints.dart';
+import 'package:exa_vortex/plx/core/game/game_scope.dart';
 
 class PlxGameFrame<T extends PlxGame> extends StatefulWidget {
   final T game;
@@ -71,23 +73,24 @@ class _PlxGameFrameState<T extends PlxGame> extends State<PlxGameFrame<T>>
       onExitRequest: widget.game.onExit,
       onLifecycleStateChange: widget.game.onLifecycleStateChange,
       child: LayoutBuilder(
-      builder: (context, constraints) {
-        final size = constraints.biggest;
-        return PlxInputLayer(
-          focusNode: _focusNode,
-          inputManagers: [widget.game.input, activeScene.input],
-          child: Stack(
-            children: [
-              PlxRenderScreen(
-                size: size,
-                game: widget.game,
-              ),
-              if (widget.transitionBuilder != null && manager.isTransitioning)
-                widget.transitionBuilder!(context, manager.progress, manager.state),
-            ],
-          ),
-        );
-      },
+        builder: (context, constraints) {
+          final size = constraints.biggest;
+          return PlxInputLayer(
+            focusNode: _focusNode,
+            inputManagers: [widget.game.input, activeScene.input],
+            child: Stack(
+              children: [
+                PlxRenderScreen(
+                  size: size,
+                  game: widget.game,
+                ),
+                PlxUI(scene: activeScene),
+                if (widget.transitionBuilder != null && manager.isTransitioning)
+                  widget.transitionBuilder!(context, manager.progress, manager.state),
+              ],
+            ),
+          );
+        },
       )
     );
   }

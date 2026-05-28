@@ -3,6 +3,7 @@ import 'package:exa_vortex/plx/core/plx_core.dart';
 import 'package:exa_vortex/plx/core/resources/resources.dart';
 import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/input/plx_input.dart';
+import 'package:flutter/widgets.dart';
 
 abstract class GameScene {
   GameCache? _cache;
@@ -15,6 +16,8 @@ abstract class GameScene {
   late PlxAssetManager asset;
   final List<Entity> entities = [];
   GameScene? _nextScene;
+  // UI overlay notifier
+  final PlxUINotifier uiNotifier = PlxUINotifier();
 
   GameScene({GameCache? cache}) : _cache = cache;
 
@@ -34,6 +37,18 @@ abstract class GameScene {
   void clearSceneRequest() {
     _nextScene = null;
   }
+
+  /// Signals the UI layer to rebuild. Call this from [update] or game logic
+  /// whenever data displayed in [buildUI] has changed.
+  void refreshUI() => uiNotifier.notify();
+
+  /// Returns the list of Flutter widgets to render as overlay layers on top
+  /// of the game canvas. Each widget in the list is an independent layer
+  /// placed inside a full-screen [Stack].
+  ///
+  /// Override this in your scene to build HUDs, menus, or any Flutter UI.
+  /// Return an empty list (default) to render no overlay.
+  List<Widget> buildUI(BuildContext context) => const [];
 
   /// Asynchronous preloading of assets (fonts, textures, audio).
   /// Do not instantiate Materials or Entities here, only use `await`.
@@ -84,6 +99,7 @@ abstract class GameScene {
       entity.dispose();
     }
     entities.clear();
+    uiNotifier.dispose();
     _loaded = false;
     _initialized = false;
     _cache = null;
