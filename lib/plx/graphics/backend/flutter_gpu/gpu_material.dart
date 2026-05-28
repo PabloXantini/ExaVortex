@@ -1,10 +1,10 @@
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:vector_math/vector_math_64.dart';
 import 'package:exa_vortex/plx/core/logger.dart';
-import '../../utils/shader_loader.dart' as sh;
-import '../../material/texture.dart';
-import '../../material/material.dart';
-import '../../utils/type_adapter.dart';
+import 'package:exa_vortex/plx/graphics/utils/shader_loader.dart' as sh;
+import 'package:exa_vortex/plx/graphics/material/texture.dart';
+import 'package:exa_vortex/plx/graphics/material/material.dart';
+import 'package:exa_vortex/plx/graphics/utils/type_adapter.dart';
 import 'gpu_texture.dart';
 import 'dart:typed_data';
 
@@ -139,6 +139,7 @@ class GpuMaterial implements PlxMaterial {
     return bin;
   }
 
+  @override
   ByteData setMatrix4(PlxShader shader, String name, Matrix4 matrix) {
     final bin = float32Mat4(matrix);
     _shaders[shader]!.uniforms[name] = bin;

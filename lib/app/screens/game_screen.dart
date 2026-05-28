@@ -1,9 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:exa_vortex/app/scenes/background_scene.dart';
 import 'package:exa_vortex/plx/plx.dart';
-import 'package:exa_vortex/plx/tests/test_rich_text.dart';
-import 'package:exa_vortex/plx/tests/testinput.dart';
-import 'package:exa_vortex/plx/tests/testscene2.dart';
-import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -25,25 +22,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-      //  PlxGameFrame(game: _game) 
-      //  TestRichTextGame()
-      //*
-      Row(
-        children: [
-          Expanded(
-            child: PlxGameFrame(game: _game)
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(child: TestInputGame()),
-                Expanded(child: TestScene2Game()),
-              ],
-            ),
-          ),
-        ],
-      ),
-      //*/
+        PlxGameFrame(game: _game) 
     );
   }
 }

@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter_gpu/gpu.dart' as gpu;
 import 'package:vector_math/vector_math_64.dart';
 import 'package:vector_math/vector_math.dart' as v32;
-import '../../primitives/mesh.dart';
-import '../../material/material.dart';
-import '../../renderer.dart';
+import 'package:exa_vortex/plx/graphics/primitives/mesh.dart';
+import 'package:exa_vortex/plx/graphics/material/material.dart';
+import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'gpu_mesh.dart';
 import 'gpu_material.dart';
 
@@ -73,6 +73,7 @@ class GpuRenderer implements PlxRenderer {
   gpu.Texture? _depthTexture;
   v32.Vector4? _backgroundColor = v32.Vector4(0, 0, 0, 1);
   final double _depthClearValue = 1.0;
+  @override
   Matrix4 viewProjectionMatrix = Matrix4.identity();
 
   final gpu.HostBuffer _hostBuffer = gpu.gpuContext.createHostBuffer();
@@ -170,6 +171,7 @@ class GpuRenderer implements PlxRenderer {
   }
 
   /// Submits the command buffer and returns the rendered image.
+  @override
   Image endFrame() {
     _flush();
     _commandBuffer?.submit();

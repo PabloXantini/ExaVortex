@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'primitives/mesh.dart';
+import 'primitives/vertex.dart';
 import 'material/material.dart';
 import 'material/texture.dart';
 import 'renderer.dart';

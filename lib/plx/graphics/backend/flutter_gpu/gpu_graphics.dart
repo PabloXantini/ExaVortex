@@ -1,12 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter_gpu/gpu.dart' as gpu;
-import '../../graphics.dart';
-import '../../primitives/mesh.dart';
-import '../../material/material.dart';
-import '../../material/texture.dart';
-import '../../renderer.dart';
-import '../../utils/type_adapter.dart';
+import 'package:exa_vortex/plx/graphics/graphics.dart';
+import 'package:exa_vortex/plx/graphics/primitives/mesh.dart';
+import 'package:exa_vortex/plx/graphics/primitives/vertex.dart';
+import 'package:exa_vortex/plx/graphics/material/material.dart';
+import 'package:exa_vortex/plx/graphics/material/texture.dart';
+import 'package:exa_vortex/plx/graphics/utils/type_adapter.dart';
+import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'gpu_renderer.dart';
 import 'gpu_mesh.dart';
 import 'gpu_material.dart';
@@ -44,6 +45,7 @@ class GpuGraphics implements PlxGraphics {
     return GpuMesh(
       vertexBuffer: vertexBuffer,
       vertexCount: vertexCount,
+      stride: format.stride,
       indexBuffer: indexBuffer,
       indexType: indexType,
       indexCount: indexCount,
