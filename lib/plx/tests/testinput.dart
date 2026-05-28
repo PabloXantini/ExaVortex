@@ -29,6 +29,8 @@ class InputTestScene extends GameScene {
   
   @override
   void onInit() {
+    PlxPlatform.toggleFullScreen(true);
+    PlxPlatform.mobile.setOrientation(ScreenOrientation.landscape);
     world = World(name: 'MyWorld');
     camera = Camera3D(name: 'Camera', world: world);
     camera.view?.lensType = CameraLensType.orthographic;

@@ -5,6 +5,11 @@ export 'game/game_loop.dart';
 export 'game/game.dart';
 export 'game/game_frame.dart';
 export 'game/game_cache.dart';
+// hints
+export 'utils/device.dart';
+export 'utils/mobile_hints.dart';
+export 'utils/desktop_hints.dart';
+export 'utils/platform_hints.dart';
 // scene
 export 'scene/game_scene.dart';
 export 'scene/scene_manager.dart';

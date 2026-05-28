@@ -4,6 +4,7 @@ import 'package:exa_vortex/plx/core/game/game_loop.dart';
 import 'package:exa_vortex/plx/core/render_screen.dart';
 import 'package:exa_vortex/plx/input/input_layer.dart';
 import 'package:exa_vortex/plx/core/scene/widgets.dart';
+import 'package:exa_vortex/plx/core/utils/platform_hints.dart';
 
 class PlxGameFrame<T extends PlxGame> extends StatefulWidget {
   final T game;
@@ -30,6 +31,9 @@ class _PlxGameFrameState<T extends PlxGame> extends State<PlxGameFrame<T>>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    
+    // Initialize platform specifics
+    PlxPlatform.init();
     
     // Initialize game
     widget.game.init();
