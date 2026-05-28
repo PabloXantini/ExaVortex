@@ -8,11 +8,13 @@ class PlxPlatform {
   static DesktopHints desktop = DesktopHints();
   
   static bool _initialized = false;
+  static bool minimized = false;
   
   static Future<void> init() async {
     if (_initialized) return;
     _initialized = true;
     await desktop.init();
+    desktop.onMinimize = (isMinimized) => minimized = isMinimized;
     await mobile.init();
   }
   

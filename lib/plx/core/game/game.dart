@@ -5,6 +5,9 @@ import 'package:exa_vortex/plx/core/scene/scene_manager.dart';
 import 'package:exa_vortex/plx/core/scene/game_scene.dart';
 import 'package:exa_vortex/plx/core/game/game_cache.dart';
 import 'package:exa_vortex/plx/input/input_manager.dart';
+import 'package:exa_vortex/plx/graphics/graphics.dart';
+import 'package:exa_vortex/plx/core/utils/device.dart';
+import 'package:exa_vortex/plx/core/utils/platform_hints.dart';
 import 'package:flutter/widgets.dart';
 import '../logger.dart';
 
@@ -12,7 +15,7 @@ class PlxGame {
   final GameScene initialScene;
   final GameCache? cache;
   
-  late final PlxRenderer renderer = PlxRenderer();
+  late final PlxRenderer renderer = PlxGraphics.instance.createRenderer();
   late final PlxAssetManager assets = PlxAssetManager();
   late final SceneManager sceneManager = SceneManager(
     assetManager: assets, 
@@ -37,7 +40,6 @@ class PlxGame {
   void onTick(double dt) {
     if (dt > 0.1) dt = 0.1;
     input.update(); // Update global inputs
-    
     sceneManager.update(dt);
     AudioManager.instance.update();
   }
@@ -58,6 +60,9 @@ class PlxGame {
         break;
       case AppLifecycleState.inactive:
         shouldPause = sceneManager.activeScene!.lifecycle.shouldPauseWhenOffFocus;
+        if(Device.isDesktop || PlxPlatform.minimized) {
+          shouldPause = sceneManager.activeScene!.lifecycle.shouldPauseWhenHidden;
+        }
         break;
       case AppLifecycleState.detached:
         break;

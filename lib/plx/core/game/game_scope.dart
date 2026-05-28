@@ -18,29 +18,27 @@ class PlxGameScope extends StatefulWidget {
   State<PlxGameScope> createState() => _PlxGameScopeState();
 }
 
-class _PlxGameScopeState extends State<PlxGameScope> with WidgetsBindingObserver {
+class _PlxGameScopeState extends State<PlxGameScope> {
   // Tracks whether a pop was approved to avoid re-entering the exit check
   bool _popApproved = false;
+  late final AppLifecycleListener _lifecycleListener;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    _lifecycleListener = AppLifecycleListener(
+      onStateChange: widget.onLifecycleStateChange,
+      onExitRequested: _handleAppExit,
+    );
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    _lifecycleListener.dispose();
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    widget.onLifecycleStateChange(state);
-  }
-
-  @override
-  Future<AppExitResponse> didRequestAppExit() async {
+  Future<AppExitResponse> _handleAppExit() async {
     PlxLogger.message("System requested app exit...", system: "GameScope");
     final allowClose = await widget.onExitRequest();
     if (allowClose) {
