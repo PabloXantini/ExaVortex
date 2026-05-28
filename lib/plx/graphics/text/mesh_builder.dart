@@ -1,4 +1,5 @@
 import 'package:exa_vortex/plx/graphics/mesh.dart';
+import 'package:exa_vortex/plx/graphics/graphics.dart';
 import 'package:exa_vortex/plx/graphics/vertex.dart';
 import 'package:exa_vortex/plx/graphics/sprite/quad.dart';
 import 'package:exa_vortex/plx/graphics/text/geometry.dart';
@@ -14,7 +15,7 @@ class TextMeshBuilder {
   /// Runs layout on a [TextComposition] and returns a map of fontId → [Mesh].
   ///
   /// The caller is responsible for pairing each mesh with the correct font renderer.
-  static Map<int, Mesh> buildMeshes(
+  static Map<int, PlxMesh> buildMeshes(
     TextComposition composition, {
     required Size bounds,
     TextAlign align = TextAlign.left,
@@ -29,7 +30,7 @@ class TextMeshBuilder {
       lineSpacing: lineSpacing,
     );
 
-    final Map<int, Mesh> result = {};
+    final Map<int, PlxMesh> result = {};
     final seen = <int>{};
 
     for (var segment in composition.segments) {
@@ -48,7 +49,7 @@ class TextMeshBuilder {
   }
 
   /// Converts a list of [SpriteQuad]s with a uniform [color] into a [Mesh].
-  static Mesh buildQuadMesh(List<SpriteQuad> quads, Vector4 color) {
+  static PlxMesh buildQuadMesh(List<SpriteQuad> quads, Vector4 color) {
     final List<double> vertexData = [];
     final List<int> indices = [];
     int vertexOffset = 0;
@@ -72,6 +73,6 @@ class TextMeshBuilder {
       const VertexAttribute(AttributeUsage.color, 4),
     ]);
 
-    return Mesh.create(format, vertexData, indices32: indices);
+    return PlxGraphics.instance.createMesh(format, vertexData, indices32: indices);
   }
 }

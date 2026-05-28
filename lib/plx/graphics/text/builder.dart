@@ -13,7 +13,7 @@ class TextBuilder {
   /// Builds a mesh from [text] using textured quads from the font atlas.
   ///
   /// [anchor] controls where the origin (0,0) sits relative to the text.
-  static Mesh buildMesh(
+  static PlxMesh buildMesh(
     String text,
     PlxFont font, {
     double fontSize = 1.0,

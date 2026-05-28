@@ -3,7 +3,6 @@ import 'package:exa_vortex/app/entities/background.dart';
 import 'package:exa_vortex/plx/plx.dart';
 import 'package:exa_vortex/plx/plx2d.dart';
 import 'package:exa_vortex/plx/plx3d.dart';
-import 'package:vector_math/vector_math.dart' as v32;
 
 class BackgroundScene extends GameScene{
   //Resources
@@ -31,8 +30,8 @@ class BackgroundScene extends GameScene{
   @override
   void onInit() {
     super.onInit();
-    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
-    material1.setTexture(PlxShader.fragment, 'tex', PlxTexture.fromPixels(1, 1, [0xFFFFFFFF]));
+    material1 = PlxGraphics.instance.createMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1.setTexture(PlxShader.fragment, 'tex', PlxGraphics.instance.createTextureFromPixels(1, 1, [0xFFFFFFFF]));
     rM = MeshRenderer(material: material1);
     w1 = World();
     title = Text2D(
@@ -93,7 +92,7 @@ class BackgroundScene extends GameScene{
   @override
   void draw(PlxRenderer renderer) {
     final cb = background.colorPalette.first;
-    renderer.setBackgroundColor(v32.Vector4(cb.x,cb.y,cb.z,cb.w));
+    renderer.setBackgroundColor(Vector4(cb.x,cb.y,cb.z,cb.w));
     w1.draw(renderer);
     super.draw(renderer);
   }

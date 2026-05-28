@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart';
 import 'package:exa_vortex/plx/core/logger.dart';
 import 'package:exa_vortex/plx/graphics/texture.dart';
+import 'package:exa_vortex/plx/graphics/graphics.dart';
 import 'glyph.dart';
 
 class FontAtlas {
@@ -136,7 +137,7 @@ class FontAtlasBuilder {
     final image = await picture.toImage(maxSize, maxSize);
     picture.dispose();
     
-    final texture = await PlxTexture.fromImage(image);
+    final texture = await PlxGraphics.instance.createTextureFromImage(image);
     image.dispose();
 
     return FontAtlas(texture, glyphs);

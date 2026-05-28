@@ -2,7 +2,7 @@ import 'package:exa_vortex/plx/plx.dart';
 import 'package:exa_vortex/plx/plx3d.dart';
 
 class Background extends Entity3D {
-  late Mesh model;
+  late PlxMesh model;
   late RegularPolygon2D skeleton;
   late List<Vector4> colorPalette;
 
@@ -75,6 +75,6 @@ class Background extends Entity3D {
         vertexCounter++;
       }
     }
-    model = Mesh.create(format, vertexData);
+    model = PlxGraphics.instance.createMesh(format, vertexData);
   }
 }

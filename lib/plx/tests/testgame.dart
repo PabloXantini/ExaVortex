@@ -4,7 +4,7 @@ import 'package:exa_vortex/plx/plx.dart' hide Colors; // Importa toda la abstrac
 import 'package:exa_vortex/plx/plx3d.dart';
 
 // Malla del Cubo
-Mesh getCubeMesh() {
+PlxMesh getCubeMesh() {
   final format = VertexFormat('CubeFormat', const [
     VertexAttribute(AttributeUsage.position, 3),
     VertexAttribute(AttributeUsage.uv, 2),
@@ -23,7 +23,7 @@ Mesh getCubeMesh() {
     -1,  1,  1,       0, 1,     1, 1, 1, 1,
   ];
 
-  return Mesh.create(format, vertices, indices16: [
+  return PlxGraphics.instance.createMesh(format, vertices, indices16: [
     0, 1, 3, 3, 1, 2, // Frontal
     1, 5, 2, 2, 5, 6, // Derecha
     5, 4, 6, 6, 4, 7, // Trasera
@@ -35,7 +35,7 @@ Mesh getCubeMesh() {
 
 // Textura del Cubo
 PlxTexture getCubeTexture() {
-  return PlxTexture.fromPixels(5, 5, [
+  return PlxGraphics.instance.createTextureFromPixels(5, 5, [
     0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
     0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000,
     0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
@@ -78,7 +78,7 @@ class CubeDemoScene extends GameScene {
     cubeEntity.position = Vector3(0, 0, 0); // for the view from camera
     cameraEntity.position = Vector3(0, 0, 5); 
     // 3. Material setup
-    final material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    final material = PlxGraphics.instance.createMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
     // 4. Create the mesh renderer
     renderComponent = MeshRenderer(material: material);

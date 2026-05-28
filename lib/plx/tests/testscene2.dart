@@ -37,7 +37,7 @@ class TransitionScene1 extends GameScene {
     cameraEntity.position = Vector3(0, 0, 5);
     cameraEntity.addComponent(CameraView3D(lens: CameraLensType.perspective));
 
-    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1 = PlxGraphics.instance.createMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', cubeTex);
 
     rM = MeshRenderer(material: material1, opaque: false);
@@ -103,7 +103,7 @@ class TransitionScene2 extends GameScene {
 
     cube2 = Entity3D(name: 'Cube2');
     cube2.scale = Vector3.all(1.5);
-    material = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material = PlxGraphics.instance.createMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
     rM = MeshRenderer(material: material, opaque: false);
     cube2.addComponent(MeshComponent(getCubeMesh()));

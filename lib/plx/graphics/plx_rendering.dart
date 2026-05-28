@@ -8,3 +8,4 @@ export 'mesh.dart';
 export 'shader_loader.dart';
 export 'texture.dart';
 export 'type_adapter.dart';
+export 'graphics.dart';

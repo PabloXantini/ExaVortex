@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:exa_vortex/plx/core/logger.dart';
 import 'package:exa_vortex/plx/graphics/texture.dart';
 import 'package:exa_vortex/plx/graphics/material.dart';
+import 'package:exa_vortex/plx/graphics/graphics.dart';
 import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
 import 'glyph.dart';
 import 'font_atlas_builder.dart';
@@ -57,7 +58,7 @@ class PlxFont {
     glyphs.addAll(atlas.glyphs);
 
     // Text Default Material
-    defaultMaterial = PlxMaterial(
+    defaultMaterial = PlxGraphics.instance.createMaterial(
       vertexShaderName: 'TextV',
       fragmentShaderName: 'TextF',
     );

@@ -1,4 +1,5 @@
 import 'package:exa_vortex/plx/graphics/texture.dart';
+import 'package:exa_vortex/plx/graphics/graphics.dart';
 
 class AssetLoader {
   static AssetLoader? _instance;
@@ -11,6 +12,6 @@ class AssetLoader {
   AssetLoader._internal();
 
   Future<PlxTexture> loadTexture(String path) async {
-    return await PlxTexture.fromAsset(path);
+    return await PlxGraphics.instance.createTextureFromAsset(path);
   }
 }

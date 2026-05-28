@@ -27,7 +27,7 @@ class SceneA extends GameScene {
     viewComponent = CameraView3D(lens: CameraLensType.orthographic);
     cameraEntity.addComponent(viewComponent);
 
-    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1 = PlxGraphics.instance.createMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
     rM = MeshRenderer(material: material1);
@@ -94,7 +94,7 @@ class SceneB extends GameScene {
     viewComponent = CameraView3D(lens: CameraLensType.perspective);
     cameraEntity.addComponent(viewComponent);
 
-    material1 = PlxMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
+    material1 = PlxGraphics.instance.createMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     material1.setTexture(PlxShader.fragment, 'tex', getCubeTexture());
 
     rM = MeshRenderer(material: material1);
