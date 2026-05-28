@@ -23,14 +23,13 @@ class PlxGameFrame<T extends PlxGame> extends StatefulWidget {
 }
 
 class _PlxGameFrameState<T extends PlxGame> extends State<PlxGameFrame<T>>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+    with SingleTickerProviderStateMixin {
   late final PlxGameLoop _gameLoop;
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     
     // Initialize platform specifics
     PlxPlatform.init();
@@ -52,16 +51,10 @@ class _PlxGameFrameState<T extends PlxGame> extends State<PlxGameFrame<T>>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    widget.game.onLifecycleStateChange(state);
-  }
-
-  @override
   void dispose() {
     _gameLoop.dispose();
     _focusNode.dispose();
     widget.game.sceneManager.removeListener(_onManagerUpdate);
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -74,11 +67,12 @@ class _PlxGameFrameState<T extends PlxGame> extends State<PlxGameFrame<T>>
       if (widget.loadingBuilder == null) return const ColoredBox(color: Color(0x00000000));
       return widget.loadingBuilder!(context);
     }
-
-    return LayoutBuilder(
+    return PlxGameScope(
+      onExitRequest: widget.game.onExit,
+      onLifecycleStateChange: widget.game.onLifecycleStateChange,
+      child: LayoutBuilder(
       builder: (context, constraints) {
         final size = constraints.biggest;
-        
         return PlxInputLayer(
           focusNode: _focusNode,
           inputManagers: [widget.game.input, activeScene.input],
@@ -94,6 +88,7 @@ class _PlxGameFrameState<T extends PlxGame> extends State<PlxGameFrame<T>>
           ),
         );
       },
+      )
     );
   }
 }

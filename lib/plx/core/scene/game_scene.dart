@@ -45,6 +45,12 @@ abstract class GameScene {
 
   void onClose() {}
 
+  /// Called when the application is requested to close.
+  /// Return true to allow closing, false to prevent it.
+  Future<bool> onAppExit() async {
+    return true;
+  }
+
   void onPause() {}
   
   void onResume() {}
