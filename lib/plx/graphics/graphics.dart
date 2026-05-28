@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'mesh.dart';
-import 'material.dart';
-import 'texture.dart';
+import 'primitives/mesh.dart';
+import 'material/material.dart';
+import 'material/texture.dart';
 import 'renderer.dart';
 import 'backend/flutter_gpu/gpu_graphics.dart';
 

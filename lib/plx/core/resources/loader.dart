@@ -1,4 +1,4 @@
-import 'package:exa_vortex/plx/graphics/texture.dart';
+import 'package:exa_vortex/plx/graphics/material/texture.dart';
 import 'package:exa_vortex/plx/graphics/graphics.dart';
 
 class AssetLoader {

@@ -1,5 +1,5 @@
 import 'package:exa_vortex/plx/core/component.dart';
-import 'mesh.dart';
+import '../primitives/mesh.dart';
 
 class MeshComponent extends Component {
   PlxMesh? mesh;

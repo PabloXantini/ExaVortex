@@ -1,8 +1,8 @@
-import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
-import 'package:exa_vortex/plx/graphics/mesh_component.dart';
-import 'package:exa_vortex/plx/graphics/text/geometry.dart';
-import 'package:exa_vortex/plx/graphics/text/rich_text.dart';
-import 'package:exa_vortex/plx/graphics/text/mesh_builder.dart';
+import 'package:exa_vortex/plx/graphics/rendering/mesh/mesh_renderer.dart';
+import 'package:exa_vortex/plx/graphics/components/mesh_component.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/geometry.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/rich_text.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/mesh_builder.dart';
 import 'package:exa_vortex/plx/scene/2d/entity_2d.dart';
 import 'package:flutter/material.dart' show Size;
 

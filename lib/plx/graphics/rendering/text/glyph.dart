@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:exa_vortex/plx/graphics/sprite/quad.dart';
+import 'package:exa_vortex/plx/graphics/rendering/sprite/quad.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class GlyphMetrics {

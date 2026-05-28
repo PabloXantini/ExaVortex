@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exa_vortex/plx/core/logger.dart';
-import 'package:exa_vortex/plx/graphics/texture.dart';
-import 'package:exa_vortex/plx/graphics/material.dart';
+import 'package:exa_vortex/plx/graphics/material/texture.dart';
+import 'package:exa_vortex/plx/graphics/material/material.dart';
 import 'package:exa_vortex/plx/graphics/graphics.dart';
-import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
+import 'package:exa_vortex/plx/graphics/rendering/mesh/mesh_renderer.dart';
 import 'glyph.dart';
 import 'font_atlas_builder.dart';
 

@@ -1,14 +1,13 @@
-import 'package:exa_vortex/plx/core/plx_core.dart';
+import 'package:exa_vortex/plx/graphics/renderer.dart';
 import 'package:exa_vortex/plx/math/plx_math.dart';
-import 'mesh_component.dart';
-import 'material.dart';
-import 'renderer.dart';
+import 'package:exa_vortex/plx/graphics/rendering/renderer.dart';
+import 'package:exa_vortex/plx/graphics/components/mesh_component.dart';
+import 'package:exa_vortex/plx/graphics/material/material.dart';
 
-class MeshRenderer extends Component {
-  PlxMaterial? material;
+class MeshRenderer extends Renderer {
   bool opaque = true;
 
-  MeshRenderer({this.material, this.opaque = true});
+  MeshRenderer({super.material, this.opaque = true});
 
   @override
   void draw(PlxRenderer renderer) {
@@ -28,11 +27,5 @@ class MeshRenderer extends Component {
         instance.setMatrix4('ModelInfo', mvpMatrix);
       }
     renderer.submit(meshComponent.mesh!, material!, opaque: opaque, depth: depth, instance: instance);
-  }
-
-  @override
-  void dispose() {
-    material = null;
-    super.dispose();
   }
 }

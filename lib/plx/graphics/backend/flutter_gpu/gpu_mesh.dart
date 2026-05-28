@@ -1,5 +1,5 @@
 import 'package:flutter_gpu/gpu.dart' as gpu;
-import '../../mesh.dart';
+import '../../primitives/mesh.dart';
 
 class GpuMesh implements PlxMesh {
   final gpu.DeviceBuffer vertexBuffer;

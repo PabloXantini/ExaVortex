@@ -1,8 +1,8 @@
-import 'package:exa_vortex/plx/graphics/mesh_component.dart';
-import 'package:exa_vortex/plx/graphics/mesh_renderer.dart';
-import 'package:exa_vortex/plx/graphics/text/font.dart';
-import 'package:exa_vortex/plx/graphics/text/builder.dart';
-import 'package:exa_vortex/plx/graphics/text/geometry.dart';
+import 'package:exa_vortex/plx/graphics/components/mesh_component.dart';
+import 'package:exa_vortex/plx/graphics/rendering/mesh/mesh_renderer.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/font.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/builder.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/geometry.dart';
 import 'package:exa_vortex/plx/scene/3d/entity_3d.dart';
 import 'package:vector_math/vector_math_64.dart';
 

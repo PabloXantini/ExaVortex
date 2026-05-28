@@ -1,7 +1,7 @@
 import 'package:exa_vortex/plx/geometry/2d/rect.dart';
-import 'package:exa_vortex/plx/graphics/sprite/quad.dart';
-import 'package:exa_vortex/plx/graphics/text/geometry.dart';
-import 'package:exa_vortex/plx/graphics/text/glyph.dart';
+import 'package:exa_vortex/plx/graphics/rendering/sprite/quad.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/geometry.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/glyph.dart';
 import 'rich_text.dart';
 
 class TextLayout {

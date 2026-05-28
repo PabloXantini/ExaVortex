@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:vector_math/vector_math_64.dart';
-import 'mesh.dart';
-import 'material.dart';
+import 'primitives/mesh.dart';
+import 'material/material.dart';
 
 abstract class PlxRenderer {
   Size get size;

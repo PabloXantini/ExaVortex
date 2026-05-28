@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart';
 import 'package:exa_vortex/plx/core/logger.dart';
-import 'package:exa_vortex/plx/graphics/texture.dart';
+import 'package:exa_vortex/plx/graphics/material/texture.dart';
 import 'package:exa_vortex/plx/graphics/graphics.dart';
 import 'glyph.dart';
 

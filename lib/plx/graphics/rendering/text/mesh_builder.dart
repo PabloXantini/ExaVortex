@@ -1,10 +1,10 @@
-import 'package:exa_vortex/plx/graphics/mesh.dart';
+import 'package:exa_vortex/plx/graphics/primitives/mesh.dart';
 import 'package:exa_vortex/plx/graphics/graphics.dart';
-import 'package:exa_vortex/plx/graphics/vertex.dart';
-import 'package:exa_vortex/plx/graphics/sprite/quad.dart';
-import 'package:exa_vortex/plx/graphics/text/geometry.dart';
-import 'package:exa_vortex/plx/graphics/text/rich_text.dart';
-import 'package:exa_vortex/plx/graphics/text/layout_builder.dart';
+import 'package:exa_vortex/plx/graphics/primitives/vertex.dart';
+import 'package:exa_vortex/plx/graphics/rendering/sprite/quad.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/geometry.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/rich_text.dart';
+import 'package:exa_vortex/plx/graphics/rendering/text/layout_builder.dart';
 import 'package:flutter/material.dart' show Size;
 import 'package:vector_math/vector_math_64.dart';
 

@@ -6,7 +6,7 @@ import 'package:vector_math/vector_math_64.dart';
 
 import 'package:flutter_gpu/gpu.dart' as gpu;
 
-import '../graphics/shader_loader.dart' as sh;
+import '../graphics/utils/shader_loader.dart' as sh;
 
 ByteData float32(List<double> values) {
   return Float32List.fromList(values).buffer.asByteData();
