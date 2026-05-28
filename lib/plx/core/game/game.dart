@@ -80,4 +80,13 @@ class PlxGame {
     input.dispose();
     AudioManager.instance.dispose();
   }
+
+  /// Called when the application is requested to close.
+  /// Return true to allow closing, false to prevent it.
+  Future<bool> onExit() async {
+    if (sceneManager.activeScene != null) {
+      return await sceneManager.activeScene!.onAppExit();
+    }
+    return true;
+  }
 }
