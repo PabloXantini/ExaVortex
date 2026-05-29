@@ -24,4 +24,9 @@ class Entity2D extends Entity {
   set scale(Vector2 value) {
     transform.scale = Vector3(value.x, value.y, transform.scale.z);
   }
+
+  double get zLayer => transform.position.z;
+  void setZLayer(double z) {
+    transform.position = Vector3(transform.position.x, transform.position.y, z);
+  }
 }
