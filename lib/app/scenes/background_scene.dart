@@ -51,7 +51,7 @@ class BackgroundScene extends GameScene{
       playTextMessage = "Tap to start";
     }
 
-    startText = ExaVortexTitle(text: playTextMessage, font: font, fontSize: 0.2); 
+    startText = ExaVortexTitle(text: playTextMessage, font: font, fontSize: 0.25); 
     
     background = Background(name: 'BG', numSides: 6, radius: 1000);
     camera = Camera3D(name: 'Camera', world: w1);
