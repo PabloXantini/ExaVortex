@@ -86,7 +86,9 @@ class SceneManager extends ChangeNotifier {
   }
 
   Future<void> _performSwitch() async {
-    // 1. Load the new scene
+    // Mark all currently cached assets as candidate for garbage collection
+    assetManager.startTransition();
+    // 1. Load the new scene (will mark requested assets back as active)
     await _loadScene(_pendingScene!);
     // 2. Close the old scene and swap
     _activeScene?.onClose();
@@ -95,6 +97,9 @@ class SceneManager extends ChangeNotifier {
     _initializeScene(_activeScene!);
     _pendingScene = null;
     _state = SceneTransitionState.fadingIn;
+    // Sweep any assets not marked active during the transition
+    assetManager.endTransition();
+    
     notifyListeners();
   }
   Future<void> _loadScene(GameScene scene) async {
