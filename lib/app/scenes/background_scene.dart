@@ -1,8 +1,10 @@
 import 'package:exa_vortex/app/components/rotator.dart';
 import 'package:exa_vortex/app/entities/background.dart';
 import 'package:exa_vortex/app/entities/exa_text.dart';
+import 'package:exa_vortex/app/scenes/gameplay_scene.dart';
 import 'package:exa_vortex/plx/plx.dart';
 import 'package:exa_vortex/plx/plx3d.dart';
+import 'package:flutter/services.dart';
 
 class BackgroundScene extends GameScene{
   //Resources
@@ -78,8 +80,17 @@ class BackgroundScene extends GameScene{
     addEntity(camera);
     addEntity(w1);
     handler.playSoundtrack('Song', volume: 1);
-
     
+    //Input Settings
+    input.clearBindings();
+    input.enableKeyboard();
+    input.enableMouse();
+    input.enableTouch();
+    if(Device.isDesktop){
+      input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'StartGame');
+    } else if (Device.isMobile){
+      input.bindInput(PhysicalInput.touch(0), 'StartGame');
+    }
   }
 
   @override
@@ -93,7 +104,13 @@ class BackgroundScene extends GameScene{
     handler.resumeSoundtrack();
     super.onResume();
   }
-
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if(input.isActionTriggered('StartGame')){
+      requestSceneChange(GameplayScene());
+    }
+  }
   @override
   void draw(PlxRenderer renderer) {
     final cb = background.colorPalette.first;
