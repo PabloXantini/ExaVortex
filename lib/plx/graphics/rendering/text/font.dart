@@ -4,7 +4,6 @@ import 'package:exa_vortex/plx/core/logger.dart';
 import 'package:exa_vortex/plx/graphics/material/texture.dart';
 import 'package:exa_vortex/plx/graphics/material/material.dart';
 import 'package:exa_vortex/plx/graphics/graphics.dart';
-import 'package:exa_vortex/plx/graphics/rendering/mesh/mesh_renderer.dart';
 import 'glyph.dart';
 import 'font_atlas_builder.dart';
 
@@ -15,8 +14,6 @@ class PlxFont {
   final Map<int, GlyphMetrics> glyphs = {};
   PlxTexture? atlasTexture;
   PlxMaterial? defaultMaterial;
-  MeshRenderer? defaultRenderer;
-
   PlxFont._(this.fontFamily, this.fontWeight, this.fontStyle);
 
   static Future<PlxFont> load(
@@ -65,19 +62,12 @@ class PlxFont {
     if (atlasTexture != null) {
       defaultMaterial!.setTexture(PlxShader.fragment, 'text_atlas', atlasTexture!);
     }
-    // Text Default Renderer
-    defaultRenderer = MeshRenderer(
-      material: defaultMaterial!,
-      opaque: false
-    );
   }
 
   void dispose() {
     atlasTexture = null;
     defaultMaterial?.dispose();
-    defaultRenderer?.dispose();
     defaultMaterial = null;
-    defaultRenderer = null;
     glyphs.clear();
   }
 }

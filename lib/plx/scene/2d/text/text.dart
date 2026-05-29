@@ -39,7 +39,7 @@ class Text2D extends Entity2D {
     addComponent(MeshComponent(mesh));
     //Fallback renderer if not specified
     if(renderer==null){
-      addComponent(font.defaultRenderer!);
+      addComponent(MeshRenderer(material: font.defaultMaterial!, opaque: false));
     }else{
       addComponent(renderer!);
     }

@@ -42,7 +42,8 @@ class TextField2D extends Entity2D {
 
       final layerEntity = Entity2D(name: 'TextLayer_$fontId');
       layerEntity.addComponent(MeshComponent(mesh));
-      layerEntity.addComponent(renderer ?? segment.font.defaultRenderer!);
+      final r = renderer ?? MeshRenderer(material: segment.font.defaultMaterial!, opaque: false);
+      layerEntity.addComponent(r);
       addChild(layerEntity);
       // Remove so we don't re-process if multiple segments share the same font
       meshes.remove(fontId);

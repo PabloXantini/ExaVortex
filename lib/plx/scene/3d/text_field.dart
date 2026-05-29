@@ -42,7 +42,8 @@ class TextField3D extends Entity3D {
 
       final layerEntity = Entity3D(name: 'TextLayer_$fontId');
       layerEntity.addComponent(MeshComponent(mesh));
-      layerEntity.addComponent(renderer ?? segment.font.defaultRenderer!);
+      final r = renderer ?? MeshRenderer(material: segment.font.defaultMaterial!, opaque: false);
+      layerEntity.addComponent(r);
       addChild(layerEntity);
 
       // Remove so we don't re-process if multiple segments share the same font
