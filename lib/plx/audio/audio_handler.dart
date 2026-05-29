@@ -85,9 +85,14 @@ class AudioHandler {
   /// Limpia los recursos cargados por este handler
   void dispose() {
     stopSoundtrack();
+    /*
     for (var source in _audioCache.values) {
       AudioManager.instance.disposeSource(source);
     }
+    */
+    // Removed: AudioManager.instance.disposeSource(source);
+    // Doing so crashes the next scene if it shares the same audio file, 
+    // as SoLoud destroys the underlying memory.
     _audioCache.clear();
   }
 }

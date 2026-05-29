@@ -77,4 +77,13 @@ class Background extends Entity3D {
     }
     model = PlxGraphics.instance.createMesh(format, vertexData);
   }
+
+  void setColorPalette(List<Vector4> palette) {
+    colorPalette = List.from(palette);
+    _generateMesh();
+    final meshComp = getComponent<MeshComponent>();
+    if (meshComp != null) {
+      meshComp.mesh = model;
+    }
+  }
 }

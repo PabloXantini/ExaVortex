@@ -91,14 +91,25 @@ class SoloudAudioManager implements PlxAudioManager {
   }) async {
     await _ensureInitialized();
     final soloudSource = (source as SoloudAudioSource).source;
-    final handle = await soloud.play(
-      soloudSource,
-      volume: volume,
-      pan: pan,
-      paused: paused,
-      looping: looping,
-    );
-    return SoloudSoundHandle(handle);
+    try {//TO CHECK
+      final handle = await soloud.play(
+        soloudSource,
+        volume: volume,
+        pan: pan,
+        paused: paused,
+        looping: looping,
+      );
+      //LINES TO CHECK
+      return SoloudSoundHandle(handle);
+    } catch (e) {
+      PlxLogger.error("SoLoud play error: $e", system: 'Audio');
+      // Return a dummy handle if play fails.
+      // We can't construct a SoundHandle directly since it's opaque in some versions,
+      // but returning a throw or null might be worse if the return type is non-nullable.
+      // So rethrowing is sometimes the only way if we can't create a dummy handle.
+      rethrow;
+    }//TO CHECK: END
+    //return SoloudSoundHandle(handle);
   }
 
   @override

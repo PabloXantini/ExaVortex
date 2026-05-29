@@ -4,3 +4,4 @@ export 'package:exa_vortex/plx/graphics/plx_rendering.dart';
 export 'package:exa_vortex/plx/input/plx_input.dart';
 export 'package:exa_vortex/plx/math/plx_math.dart';
 export 'package:exa_vortex/plx/geometry/plx_geo2d.dart';
+export 'package:exa_vortex/plx/physics/2d/plx_physics_2d.dart';
