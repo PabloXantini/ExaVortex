@@ -11,10 +11,10 @@ class GameplayScene extends GameScene{
   @override
   void onInit() {
     // Input Config
-    input.clearBindings();
     input.enableKeyboard();
     input.enableMouse();
     input.enableTouch();
+    input.clearBindings();
     if(Device.isDesktop){
       input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.escape), 'Back');
     } else if (Device.isMobile){

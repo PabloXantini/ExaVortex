@@ -26,13 +26,13 @@ class BackgroundScene extends GameScene{
   Future<void> onLoad() async {
     handler = AudioHandler();
     await handler.preload('Song', '.assets/audio/shape_whirlwinds.ogg');
-    font = await PlxFont.load('PressStart2P');
-    await PlxPlatform.toggleFullScreen(true);
+    await asset.loadFont('Font1', 'PressStart2P');
     return super.onLoad();
   }
   @override
   void onInit() {
     super.onInit();
+    font = asset.getFont('Font1')!;
     //Creating the material for the background
     material1 = PlxGraphics.instance.createMaterial(vertexShaderName: 'BaseTextureV', fragmentShaderName: 'BaseTextureF');
     //Creating a simple texture for the background
@@ -82,10 +82,10 @@ class BackgroundScene extends GameScene{
     handler.playSoundtrack('Song', volume: 1);
     
     //Input Settings
-    input.clearBindings();
     input.enableKeyboard();
     input.enableMouse();
     input.enableTouch();
+    input.clearBindings();
     if(Device.isDesktop){
       input.bindInput(PhysicalInput.keyboard(LogicalKeyboardKey.space), 'StartGame');
     } else if (Device.isMobile){
@@ -120,9 +120,7 @@ class BackgroundScene extends GameScene{
   }
   @override
   void dispose() {
-    font.dispose();
     handler.dispose();
-    material1.dispose();
     rM.dispose();
     super.dispose();
   }
