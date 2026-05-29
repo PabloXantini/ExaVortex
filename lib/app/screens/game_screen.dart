@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:exa_vortex/app/scenes/background_scene.dart';
-import 'package:exa_vortex/plx/plx.dart';
+import 'package:exa_vortex/plx/plx.dart' hide Colors;
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -21,8 +21,8 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-        PlxGameFrame(game: _game) 
+      backgroundColor: Colors.black,
+      body: PlxGameFrame(game: _game),
     );
   }
 }

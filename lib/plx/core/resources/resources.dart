@@ -14,7 +14,6 @@ class PlxAssetManager {
     ref?.active = true;
     return ref?.texture;
   }
-
   /// Gets a cached font.
   PlxFont? getFont(String name){
     final ref = _fontReferences[name];
@@ -24,16 +23,12 @@ class PlxAssetManager {
   /// Loads a texture from an asset path and caches it.
   Future<PlxTexture> loadTexture(String name, String path) async {
     if (_textureReferences.containsKey(name)) {
-      _textureReferences[name]!.active = true;
-      return _textureReferences[name]!.texture;
+      return getTexture(name)!;
     }
     final texture = await AssetLoader.instance.loadTexture(path);
-    final ref = TextureReference(texture: texture);
-    ref.active = true;
-    _textureReferences[name] = ref;
+    _textureReferences[name] = TextureReference(texture: texture);
     return texture;
   }
-  
   /// Loads a font and caches it.
   Future<PlxFont> loadFont(
     String name,
@@ -46,16 +41,12 @@ class PlxAssetManager {
     }
   ) async {
     if (_fontReferences.containsKey(name)) {
-      _fontReferences[name]!.active = true;
-      return _fontReferences[name]!.font;
+      return getFont(name)!;
     }
     final font = await PlxFont.load(fontFamily, assetPath: assetPath, characters: characters, fontWeight: fontWeight, fontStyle: fontStyle);
-    final ref = FontReference(font: font);
-    ref.active = true;
-    _fontReferences[name] = ref;
+    _fontReferences[name] = FontReference(font: font);
     return font;
   }
-
   /// Marks all current resources as inactive, preparing for a transition sweep.
   void startTransition() {
     for (var ref in _textureReferences.values) {
